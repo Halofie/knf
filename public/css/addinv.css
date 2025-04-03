@@ -1,0 +1,64 @@
+/* The side navigation menu */
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+  }
+  .profile{
+    border-radius: 100%;
+    border: 2px solid black;
+    margin: 3% 0;
+
+  }
+  /* Sidebar links */
+  .sidebar a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+  }
+  
+  /* Active/current link */
+  .sidebar a.active {
+    background-color: #04AA6D;
+    color: white;
+  }
+  
+  /* Links on mouse-over */
+  .sidebar a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+  }
+  /*==================================*/
+  .profile{
+    width: 100px;
+    height:100px;
+  }
+  .topbar{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .lightGreen{
+    background-color: #4c7a4c;
+  }
+  .darkGreen{
+    background-color: #3a5c3a;
+  }
+  .paleGreen{
+    background-color: #d9e7d9;
+  }
+  .Green{
+    background-color: #4caf50;
+  }
+  .White{
+    background-color: #f2f2f2;
+  }
+  .color-paleGreen{
+    color:#d9e7d9;
+  }

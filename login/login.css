@@ -1,0 +1,39 @@
+.lightGreen{
+    background-color: #4c7a4c;
+  }
+  .darkGreen{
+    background-color: #3a5c3a;
+  }
+  .paleGreen{
+    background-color: #d9e7d9;
+  }
+  .Green{
+    background-color: #4caf50;
+  }
+  .White{
+    background-color: #f2f2f2;
+  }
+  .color-paleGreen{
+    color:#d9e7d9;
+  }
+  .profile{
+    border-radius: 100%;
+    border: 2px solid black;
+
+  }
+  .topbar{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .profile{
+    width: 180px;
+    height:180px;
+  }
+@media(min-width: 400px){
+    .profile{
+        width: 110px;
+        height:110px;
+      }
+}

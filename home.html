@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="public/css/bootstrap.min.css" rel="stylesheet" >
+    <script src="public/js/jquery.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="public/css/style.css">
+    <title>Kovai Natural Farmers</title>
+</head>
+<body class="paleGreen">
+    <!-- this is the offcanvas-->
+    <div class="offcanvas offcanvas-start sidebar " tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">MENU</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="col d-flex justify-content-center">
+                <img src="public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
+            </div>
+            <div>
+                <a class="btn" href="#">HOME</a>
+                <a class="btn" href="#">ABOUT</a>
+                <a class="btn" href="#">INVENTORY</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo"><img src="public/Assets/pic.jpeg" alt="logo">Kovai Natural Farmers</div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#inventory">Inventory</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <a href="login/login.html"><button>Login</button></a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Fresh from the Farm to Your Table</h1>
+        <p>Shop local, support farmers, and enjoy the freshest products directly from our fields.</p>
+        <div class="hero-buttons">
+            <button class="btn-primary" onclick="shopNow()">Shop Now</button>
+            <button class="btn-secondary" onclick="joinFarmer()">Join as a Farmer</button>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="products" class="featured-products">
+        <h2>Our Farms</h2>
+        <div class="product-grid">
+            <div class="product">
+                <img src="public/Assets/P1.jpg" alt="P1">
+            </div>
+            <div class="product">
+                <img src="public/Assets/P2.jpg" alt="P2">
+            </div>
+            <div class="product">
+                <img src="public/Assets/P3.jpg" alt="P3">
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose-us">
+        <h2>Why Shop from Us?</h2>
+        <div class="benefits">
+            <div class="benefit">
+                <img src="public/Assets/farm-fresh.png" alt="Farm Fresh">
+                <p>Farm Fresh Guarantee</p>
+            </div>
+            <div class="benefit">
+                <img src="public/Assets/local-farmers.png" alt="Local Farmers">
+                <p>Support Local Farmers</p>
+            </div>
+            <div class="benefit">
+                <img src="public/Assets/sustainable.png" alt="Sustainable">
+                <p>Sustainable Practices</p>
+            </div>
+            <div class="benefit">
+                <img src="public/Assets/quality.png" alt="Quality">
+                <p>Quality You Can Trust</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Teaser -->
+    <section id="about" class="about-us">
+        <h2>About Our Farm</h2>
+        <p>KNF emphasize the significance of organic farming and promote a healthy lifestyle. By embracing organic farming, we can support the well-being of farmers and consumers alike. Our aim is to make organic produce more accessible and affordable, ensuring that everyone has the opportunity to enjoy the benefits of fresh, pesticide-free fruits, vegetables, and other organic products. Join us in embracing organic farming and cultivating a healthier lifestyle for ourselves and our planet! If this idea interests anyone please fill this form with all the details that are required.</p>
+        <button class="accordion">Learn More</button>
+        <div class="learn-more">
+            <p>இந்த குழுவை உருவாக்கியதின் நோக்கம்:
+
+                <li>1. ஆரோக்கியமான வாழ்க்கைக்கு கவனம் செலுத்தவும், இரசாயனமற்ற உணவை உற்பத்தி செய்யவும், வழங்கவும், இயற்கையாக உற்பத்தி செய்யப்படும் காய்கறிகளை நீங்கள் இயற்கை விவசாயியிடமிருந்து நேரடியாகப் பெறுவதற்கு நாங்கள் சில முன்முயற்சிகளை எடுத்து வருகிறோம்.</li>
+                <br>
+                <li>2. உங்களைப் போன்ற இறுதி நுகர்வோருக்கு ஏற்ப திட்டமிட்டு உற்பத்தி செய்ய இயற்கை விவசாயிகளுடன் நாங்கள் பணியாற்றி வருகிறோம். அதே நேரத்தில் இயற்கை விவசாயிகள் தங்கள் சாகுபடியிலிருந்து நியாயமான இலாபம் ஈட்டி அவர்கள் இப்போதும் எதிர்காலத்திலும் நுகர்வோரின் தேவையை உற்பத்தி செய்ய விவசாயத்தைத் தொடர வேண்டும் என்பதற்கான முயற்சி எடுக்கிறோம்.</li>
+                </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="contact-info">
+                <p>Phone: 88786 49417</p>
+                <p>Email: knf@gmail.com</p>
+            </div>
+            <div class="social-media">
+                <a href="#"><img src="public/Assets/facebook-icon.png" alt="Facebook"></a>
+                <a href="#"><img src="public/Assets/instagram-icon.png" alt="Instagram"></a>
+                <a href="#"><img src="public/Assets/twitter-icon.png" alt="Twitter"></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="public/js/script.js"></script>
+    <script src="public/js/bootstrap.min.js"></script>
+</body>
+</html>

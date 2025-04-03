@@ -1,0 +1,180 @@
+/* General Body Styling */
+body {
+    display: flex;
+    font-family: Arial, sans-serif;
+    background-color: #d9e7d9;
+    margin: 0;
+    height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar, .offcanvas {
+    width: 20%;
+    background-color: #3a5c3a;
+    color: white;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+    overflow: auto;
+}
+
+.sidebar .logo, .profile {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    margin: 10px auto;
+    text-align: center;
+    line-height: 100px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar .menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.menu-item, .offcanvas a {
+    margin: 10px 0;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #4c7a4c;
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #d9e7d9;
+    text-decoration: none;
+}
+
+.menu-item a, .offcanvas a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.menu-item:hover, .offcanvas a:hover {
+    background-color: #45a049;
+}
+
+/* Main Content Area */
+.main-content, .content {
+    width: 80%;
+    margin-left: 20%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.mainheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.topbar, .logo-and-details, .user-details, .invoice-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-details input {
+    margin: 5px 0;
+    padding: 5px;
+    border: none;
+}
+
+/* Table Styling */
+.product-table {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Delivery Options */
+.delivery-options {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.delivery-options input[type="text"] {
+    padding: 5px;
+    margin-top: 10px;
+}
+
+/* Cart Container and Summary */
+.cart-container {
+    margin-top: 20px;
+}
+
+.cart {
+    border: 1px solid #4caf50;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.invoice-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+}
+
+.cart-total, #cart-total {
+    font-weight: bold;
+    color: #4caf50;
+}
+
+/* Buttons */
+.edit-profile-button, .place-order-button {
+    width: 100%;
+    padding: 15px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.place-order-button:hover, .edit-profile-button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 700px) {
+    .sidebar, .offcanvas {
+        width: 30%;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .sidebar, .offcanvas {
+        width: 15%;
+    }
+}

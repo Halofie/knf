@@ -1,0 +1,256 @@
+/* The side navigation menu */
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+.profile{
+    border-radius: 100%;
+    border: 2px solid black;
+    margin: 3% 0;
+
+}
+  /* Sidebar links */
+.sidebar a {
+    display: block;
+    color: black;
+    padding: 16px;
+    text-decoration: none;
+}
+  
+  /* Active/current link */
+.sidebar a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+  
+  /* Links on mouse-over */
+.sidebar a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+.profile{
+    width: 100px;
+    height:100px;
+}
+.topbar{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+}
+.lightGreen{
+    background-color: #4c7a4c;
+}
+.darkGreen{
+    background-color: #3a5c3a;
+}
+.paleGreen{
+    background-color: #d9e7d9;
+}
+.Green{
+    background-color: #4caf50;
+}
+.White{
+    background-color: #f2f2f2;
+}
+.color-paleGreen{
+    color:#d9e7d9;
+}
+  
+.page {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -100vw;
+    overflow-y: auto;
+    z-index: 0;
+    background-color: #d9e7d9;
+}
+  
+.page:target {
+    left: 0vw;
+    z-index: 1;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4c7a4c;
+    padding: 20px;
+}
+
+header .logo {
+    font-size: 35px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.logo img {
+    width: 150px;
+    height: 150px;
+    border-radius: 80px;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.auth-buttons button {
+    background-color: #fff;
+    color: #4c7a4c;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.hero {
+    background-image: url('../Assets/farm-hero.jpg');
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+.hero h1 {
+    font-size: 48px;
+}
+
+.hero p {
+    font-size: 20px;
+    margin: 20px 0;
+}
+
+.hero-buttons button {
+    margin: 10px;
+    padding: 15px 30px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.btn-primary {
+    background-color: #4caf50;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.featured-products {
+    text-align: center;
+    padding: 30px 10px;
+}
+
+.product-grid {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.product img {
+    width: 450px;
+    height: 450px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.why-choose-us h2 {
+    text-align: center;
+    margin: 10px;
+}
+
+.benefits {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px 20px;
+    background-color: #fff;
+}
+
+.benefit {
+    text-align: center;
+}
+
+.benefit img {
+    width: 250px;
+    height: 250px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.benefit p {
+    padding: 10px;
+}
+
+.about-us h2{
+    text-align: center;
+    margin: 20px;
+} 
+
+.about-us p {
+    padding: 10px;
+}
+
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 20px;
+    transition: 0.4s;
+}
+  
+ .accordion:hover {
+    background-color: #ccc;
+}
+  
+.learn-more {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.footer-content .social-media img {
+    width: 30px;
+    height: 30px;
+}
