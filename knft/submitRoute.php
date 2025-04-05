@@ -13,10 +13,11 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $route = $data['route'];
 $deliveryType = $data['deliveryType'];
+$rate = $data['rate'];
 
 // Prepare and bind
-$stmt = $conn->prepare("INSERT INTO routes (route, deliveryType) VALUES (?, ?)");
-$stmt->bind_param("ss", $route, $deliveryType);
+$stmt = $conn->prepare("INSERT INTO routes (route, deliveryType, rate) VALUES (?, ?, ?)");
+$stmt->bind_param("ssi", $route, $deliveryType, $rate);
 
 // Execute the statement
 if ($stmt->execute()) {

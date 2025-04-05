@@ -217,6 +217,7 @@ const loadRoutes = () => {
                     <tr>
                         <td>${data[i].route}</td>
                         <td>${data[i].deliveryType}</td>
+                        <td>${data[i].rate}</td>
                         <td>
                             <button class="btn btn-success" onclick="editRoutes('${data[i].route}')">Edit</button>
                         </td>
@@ -444,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       const jsonData = JSON.stringify(formData);
 
-      fetch('../../knft/submitUoM.php', {
+      fetch('../knft/submitUoM.php', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
@@ -507,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function() {
       };
       const jsonData = JSON.stringify(formData);
 
-      fetch('../../knft/submitCategory.php', {
+      fetch('../knft/submitCategory.php', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
@@ -542,7 +543,7 @@ document.querySelector(".ADDPRODUCT").addEventListener("click",(e)=>{
     };
     const jsonData = JSON.stringify(ProductZIP);
 
-    fetch('../../knft/submitProduct.php', {
+    fetch('../knft/submitProduct.php', {
         method: 'POST',
         headers: {
             "Content-Type": 'application/json'
@@ -571,7 +572,7 @@ document.querySelector("#routeForm").addEventListener("submit", (e) => {
   });
   console.log(data);
 
-  fetch('../../knft/submitRoute.php', {
+  fetch('../knft/submitRoute.php', {
       method: 'POST',
       headers: {
           "Content-Type": 'application/json'
@@ -603,7 +604,7 @@ document.querySelector("#routeForm").addEventListener("submit", (e) => {
   });
   console.log("Supplier form data:", data);
   // Fetch for submitSupplier.php
-  fetch('../../knft/submitSupplier.php', {
+  fetch('../knft/submitSupplier.php', {
     method: 'POST',
     headers: {
       "Content-Type": 'application/json'
@@ -622,7 +623,7 @@ document.querySelector("#routeForm").addEventListener("submit", (e) => {
     loadSuppliers();
   });
   // Fetch for submitSupplierAcc.php
-  fetch('../../knft/submitSupplierAcc.php', {
+  fetch('../knft/submitSupplierAcc.php', {
     method: 'POST',
     headers: {
       "Content-Type": 'application/json'
@@ -651,14 +652,14 @@ document.querySelector("#customerForm").addEventListener("submit", (e) => {
   });
   console.log(data);
 
-  fetch('../../knft/submitCustomer.php', {
+  fetch('../knft/submitCustomer.php', {
       method: 'POST',
       headers: {
           "Content-Type": 'application/json'
       },
       body: JSON.stringify(data)
   })
-  fetch('../../knft/submitCustomerAcc.php', {
+  fetch('../knft/submitCustomerAcc.php', {
     method: 'POST',
     headers: {
         "Content-Type": 'application/json'
@@ -694,7 +695,7 @@ function validateForm() {
 
 //---------------------------------------------------------------------------------------------------------------
 document.getElementById('downloadOrdersBtn').addEventListener('click', function() {
-  fetch('../../knft/printorder.php')
+  fetch('../knft/printorder.php')
       .then(response => {
           if (response.ok) {
               return response.blob();

@@ -70,7 +70,48 @@ async function fetchHistory(farmerId, weekId) {
   })
   .catch(error => console.error("Fetch Error:", error));
 }
-
+async function deleteItem(id) {
+    try {
+      const formData = new FormData();
+      formData.append("id", id);
+  
+      const response = await fetch("../knft/deleteInventory.php", {
+        method: "POST",
+        body: formData,
+      });
+     
+      const result = await response.json();
+  
+      if (result.status === "success") {
+        console.log("Item deleted successfully.");
+        initialize();
+      } else {
+        console.error("Failed to delete item:", result.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+  
+async function fillCurrentInv(farmerId, weekId) {
+    fetch('../knft/getFarmerHistory.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ farmer_id: farmerId, weekid: weekId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error("Error:", data.error);
+            return;
+        }
+        console.log("Products:", data);
+        populateTable2(data);
+    })
+    .catch(error => console.error("Fetch Error:", error));
+  }
 function populateTable(products) {
   let tableBody = document.querySelector(".inventory-body");
   tableBody.innerHTML = ""; // Clear existing table data
@@ -87,7 +128,23 @@ function populateTable(products) {
       tableBody.appendChild(row);
   });
 }
+function populateTable2(products) {
+    let tableBody = document.querySelector(".currentinventory-body");
+    tableBody.innerHTML = ""; // Clear existing table data
+  
+    products.forEach(product => {
+        let row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${product.product_name}</td>
+            <td>${product.category_id}</td>
+            <td>₹${product.price}</td>
+            <td>${product.quantity} ${product.unit_id}</td>
+            <td><button class="remove-from-inv button-danger" id="${product.id}">Delete</button></td>
+        `;
 
+        tableBody.appendChild(row);
+    });
+  }
 async function initialize() {
     const email = await fetchEmail();
     if (!email) {
@@ -115,6 +172,7 @@ async function initialize() {
     document.querySelector("#week").innerText = weekId;
     
     fetchHistory(fId, weekId);
+    fillCurrentInv(fId, weekId);
 
     const productData = await fetchProducts();
     if (productData && productData.data) {
@@ -228,7 +286,15 @@ function setupEventListeners(fId, weekId, productData) {
             document.querySelector(`#total2${id}`).innerText = `${newVal * tempInv[id].price}`;
         }
     });
-    
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".remove-from-inv").forEach(button => {
+          button.addEventListener("click", async () => {
+            const id = button.id; // Button's ID is the inventory item ID
+            await deleteItem(id);
+          });
+        });
+      });
+      
     document.querySelector(".submission").addEventListener("click", async () => {
         try {
             const response = await fetch('../knft/submitINV.php', {
@@ -238,7 +304,6 @@ function setupEventListeners(fId, weekId, productData) {
             });
             const data = await response.json();
             console.log('Success:', data);
-            document.querySelector(".submit").innerHTML = `<button class="btn-success" disabled>SUBMIT SELECTION</button>`;
             fetchHistory(fId, weekId);
         } catch (error) {
             console.error('Error:', error);

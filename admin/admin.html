@@ -318,6 +318,11 @@
                         <input type="radio" id="vd" name="deliveryType" value="VD" required>
                         <label for="vd">Van Delivery</label>
                     </div>
+
+                    <div class="form-group">
+                        <label for="rate">Rate</label>
+                        <input type="number" min="0" step="1" class="form-control" name="rate" id="rate" required>
+                    </div>
                     <!--<input type="submit" class="btn-success m-3 submit-route btn" value="submit-route">-->
                     <button type="submit" class="btn btn-success m-3 submit-route">Submit</button>
                 </form>
@@ -331,6 +336,7 @@
                         <tr>
                             <th scope="col">Route</th>
                             <th scope="col">Delivery Type</th>
+                            <th scope="col">Rate</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>

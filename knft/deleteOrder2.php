@@ -32,9 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt_update->close();
 
         // Step 3: Delete the row from your_table
-        $sql_delete = "DELETE FROM final_order WHERE id = ? AND customer_id = ? AND product_id = ?";
+        $sql_delete = "DELETE FROM final_order WHERE id = ? AND customer_id = ? AND product_id = ? AND quantity = ? LIMIT 1";
         $stmt_delete = $conn->prepare($sql_delete);
-        $stmt_delete->bind_param("iii", $week_id, $customer_id, $product_id);
+        $stmt_delete->bind_param("iiii", $week_id, $customer_id, $product_id, $quantity);
 
         if ($stmt_delete->execute()) {
             echo json_encode(["success" => true, "message" => "Row deleted and inventory updated successfully"]);

@@ -22,7 +22,7 @@ $farmer_id = intval($data['farmer_id']);
 $weekid = intval($data['weekid']);
 
 // Query the database
-$sql = "SELECT product_name, category_id, price, quantity, unit_id, datetime 
+$sql = "SELECT id, product_name, category_id, price, quantity, unit_id, datetime 
         FROM inventory 
         WHERE farmer_id = ? AND weekid = ?";
 $stmt = $conn->prepare($sql);
