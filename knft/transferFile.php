@@ -1,8 +1,5 @@
 <?php
-$host = 'localhost';
-$dbname = 'knf';
-$user = 'root';
-$pass = '';
+require('header.php');
 
 // Connect using MySQLi
 $conn = new mysqli($host, $user, $pass, $dbname);

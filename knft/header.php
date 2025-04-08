@@ -16,5 +16,9 @@ $username = "root";
 $password = "";
 $dbname = "knf";
 
+$host = $servername;
+$user = $username;
+$pass = $password;
+
 session_start();
 ?>
