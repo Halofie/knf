@@ -347,6 +347,32 @@ async function loadWeekDropdown() {
     }
 }
 
+// Function to initialize and update the clock
+function initializeClock() {
+    const dateElement = document.getElementById('date');
+    if (!dateElement) return;
+
+    function updateClock() {
+        const now = new Date();
+        const formattedTime = now.toLocaleTimeString(); // Format: HH:MM:SS AM/PM
+        const formattedDate = now.toLocaleDateString(); // Format: MM/DD/YYYY
+        dateElement.textContent = `${formattedDate} ${formattedTime}`;
+    }
+
+    // Update the clock every second
+    setInterval(updateClock, 1000);
+
+    // Initial call to display the clock immediately
+    updateClock();
+}
+
+// Call the clock initialization function when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initializeClock();
+    initialize(); // Ensure the rest of the page functionality is initialized
+});
+
+
 
 // // create a new `Date` object
 // const now = new Date();
