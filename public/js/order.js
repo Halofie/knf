@@ -26,7 +26,6 @@ async function fetchEmailAndRunProgram() {
 fetchEmailAndRunProgram();
 
 async function runNextProgram(email) {
-    document.getElementById('myAnchor').innerHTML += `<a class="btn btn-success btn-sm proceed" href="../consumer/cart.html">Proceed To Checkout</a>`;
     await main_load(email);
     await loadMenu();
 }
@@ -114,7 +113,7 @@ function deleteRow2(week_id, customer_id, product_id, id) {
     .then(data => alert(data.success ? "Row deleted successfully!" : "Error: " + data.message))
     .catch(error => console.error("Error:", error));
 }
-async function renderMenu() {
+function renderMenu() {
     const tbody = document.querySelector('tbody');
     tbody.innerHTML = '';
     
@@ -132,26 +131,10 @@ async function renderMenu() {
                 <td><input type="number" id="q${productId}" value="${purchasedQuantity}"></td>
                 <td>
                     <button class="btn btn-success btn-sm purchaseButton" id="${productId}" ${(availableQuantity) ? "" : "disabled"}>+ Purchase</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteRow(${weekId}, ${custID}, ${productId})">DELETE</button>
                 </td>
             </tr>`;
     });
     attachPurchaseEventListeners();
-}
-
-function attachPurchaseEventListeners() {
-    document.querySelectorAll('.purchaseButton').forEach(button => {
-        button.addEventListener('click', async (e) => {
-            const productId = e.currentTarget.id;
-            const purchased = parseInt(document.querySelector(`#q${productId}`).value, 10);
-            const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
-            
-            purchasedItems[productId] = purchased;
-            await sendPurchaseData(productId, purchased);
-            await insertData(productId, purchased, price);
-            await loadMenu();
-        });
-    });
 }
 
 async function loadMenu() {
@@ -214,38 +197,131 @@ async function fetchOrders(week_id, customer_id) {
     }
 }
 
-function renderOrders(orders) {
-    const orderBody = document.querySelector('.order-body');
-    orderBody.innerHTML = ''; // Clear previous data
+// Function to render the cart
+function renderCart() {
+    const cartBody = document.querySelector('.cart-body');
+    cartBody.innerHTML = ''; // Clear previous data
 
-    if (orders.length === 0) {
-        orderBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No orders found</td></tr>`;
+    if (Object.keys(purchasedItems).length === 0) {
+        cartBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Your cart is empty</td></tr>`;
         return;
     }
 
-    orders.forEach(order => {
-        console.log(prodlist);
-        const product = prodlist[order.product_id -1] || { name: "Unknown", category: "Unknown" }; // Match product
+    Object.entries(purchasedItems).forEach(([productId, item]) => {
+        const product = prodlist[productId - 1] || { product: "Unknown", category: "Unknown" }; // Match product
 
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${product.product}</td>
             <td>${product.category_id}</td>
-            <td>$${order.rate.toFixed(2)}</td>
-            <td>${order.quantity}</td>
-            <td><button class="btn btn-danger btn-sm" onclick="removeOrder(this,${order.product_id} ,${order.id})">Remove</button></td>
+            <td>Rs.${item.price.toFixed(2)}</td>
+            <td>${item.quantity}</td>
+            <td>
+                <button class="btn btn-danger btn-sm deleteButton" data-id="${productId}">Delete</button>
+            </td>
         `;
 
-        orderBody.appendChild(row);
+        cartBody.appendChild(row);
+    });
+
+    attachDeleteEventListeners();
+}
+
+// Function to handle deleting a product from the cart
+function deleteFromCart(productId) {
+    delete purchasedItems[productId]; // Remove the product from the cart
+    renderCart(); // Re-render the cart
+}
+
+// Attach event listeners to "Delete" buttons in the cart
+function attachDeleteEventListeners() {
+    document.querySelectorAll('.deleteButton').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const productId = e.currentTarget.getAttribute('data-id');
+            deleteFromCart(productId);
+        });
     });
 }
 
-function removeOrder(button, productId, id) {
-    button.closest('tr').remove(); // Remove row from UI
-    deleteRow(weekId, custID,productId,id)
+// Attach event listeners to "Purchase" buttons in the product menu
+function attachPurchaseEventListeners() {
+    document.querySelectorAll('.purchaseButton').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            const productId = e.currentTarget.id;
+            const quantityInput = document.querySelector(`#q${productId}`);
+            const quantity = parseInt(quantityInput.value, 10);
+            const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
+
+            if (quantity > 0) {
+                // Add product to the cart
+                purchasedItems[productId] = { quantity, price };
+
+                // Update the cart UI
+                renderCart();
+
+                // Optionally, send data to the server
+                await sendPurchaseData(productId, quantity);
+                await insertData(productId, quantity, price);
+            } else {
+                alert('Quantity cannot be less than 0.');
+                quantityInput.value = 0; // Reset to 0 if invalid
+            }
+        });
+    });
 }
 
+// Attach event listener to "Place Your Order" button
+document.getElementById('placeOrderButton').addEventListener('click', async () => {
+    if (Object.keys(purchasedItems).length === 0) {
+        alert('Your cart is empty. Please add items to the cart before placing an order.');
+        return;
+    }
 
+    try {
+        // Prepare the data to send
+        const orderData = {
+            week_id: weekId,
+            customer_id: cId,
+            routeId: cRoute,
+            date_time: currentDateTime,
+            items: Object.entries(purchasedItems).map(([productId, item]) => ({
+                product_id: productId,
+                quantity: item.quantity,
+                price: item.price,
+                total: item.quantity * item.price
+            }))
+        };
+
+        // Send the data to submitOrder.php
+        const response = await fetch('../knft/submitOrder.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        const result = await response.text(); // Get the response as text
+        alert(result); // Show success or error message
+
+        if (result.includes('Data inserted successfully')) {
+            // Update available quantities
+            Object.entries(purchasedItems).forEach(([productId, item]) => {
+                const product = prodData.find(p => p.product_id == productId);
+                if (product) {
+                    product.quantity -= item.quantity; // Reduce available quantity
+                }
+            });
+
+            // Clear the cart after successful order placement
+            purchasedItems = {};
+            renderCart();
+            // Re-render the menu to reflect updated quantities
+        }
+        renderMenu(); 
+    } catch (error) {
+        console.error('Error placing order:', error);
+        alert('An error occurred while placing your order. Please try again.');
+    }
+});
 
 
 
