@@ -28,9 +28,7 @@
           <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
       </div>
       <div>
-        <a class="btn" href="#">HOME</a>
-        <a class="btn" href="#">ABOUT</a>
-        <a class="btn" href="#">INVENTORY</a>
+        <a class="btn" href="../home.html">HOME</a>
       </div>
   </div>
 </div>
@@ -53,10 +51,10 @@
       <p class="navinfo m-0" id="route">.</p>
   </div>
   <div class="col-3 d-flex justify-content-end">
-    <div class="m-0 d-block color-paleGreen justify-content-end" id="clock">
-      <span>date</span>
-    </div> 
-  </div>
+    <div class="m-0 d-block color-paleGreen justify-content-end">
+        <div class="clock">date</div>
+    </div>
+</div>
 </div>
 
 
@@ -133,9 +131,9 @@
     
   </div>
 
-  <h1 class="text-center">Your Orders</h1>
-  <div id="order-result" class="m-3"></div>
-  <div class="orderHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
+  <h1 class="text-center">Cart</h1>
+  <div id="cart-result" class="m-3"></div>
+  <div class="cartHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
       <div class="d-flex justify-content-center container align-center">
           <table class="table table-success table-striped border">
               <thead>
@@ -147,9 +145,12 @@
                       <th scope="col">Action</th>
                   </tr>
               </thead>
-              <tbody class="order-body"></tbody>
+              <tbody class="cart-body"></tbody>
           </table>
       </div>
+  </div>
+  <div class="text-center m-3">
+      <button class="btn btn-primary btn-lg" id="placeOrderButton">Place Your Order</button>
   </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
