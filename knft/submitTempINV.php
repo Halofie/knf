@@ -13,10 +13,6 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
 
     if (!empty($data)) {
-        // Prepare the SQL statement for inserting into temp_inventory
-        $stmt = $conn->prepare("INSERT INTO temp_inventory (weekID, product_id, quantity, price, datetime) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("iiids", $product_id, $weekID, $quantity, $price, $datetime);
-
         // Loop through the incoming data
         foreach ($data as $product) {
             $weekID = $product['week_id']; // Current week's ID
@@ -24,7 +20,9 @@ try {
             $quantity = $product['quantity'];
             $price = $product['price'];
             $datetime = $product['DateTime'];
-
+            // Prepare the SQL statement for inserting into temp_inventory
+            $stmt = $conn->prepare("INSERT INTO temp_inventory (weekID, product_id, quantity, price, temp_inv_datetime) VALUES (?, ?, ?, NOW())");
+            $stmt->bind_param("iiid", $product_id, $weekID, $quantity, $price);
             // Execute the prepared statement
             $stmt->execute();
         }

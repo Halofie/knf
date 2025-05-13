@@ -10,7 +10,7 @@ try {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
 
-    $sql = "SELECT * FROM inventory";
+    $sql = "SELECT * FROM inventory WHERE rec_status = 1";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {

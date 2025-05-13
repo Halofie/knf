@@ -1,6 +1,6 @@
 <?php
 require('header.php');
-
+header('Content-Type: application/json');
 $response = array();
 $input = json_decode(file_get_contents('php://input'), true);
 $email = $input['email'];
@@ -27,12 +27,11 @@ $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     // Output data of each row
     $details = $result->fetch_assoc();
-    echo json_encode(['details' => $details]);
+    echo json_encode(['status' => 'success', 'details' => $details]);
 } else {
-    echo json_encode(['details' => 'No user found with this email.']);
+    echo json_encode(['status' => 'not_found', 'message' => 'No customer found with this email.', 'details' => null]);
 }
 // Close connection
 $stmt->close();
 $conn->close();
-header('Content-Type: application/json');
 ?>

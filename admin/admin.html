@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -10,7 +9,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="../public/css/bootstrap.min.css" rel="stylesheet" >
-    <script src="../public/js/jquery.js"></script>
+    <!-- <script src="../public/js/jquery.js"></script> -->
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../public/css/admin.css">
@@ -38,6 +37,7 @@
                 <a class="btn" href="#five">CUSTOMER REGISTRATION</a>
                 <a class="btn" href="#six">SUPPLIER REGISTRATION</a>
                 <a class="btn" href="#seven">WEEK MASTER</a>
+                <a class="btn" href="../knft/logout.php">LOGOUT</a>
             </div>
         </div>
     </div>
@@ -62,8 +62,9 @@
             </div>
         </div>
     </div>
+
     <div class="container d-flex justify-content-center">
-        <div class="col-7 text-center">
+        <div class="col-7 text-center mt-3 mb-3">
             <a class="btn m-3 btn-primary" href="#one">Unit of Measure Master</a>
             <a class="btn m-3 btn-primary" href="#two">Category Master</a>
             <a class="btn m-3 btn-primary" href="#three">Product Master</a>
@@ -73,7 +74,7 @@
             <a class="btn m-3 btn-primary" href="#seven">Week Master</a>
             <a class="btn m-3 btn-primary" href="../knft/trunc_temp.php">clear Temp_inv</a>
             <a class="btn m-3 btn-primary" href="../knft/loadTempInventory.php">load Temp_inv</a>
-            <a class="btn m-3 btn-primary" href="../knft/transferFile.php">Download Orders</a>
+            <a class="btn m-3 btn-secondary" href="../knft/transferFile.php">Download Orders</a>
         </div>
     </div>
 
@@ -98,32 +99,33 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center m-5">
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
             <h2 class="m-0">UOM Master</h2>
             <a class="btn btn-dark" href="#">Back</a>
         </div>
         <div class="d-flex justify-content-center">
-            <div class="col-6">
-                <form class="form-control White " id="uomForm">
-                    <label for="UoM">UoM Name</label>
+            <div class="col-md-8 col-lg-6">
+                <form class="form-control White p-3 mb-3" id="uomForm">
+                    <label for="UoM" class="form-label">UoM Name</label>
                     <input type="text" class="form-control" name="UoM" id="UoM" required>
                     
-                    <label for="UoMID" >UoM ID</label>
+                    <label for="UoMID" class="form-label">UoM ID</label>
                     <input type="text" class="form-control" name="UoMID" id="UoMID" required>
 
-                    <button type="submit" class="btn btn-success m-3 submit-uom">Submit</button>
+                    <button type="submit" class="btn btn-success mt-2 submit-uom">Submit</button>
                 </form>
             </div>
         </div>
-        <div id="result-uom" class="m-3"></div>
-        <div class="uomHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-            <div class="d-flex justify-content-center container align-center ">
-                <table class="table table-success table-striped border">
+        <div id="result-uom" class="m-3 alert" style="display: none;"></div>
+        <div class="uomHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Existing UoMs</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-striped border table-hover">
                     <thead>
                         <tr>
                             <th scope="col">UoM ID</th>
                             <th scope="col">UoM Name</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" style="width: 200px;">Action</th>
                         </tr>
                     </thead>
                     <tbody class="uom-body"></tbody>
@@ -153,32 +155,33 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center m-5">
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
             <h2 class="m-0">Category Master</h2>
             <a class="btn btn-dark" href="#">Back</a>
         </div>
         <div class="d-flex justify-content-center">
-            <div class="col-6">
-                <form class="form-control White " id="categoryForm">
-                    <label for="categoryDesc">Category Name</label>
+            <div class="col-md-8 col-lg-6">
+                <form class="form-control White p-3 mb-3" id="categoryForm">
+                    <label for="categoryDesc" class="form-label">Category Name</label>
                     <input type="text" class="form-control" name="categoryDesc" id="categoryDesc" required>
                     
-                    <label for="categoryType" >category ID</label>
+                    <label for="categoryType" class="form-label">category ID</label>
                     <input type="text" class="form-control" name="categoryType" id="categoryType" required>
         
-                    <button type="submit" class="btn btn-success m-3 submit-category">Submit</button>
+                    <button type="submit" class="btn btn-success mt-2 submit-category">Submit</button>
                 </form>
             </div>
         </div>
-        <div id="result-category" class="m-3"></div>
-        <div class="categoryHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-            <div class="d-flex justify-content-center container align-center ">
-                <table class="table table-success table-striped border">
+        <div id="result-category" class="m-3 alert" style="display: none;"></div>
+        <div class="categoryHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Existing Categories</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-striped border table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Category ID</th>
                             <th scope="col">Category Name</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" style="width: 200px;">Action</th>
                         </tr>
                     </thead>
                     <tbody class="category-body"></tbody>
@@ -208,57 +211,41 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center m-5">
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
             <h2 class="m-0">Product Master</h2>
             <a class="btn btn-dark" href="#">Back</a>
         </div>
         <section class="d-flex justify-content-center">
-            <div class="addzone">
-                <div class="addbox w-auto m-3 d-flex col-6 p-0 container justify-content-between White ">
-                    <div class=" col text-center">
-                        <table class="table m-1 border ">
-                            <tbody>
-                            <tr>
-                                <th scope="row">PRODUCT:</th>
-                                <td><input type="text" class="form-control itmProduct" name="itmProduct" id="itmProduct"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Category</th>
-                                <td><select class="form-select itmCategory" name="itmCategory" id="floatingSelect itmCategory" aria-label="Floating label select example">
-                                    <!-- <option value="001">gram</option>
-                                    <option value="002">kattu</option>
-                                    <option value="003">kg</option>
-                                    <option value="004">nos</option> -->
-    
-                                </select></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">UoM</th>
-                                <td><select class="form-select itmUoM" name="itmUoM" id="floatingSelect itmUoM" aria-label="Floating label select example">
-                                    <!-- <option value="001">gram</option>
-                                    <option value="002">kattu</option>
-                                    <option value="003">kg</option>
-                                    <option value="004">nos</option> -->
-    
-                                </select></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">RATE</th>
-                                <td><input type="number" class="form-control itmRate" name="itmRate" id="itmRate" width="100" default></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-2 m-2 text-center ">
-                        <button type="button" class="ADDPRODUCT col  mt-2 btn btn-success">ADD</button>
+            <div class="col-md-8 col-lg-7">
+                <div class="p-3 mb-3 border rounded bg-light">
+                    <h5 class="text-center mb-3">Add New Product</h5>
+                        <label for="itmProduct" class="form-label">Product Name:</label>
+                        <input type="text" class="form-control" name="itmProduct" id="itmProduct">
+
+                        <label for="itmCategory" class="form-label">Category:</label>
+                        <select class="form-select itmCategory" name="itmCategory" id="itmCategory">
+                            <option value="">Select...</option>
+                        </select>
+
+                        <label for="itmUoM" class="form-label">UoM:</label>
+                        <select class="form-select itmUoM" name="itmUoM" id="itmUoM">
+                            <option value="">Select...</option>
+                        </select>
+
+                        <label for="itmRate" class="form-label">Base Rate/UoM:</label>
+                        <input type="number" step="0.01" class="form-control itmRate" name="itmRate" id="itmRate">
+
+                    <div class="text-center mt-3">
+                        <button type="button" class="ADDPRODUCT btn btn-success">Add Product</button>
                     </div>
                 </div>
             </div>
         </section>
-        <div id="result-product" class="m-3"></div>
-        <div class="productHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-            <div class="d-flex justify-content-center container align-center ">
-                <table class="table table-success table-striped border">
+        <div id="result-product" class="m-3 alert" style="display: none;"></div>
+        <div class="productHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Existing Products</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-striped border table-hover">
                     <thead>
                       <tr>
                         <th scope="col">ID</th>
@@ -266,13 +253,12 @@
                         <th scope="col">Product</th>
                         <th scope="col">UoM ID</th>
                         <th scope="col">Rate/UoM</th>
-                        <th scope="col">Action</th>
+                        <th scope="col" style="width: 200px;">Action</th>
                       </tr>
                     </thead>
                     <tbody class="product-body"></tbody>
                 </table>
             </div>
-        </div>
         </div>
     </div>
 
@@ -297,15 +283,15 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center m-5">
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
             <h2 class="m-0">Route Master</h2>
             <a class="btn btn-dark" href="#">Back</a>
         </div>
         <div class="d-flex justify-content-center">
-            <div class="col-6">
-                <form class="form-control White" id="routeForm">
+            <div class="col-md-8 col-lg-6">
+                <form class="form-control White p-3 mb-3" id="routeForm">
                     <div class="form-group">
-                        <label for="route">Route</label>
+                        <label for="route" class="form-label">Route</label>
                         <input type="text" class="form-control" name="route" id="route" required>
                     </div>
         
@@ -320,24 +306,25 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="rate">Rate</label>
-                        <input type="number" min="0" step="1" class="form-control" name="rate" id="rate" required>
+                        <label for="rate" class="form-label">Delivery Charge</label>
+                        <input type="number" min="0" step="0.01" class="form-control" name="rate" id="rate" required>
                     </div>
                     <!--<input type="submit" class="btn-success m-3 submit-route btn" value="submit-route">-->
-                    <button type="submit" class="btn btn-success m-3 submit-route">Submit</button>
+                    <button type="submit" class="btn btn-success mt-2 submit-route">Submit</button>
                 </form>
             </div>
         </div>
-        <div id="result-route" class="m-3"></div>
-        <div class="routeHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-            <div class="d-flex justify-content-center container align-center ">
-                <table class="table table-success table-striped border">
+        <div id="result-route" class="m-3 alert" style="display: none;"></div>
+        <div class="routeHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Existing Routes</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-striped border table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Route</th>
                             <th scope="col">Delivery Type</th>
                             <th scope="col">Rate</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" style="width: 200px;">Action</th>
                         </tr>
                     </thead>
                     <tbody class="route-body"></tbody>
@@ -367,47 +354,47 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center m-5">
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
             <h2 class="m-0">Customer Registration</h2>
             <a class="btn btn-dark" href="#">Back</a>
         </div>
         <div class="d-flex justify-content-center">
-            <div class="col-6">
-                <form class="form-control White " id="customerForm">
-                    <label for="customerName">Customer Name</label>
+            <div class="col-md-8 col-lg-6">
+                <form class="form-control White p-3 mb-3" id="customerForm">
+                    <label for="customerName" class="form-label">Customer Name</label>
                     <input type="text" class="form-control" name="customerName" id="customerName" required>
                     
-                    <label scope="row" for="routeID">Route ID</label>
-                    <select class="form-select routeID" name="routeID" id="floatingSelect routeID" required>
-                        <!-- <option value="">Select Route</option>
-                        <option value="route1">Route 1</option>
-                        <option value="route2">Route 2</option>
-                        <option value="route3">Route 3</option>
-                        <option value="route4">Route 4</option>
-                        <option value="route5">Route 5</option>
-                        <option value="route6">Route 6</option> -->
+                    <label scope="row" for="routeID" class="form-label">Assign Route</label>
+                    <select class="form-select routeID" name="routeID" id="routeID" required>
+                        <option value="">Select Route...</option>
+                        <!-- <option value="route1">Route 1</option>
+                        <option value="route2">Route 2</option>-->
                     </select>
 
-                    <label for="contact">Contact No</label>
-                    <input type="text" class="form-control" name="contact" id="contact" required>
+                    <label for="contact" class="form-label">Contact No</label>
+                    <input type="tel" class="form-control" name="contact" id="contact" required pattern="[0-9]{10,}" title="Enter a valid phone number">
 
-                    <label for="alternativeContact">Alternative Contact No</label>
-                    <input type="text" class="form-control" name="alternativeContact" id="alternativeContact">
+                    <label for="alternativeContact" class="form-label">Alternative Contact No</label>
+                    <input type="tel" class="form-control" name="alternativeContact" id="alternativeContact">
 
-                    <label for="address">Address</label>
-                    <input type="text" class="form-control" name="address" id="address" required>
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" name="address" id="address" rows="2" required></textarea>
 
-                    <label for="emailID">Email ID</label>
+                    <label for="emailID" class="form-label">Email ID</label>
                     <input type="email" class="form-control" name="emailID" id="emailID" required>
 
-                    <input type="submit" class="btn-success m-3 submit-customer btn" value="Submit">
+                    <label for="customerPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="customerPassword" required>
+
+                    <input type="submit" class="btn btn-success mt-2 submit-customer" value="Register Customer">
                 </form>
             </div>
         </div>
-        <div id="result-customer" class="m-3"></div>
-        <div class="customerHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-            <div class="d-flex justify-content-center container align-center ">
-                <table class="table table-success table-striped border">
+        <div id="result-customer" class="m-3 alert" style="display: none;"></div>
+        <div class="customerHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Existing Customers</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-striped border table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Customer Name</th>
@@ -416,7 +403,7 @@
                             <th scope="col">Alternative Contact No</th>
                             <th scope="col">Address</th>
                             <th scope="col">Email ID</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" style="width: 200px;">Action</th>
                         </tr>
                     </thead>
                     <tbody class="customer-body"></tbody>
@@ -446,39 +433,43 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center m-5">
-            <h2 class="m-0">Supplier Form</h2>
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
+            <h2 class="m-0">Supplier Registration</h2>
             <a class="btn btn-dark" href="#">Back</a>
         </div>
         <div class="d-flex justify-content-center">
-            <div class="col-6">
-                <form class="form-control White " id="supplierForm">
-                    <label for="supplierName">Farmer Name</label>
+            <div class="col-md-8 col-lg-6">
+                <form class="form-control White p-3 mb-3" id="supplierForm">
+                    <label for="supplierName" class="form-label">Farmer Name</label>
                     <input type="text" class="form-control" name="supplierName" id="supplierName" required>
                     
-                    <label for="farmLocation">Farm Location</label>
+                    <label for="farmLocation" class="form-label">Farm Location</label>
                     <input type="text" class="form-control" name="farmLocation" id="farmLocation" required>
 
-                    <label for="contact">Contact No</label>
-                    <input type="text" class="form-control" name="contact" id="contact" required>
+                    <label for="contact" class="form-label">Contact No</label>
+                    <input type="tel" class="form-control" name="contact" id="contact" required pattern="[0-9]{10,}" title="Enter a valid phone number">
 
-                    <label for="alternativeContact">Alternative Contact No</label>
-                    <input type="text" class="form-control" name="alternativeContact" id="alternativeContact">
+                    <label for="alternativeContact" class="form-label">Alternative Contact No</label>
+                    <input type="tel" class="form-control" name="alternativeContact" id="alternativeContact">
 
-                    <label for="farmSize">Farm Size (In Acres)</label>
-                    <input type="text" class="form-control" name="farmSize" id="farmSize" required>
+                    <label for="farmSize" class="form-label">Farm Size (In Acres)</label>
+                    <input type="number" class="form-control" name="farmSize" id="farmSize" required>
 
-                    <label for="emailID">Email ID</label>
+                    <label for="emailID" class="form-label">Email ID</label>
                     <input type="email" class="form-control" name="emailID" id="emailID" required>
 
-                    <input type="submit" class="btn-success m-3 submit-supplier btn" value="Submit">
+                    <label for="supplierPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" id="supplierPassword" required>
+
+                    <input type="submit" class="btn btn-success mt-2 submit-supplier" value="Submit">
                 </form>
             </div>
         </div>
-        <div id="result-supplier" class="m-3"></div>
-        <div class="supplierHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-            <div class="d-flex justify-content-center container align-center ">
-                <table class="table table-success table-striped border">
+        <div id="result-supplier" class="m-3 alert" style="display: none;"></div>
+        <div class="supplierHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Existing Suppliers</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-striped border table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Farmer Name</th>
@@ -487,7 +478,7 @@
                             <th scope="col">Alternative Contact No</th>
                             <th scope="col">Farm Size</th>
                             <th scope="col">Email ID</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" style="width: 200px;">Action</th>
                         </tr>
                     </thead>
                     <tbody class="supplier-body"></tbody>
@@ -517,29 +508,30 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center m-5">
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
             <h2 class="m-0">Week Master</h2>
             <a class="btn btn-dark" href="#">Back</a>
         </div>
         <div class="d-flex justify-content-center">
-            <div class="col-6">
-                <form class="form-control White " id="weekForm" >
-                    <label for="weekDate">ENTER WEEK DATE IN DDMMYY format</label>
+            <div class="col-md-8 col-lg-6">
+                <form class="form-control White p-3 mb-3" id="weekForm" >
+                    <label for="weekDate" class="form-label">ENTER WEEK DATE IN DDMMYY format</label>
                     <input type="date" class="form-control" name="weekDate" id="weekDate" required>
                     <input type="hidden" id="formattedWeekDate" name="formattedWeekDate">
-                    <input type="submit" class="btn-success m-3 submit-week btn" value="Submit">
+                    <input type="submit" class="btn btn-success mt-2 submit-week" value="Submit">
                 </form>
             </div>
         </div>
-        <div id="result-week" class="m-3"></div>
-        <div class="weekHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-            <div class="d-flex justify-content-center container align-center ">
-                <table class="table table-success table-striped border">
+        <div id="result-week" class="m-3 alert" style="display: none;"></div>
+        <div class="weekHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Existing Weeks</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-striped border table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Week ID</th>
-                            <th scope="col">Week Date</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">Week Date (YYYY-MM-DD)</th>
+                            <th scope="col" style="width: 200px;">Action</th>
                         </tr>
                     </thead>
                     <tbody class="week-body"></tbody>
@@ -547,17 +539,11 @@
             </div>
         </div>
     </div>
-    
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="../public/js/jquery.js" ></script>
-    
+    <!-- <script src="../public/js/jquery.js" ></script> -->
     <script src="../public/js/bootstrap.min.js"></script>
-    <script src="../public//js/clock.js"></script>
-    
-    
+    <script src="../public/js/clock.js"></script>
     <script src="../public/js/admin.js"></script>
 </body>
 </html>
-
- <!-- ADMIN PANEL-->

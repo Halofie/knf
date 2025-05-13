@@ -2,7 +2,6 @@
 require('header.php');
 
 try {
-
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     if ($conn->connect_error) {
@@ -35,12 +34,10 @@ try {
         throw new Exception("No week data found.");
     }
     // Retrieve weekID from the reques
-
     $conn->close();
 } catch (Exception $e) {
     $response["error"] = $e->getMessage();
 }
-
 header('Content-Type: application/json');
 echo json_encode($response);
 ?>

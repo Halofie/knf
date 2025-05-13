@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 require('header.php');
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -8,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // SQL query to fetch units of measure
-$sql = "SELECT weekID, weekdate FROM week";
+$sql = "SELECT weekID, weekdate FROM week WHERE rec_status = 1 ORDER BY weekID DESC";
 $result = $conn->query($sql);
 
 $units = array();
@@ -25,6 +26,5 @@ if ($result->num_rows > 0) {
 $conn->close();
 
 // Send JSON response
-header('Content-Type: application/json');
 echo json_encode($units);
 ?>

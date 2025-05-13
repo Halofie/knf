@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -10,7 +9,6 @@
 
     <!-- Bootstrap CSS -->
     <link href="../public/css/bootstrap.min.css" rel="stylesheet" >
-
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../public/css/addinv.css">
@@ -31,6 +29,7 @@
             </div>
             <div>
                 <a class="btn" href="../home.html">HOME</a>
+                <a class="btn" href="../knft/logout.php">LOGOUT</a>
             </div>
         </div>
     </div>
@@ -55,43 +54,30 @@
             <div class="m-0 d-block color-paleGreen justify-content-end" id="date">date</div>
         </div>
     </div>
+
     <div class="m-2 text-center">
         <h2 class="text-center pt-4">ADD PRODUCT TO INVENTORY</h3>
-        
         <section class="d-flex justify-content-center">
-        <div class="addzone">
-            <form>
-                <div class="addbox w-auto m-3 d-flex col-6 p-0 container justify-content-between White ">
-                    <div class="col text-center">
-                        <table class="table m-1 border">
-                            <tbody>
-                                <tr>
-                                    <th scope="row">PRODUCT:</th>
-                                    <td>
-                                        <select class="form-select itmProduct" name="itmProduct" id="itmProduct" aria-label="Floating label select example">
-                                            <!-- Add your product options here 
-                                            <option value="001">gram</option>
-                                            <option value="002">kattu</option>
-                                            <option value="003">kg</option>
-                                            <option value="004">nos</option> -->
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">QUANTITY</th>
-                                    <td>
-                                        <input type="number" class="form-control" name="itmQuantity" id="itmQuantity" width="100" required>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="col-2 m-2 text-center">
-                        <button type="button" class="ADDPRODUCT col mt-2 btn btn-success">ADD</button>
+            <div class="addzone">
+                <div class="addbox bg-white p-3 m-3 rounded shadow-sm">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md">
+                            <label for="itmProduct" class="form-label">Product:</label>
+                            <select class="form-select itmProduct" name="itmProduct" id="itmProduct" aria-label="Select Product">
+                                <option value="">Select products...</option>
+                            </select>
+                        </div>
+                        <div class="col-md">
+                            <label for="itmQuantity" class="form-label">Quantity:</label>
+                            <input type="number" class="form-control" name="itmQuantity" id="itmQuantity" required min="1">
+                        </div>
+                        <div class="col-md-auto">
+                            <button type="button" class="ADDPRODUCT btn btn-success" aria-label="Add selected product to temporary list">ADD</button>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
+                <div id="add-item-result" class="mt-3 alert" style="display: none;"></div>
+            </div>
         </section>
     </div>
 
@@ -137,6 +123,7 @@
     <div class="submit mt-3 text-center">
         <button type="button" class="col btn my-1 mx-5 submission btn-success">SUBMIT SELECTION</button>
     </div>
+    <div id="submission-result" class="m-3 alert" style="display: none;"></div>
     
     <h1 class="text-center pt-4">Current Inventory</h1>
     <div id="currentinventory-result" class="m-3"></div>
@@ -157,7 +144,6 @@
         </div>
     </div>
 
-
     <div class="d-flex justify-content-center">
         <div class="col-6">
             <form class="form-control White" id="weekForm">
@@ -170,24 +156,6 @@
         </div>
     </div>
 
-    <!-- Week Dropdown
-    <div class="d-flex justify-content-center">
-        <div class="col-6">
-            <form class="form-control White" id="weekForm">
-
-                <label scope="row" for="floatingSelect">Select Week</label>
-                <select class="form-select weekid" name="weekid" id="floatingSelect" required>
-                  .
-                  .
-                  .
-                </select>
-
-                <input type="submit" class="btn-success m-3 submit-week btn" value="Load Inventory">
-            </form>
-        </div>
-    </div>
-     -->
-    <!-- Inventory Table -->
     <div id="inventory-result" class="m-3"></div>
     <div class="inventoryHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
         <div class="d-flex justify-content-center container align-center">
@@ -205,16 +173,12 @@
             </table>
         </div>
     </div>
-    
-    
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="../public/js/jquery.js" ></script>
-    
     <script src="../public/js/bootstrap.min.js" ></script>
-
     <script src="../public/js/addinv.js"></script>
+    <script src="../public/js/clock.js"></script>  
 </body>
 </html>
 

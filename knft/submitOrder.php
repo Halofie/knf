@@ -14,20 +14,20 @@ $data = json_decode($json, true);
 // Extract data from the decoded JSON
 $week_id = $data['week_id'];
 $customer_id = $data['customer_id'];
-$product_id = $data['product_id'];
-$quantity = $data['quantity'];
 $routeId = $data['routeId'];
-$date_time = $data['date_time'];
-$rate = $data ['price'];
-$tc = $data ['total'];
+// $date_time = $data['date_time'];
+foreach ($data["items"] as $product) {
+    $product_id = $product['product_id'];
+    $quantity = $product['quantity'];
+    $rate = $product ['price'];
+    $tc = $product ['total'];
+    $sql = "INSERT INTO final_order (week_id, customer_id, product_id, quantity, route_id, date_time, rate, total_cost) VALUES ('$week_id', '$customer_id', '$product_id', '$quantity', '$routeId', NOW(),'$rate' ,'$tc')";
 
-$sql = "INSERT INTO final_order (week_id, customer_id, product_id, quantity, route_id, date_time, rate, total_cost) VALUES ('$week_id', '$customer_id', '$product_id', '$quantity', '$routeId', '$date_time','$rate' ,'$tc')";
-
-if ($conn->query($sql) === TRUE) {
-    echo "Data inserted successfully";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    if ($conn->query($sql) === TRUE) {
+        echo "Data inserted successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
-
 $conn->close();
 ?>

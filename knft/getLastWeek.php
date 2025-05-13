@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json');
 require('header.php');
 
 // Create connection
@@ -24,8 +25,6 @@ if ($result->num_rows > 0) {
 }
 // Close connection
 $conn->close();
-
 // Send JSON response
-header('Content-Type: application/json');
 echo json_encode($units);
 ?>

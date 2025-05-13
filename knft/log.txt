@@ -1,5 +1,0 @@
-Received: UoMID=g, UoM=gram
-Query executed successfully: UPDATE uom SET UoM='gram' WHERE UoMID=g
-Received: UoMID=g, UoM=Gram
-Received: UoMID=kg, UoM=Kilogram
-Received: UoMID=kattu, UoM=Kattu

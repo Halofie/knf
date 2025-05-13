@@ -23,8 +23,8 @@ try {
     }
 
     // Step 2: Insert data into temp_inventory
-    $sql = "INSERT INTO temp_inventory (weekID, product_id, price, quantity, datetime)
-            SELECT weekID, product_id, price, SUM(quantity) as quantity, datetime
+    $sql = "INSERT INTO temp_inventory (weekID, product_id, price, quantity, temp_inv_datetime)
+            SELECT weekID, product_id, price, SUM(quantity) as quantity, inv_datetime
             FROM inventory
             WHERE weekID = ?
             GROUP BY product_id, category_id, price";

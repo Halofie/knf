@@ -7,7 +7,42 @@ body {
     align-items: center;
     flex-direction: column;
     height: 100vh;
-    margin: 0;
+    padding-top: 80px;
+    padding-bottom: 20px;
+}
+.registration-header {
+    background-color: #3a5c3a; /* darkGreen */
+    color: white;
+    padding: 15px 0;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1030;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.registration-header .logo img {
+    height: 40px; margin-right: 10px; border-radius: 50%;
+}
+.registration-header .logo {
+     font-size: 1.5rem; font-weight: bold;
+}
+.registration-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+}
+.registration-container h2 {
+    color: #2e7d32; margin-bottom: 1.5rem; text-align: center;
+}
+.btn-register {
+    background-color: #4CAF50; border-color: #4CAF50; color: white;
+}
+.btn-register:hover {
+    background-color: #45a049; border-color: #45a049;
 }
 
 /* Centered Container for Title and Form */

@@ -12,17 +12,24 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
 
     $customerName = $data['customerName'];
-    $contact = $data['contact'];
+    $plainPassword = $data['password'];
+    // $contact = $data['contact'];
     $emailID = $data['emailID'];
-    $category = "C"; 
+    $category = "C";
+
+    // Hash the password
+    $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
+    if ($hashedPassword === false) {
+        throw new Exception("Password hashing failed.");
+    }
     
     // Prepare and bind
     $stmt = $conn->prepare("INSERT INTO accounts (username, password, email, category) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $customerName, $contact, $emailID, $category);
+    $stmt->bind_param("ssss", $customerName, $hashedPassword, $emailID, $category);
 
     // Execute the query
     if ($stmt->execute()) {
-        echo "New record created successfully";
+        echo "New customer account created successfully";
     } else {
         echo "Error: " . $stmt->error;
     }

@@ -21,8 +21,7 @@ try {
 
         // SQL query to fetch the inventory for the given week and farmer
         $sql = "
-            SELECT i.product_name, c.category_name, i.price, i.quantity, i.datetime
-            FROM inventory i
+            SELECT i.product_name, c.category_name, i.price, i.quantity, i.inv_datetime FROM inventory i
             JOIN categories c ON i.category_id = c.category_id
             WHERE i.weekId = ? AND i.Farmer_id = ?
         ";

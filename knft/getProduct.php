@@ -1,17 +1,21 @@
 <?php
+header('Content-Type: application/json');
 require('header.php');
 
-try {
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    // Check connection
-    if ($conn->connect_error) {
-        throw new Exception("Connection failed: " . $conn->connect_error);
-    }
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
+try {
     // SQL query to fetch products
-    $sql = "SELECT * FROM product";
+    $sql = "SELECT * FROM product WHERE rec_status = 1";
     $result = $conn->query($sql);
+    if ($result === false) {
+        throw new Exception("Query failed: " . $conn->error);
+    }
 
     $inventory = array();
     if ($result->num_rows > 0) {
@@ -20,17 +24,17 @@ try {
             $inventory[] = $row;
         }
         $response["data"] = $inventory;
+        $response["status"] = "success";
     } else {
         echo json_encode(array("message" => "No records found"));
         exit();
-        $response["message"] = "No records found";
+        $response["message"] = "No active products found";
     }
-    // Close connection
-    $conn->close();
 } catch (Exception $e) {
     $response["error"] = $e->getMessage();
 }
+// Close connection
+$conn->close();
 // Send JSON response
-header('Content-Type: application/json');
 echo json_encode($response);
 ?>

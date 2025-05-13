@@ -1,8 +1,9 @@
 <?php
+header('Content-Type: application/json');
 require('header.php');
 
 $input = json_decode(file_get_contents('php://input'), true);
-$email = $input['email'];
+$email = $input['email'] ?? null;
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -23,10 +24,9 @@ if ($result->num_rows > 0) {
     $details = $result->fetch_assoc();
     echo json_encode(['details' => $details]);
 } else {
-    echo json_encode(['details' => 'No user found with this email.']);
+    echo json_encode(['details' => 'No supplier found with this email.']);
 }
 // Close connection
 $stmt->close();
 $conn->close();
-header('Content-Type: application/json');
 ?>

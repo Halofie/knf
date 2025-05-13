@@ -37,6 +37,12 @@
     width: 100px;
     height:100px;
   }
+  .topbar{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
   .lightGreen{
     background-color: #4c7a4c;
   }

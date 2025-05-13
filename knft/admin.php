@@ -10,7 +10,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 // Redirect to admin dashboard if email exists in session
 if (isset($_SESSION['email'])) {
-    header("Location: ../admin/admin");
+    header("Location: ../admin/admin.html");
     exit();
 } else {
     echo "Access denied. No email provided.";

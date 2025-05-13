@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // SQL query to fetch units of measure
-$sql = "SELECT id, route, deliveryType, rate FROM routes";
+$sql = "SELECT id, route, deliveryType, rate FROM routes WHERE rec_status = 1";
 $result = $conn->query($sql);
 
 $units = array();
