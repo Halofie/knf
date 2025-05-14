@@ -826,10 +826,12 @@ function populateCategoryDropdownForProductForm(categories) {
     select.innerHTML = '<option value="">-- Select Category --</option>'; // Clear and add default
     if (categories && categories.length > 0) {
         categories.forEach(cat => {
-            const option = document.createElement('option');
-            option.value = cat.categoryType; // Use categoryType (PK) as value
-            option.textContent = `${cat.categoryDesc} (${cat.categoryType})`; // Use categoryDesc as text
-            select.appendChild(option);
+            if(cat.rec_status ==1){
+                const option = document.createElement('option');
+                option.value = cat.categoryType; // Use categoryType (PK) as value
+                option.textContent = `${cat.categoryDesc} (${cat.categoryType})`; // Use categoryDesc as text
+                select.appendChild(option);
+            }
         });
     }
 }
@@ -839,10 +841,12 @@ function populateUomDropdownForProductForm(uoms) {
     select.innerHTML = '<option value="">-- Select UoM --</option>';
     if (uoms && uoms.length > 0) {
         uoms.forEach(uom => {
-            const option = document.createElement('option');
-            option.value = uom.UoMID; // Use UoMID (PK) as value
-            option.textContent = `${uom.UoM} (${uom.UoMID})`;
-            select.appendChild(option);
+            if(uom.rec_status == 1){
+                const option = document.createElement('option');
+                option.value = uom.UoMID; // Use UoMID (PK) as value
+                option.textContent = `${uom.UoM} (${uom.UoMID})`;
+                select.appendChild(option);
+            }
         });
     }
 }
@@ -889,8 +893,8 @@ function displayUomTable(uoms) {
                 <th scope="row">${uom.UoMID || ''}</th>
                 <td>${uom.UoM || ''}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning edit-uom-btn" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/edit.svg" alt="Edit"></button>
-                    <button class="btn btn-sm btn-danger delete-uom-btn" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/delete.svg" alt="Delete"></button>
+                    <button class="btn btn-sm btn-danger edit-uom-btn" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/edit.svg" alt="Edit"></button>
+                    <button class="btn btn-sm ${uom.rec_status ? "btn-success": "btn-danger"} delete-uom-btn" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/delete.svg" alt="Delete"></button>
                 </td>
             </tr>`;
     });
@@ -991,7 +995,7 @@ function displayCategoryTable(categories) {
                 <td>${cat.categoryDesc}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-category-btn" data-id="${cat.categoryType}" data-desc="${cat.categoryDesc}"><img src="../public/Assets/edit.svg"></button>
-                    <button class="btn btn-sm btn-danger delete-category-btn" data-id="${cat.categoryType}" data-name="${cat.categoryDesc}"><img src="../public/Assets/delete.svg"></button>
+                    <button class="btn btn-sm ${cat.rec_status ? "btn-success":"btn-danger"} delete-category-btn" data-id="${cat.categoryType}" data-name="${cat.categoryDesc}"><img src="../public/Assets/delete.svg"></button>
                 </td>
             </tr>`;
     });
@@ -1059,7 +1063,7 @@ function displayProductTable(products) {
                 <td>${price}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-product-btn" data-id="${prod.prod_id}" data-name="${prod.product||''}" data-categoryid="${prod.category_id||''}" data-uomid="${prod.UoM_id||''}" data-price="${prod.price||''}"><img src="../public/Assets/edit.svg"></button>
-                    <button class="btn btn-sm btn-danger delete-product-btn" data-id="${prod.prod_id}" data-name="${prod.product}"><img src="../public/Assets/delete.svg"></button>
+                    <button class="btn btn-sm ${prod.rec_status ? "btn-success": "btn-danger"} delete-product-btn" data-id="${prod.prod_id}" data-name="${prod.product}"><img src="../public/Assets/delete.svg"></button>
                 </td>
             </tr>`;
     });
@@ -1141,7 +1145,7 @@ function displayRouteTable(routes) {
                 <td>${rate}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-route-btn" data-id="${route.id}" data-route="${route.route||''}" data-type="${route.deliveryType||''}" data-rate="${route.rate||''}"><img src="../public/Assets/edit.svg"></button>
-                    <button class="btn btn-sm btn-danger delete-route-btn" data-id="${route.id}" data-name="${route.route}"><img src="../public/Assets/delete.svg"></button>
+                    <button class="btn btn-sm ${route.rec_status ? "btn-success": "btn-danger"} delete-route-btn" data-id="${route.id}" data-name="${route.route}"><img src="../public/Assets/delete.svg"></button>
                 </td>
             </tr>`;
     });
@@ -1213,7 +1217,7 @@ function displayCustomerTable(customers) {
                 <td>${cust.emailId || ''}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-customer-btn" data-email="${cust.emailId}"><img src="../public/Assets/edit.svg"></button>
-                    <button class="btn btn-sm btn-danger delete-customer-btn" data-email="${cust.emailId}" data-name="${cust.customerName}"><img src="../public/Assets/delete.svg"></button>
+                    <button class="btn btn-sm ${cust.rec_status ? "btn-success": "btn-danger"} delete-customer-btn" data-email="${cust.emailId}" data-name="${cust.customerName}"><img src="../public/Assets/delete.svg"></button>
                 </td>
             </tr>`;
      });
@@ -1305,7 +1309,7 @@ function displaySupplierTable(suppliers) {
                 <td>${sup.emailID || ''}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-supplier-btn" data-email="${sup.emailID}"><img src="../public/Assets/edit.svg"></button>
-                    <button class="btn btn-sm btn-danger delete-supplier-btn" data-email="${sup.emailID}" data-name="${sup.supplierName}"><img src="../public/Assets/delete.svg"></button>
+                    <button class="btn btn-sm ${sup.rec_status ? "btn-success": "btn-danger"} delete-supplier-btn" data-email="${sup.emailID}" data-name="${sup.supplierName}"><img src="../public/Assets/delete.svg"></button>
                 </td>
             </tr>`;
      });

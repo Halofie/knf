@@ -1,7 +1,6 @@
 <?php
 require('header.php');
 
-session_start();
 
 // Connect to MySQL database
 $con = mysqli_connect($servername, $username, $password, $dbname);
@@ -27,18 +26,18 @@ if (!filter_var($submitted_username, FILTER_VALIDATE_EMAIL)) {
 $sanitized_email = filter_var($submitted_username, FILTER_SANITIZE_EMAIL);
 
 // Prepare SQL statement to prevent SQL injection 
-if ($stmt = $con->prepare('SELECT id, password, category FROM accounts WHERE email = ? AND rec_status = 1')) {
+if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accounts WHERE email = ?')) {
     $stmt->bind_param('s', $sanitized_email);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($acc_id, $hashed_password, $category);
+        $stmt->bind_result($acc_id, $hashed_password, $category, $rec_status);
         $stmt->fetch();
         $stmt->close();
 
         // Verify password using password_verify()
-        if (password_verify($submitted_password, $hashed_password)){
+        if (password_verify($submitted_password, $hashed_password) && $rec_status == '1') {  //Fixed the condition to check rec_status
             // Successful login - create session variables
             session_regenerate_id(true);
             $_SESSION['loggedin'] = TRUE;
