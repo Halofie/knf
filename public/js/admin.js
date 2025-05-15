@@ -856,10 +856,12 @@ function populateRouteDropdownForCustomerForm(routes) {
     select.innerHTML = '<option value="">-- Select Route --</option>';
     if (routes && routes.length > 0) {
         routes.forEach(route => {
-            const option = document.createElement('option');
-            option.value = route.id; // Use id (PK) as value
-            option.textContent = route.route; // Use route name as text
-            select.appendChild(option);
+            if(route.rec_status == 1){
+                const option = document.createElement('option');
+                option.value = route.id; // Use id (PK) as value
+                option.textContent = route.route; // Use route name as text
+                select.appendChild(option);
+            }
         });
     }
 }
@@ -893,8 +895,8 @@ function displayUomTable(uoms) {
                 <th scope="row">${uom.UoMID || ''}</th>
                 <td>${uom.UoM || ''}</td>
                 <td>
-                    <button class="btn btn-sm btn-danger edit-uom-btn" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/edit.png" alt="Edit" class="icon-sm"></button>
-                    <button class="btn btn-sm ${uom.rec_status ? "btn-success": "btn-danger"} delete-uom-btn" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/delete.png" alt="Delete" class="icon-sm"></button>
+                    <button class="btn btn-sm btn-danger edit-uom-btn" id="${uom.id}" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/edit.png" alt="Edit" class="icon-sm"></button>
+                    <button class="btn btn-sm ${uom.rec_status ? "btn-success": "btn-danger"} id="${uom.id}" delete-uom-btn" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/delete.png" alt="Delete" class="icon-sm"></button>
                 </td>
             </tr>`;
     });
@@ -987,6 +989,7 @@ function getCategoryData() {
 }
 function displayCategoryTable(categories) {
     const tbody = document.querySelector(".category-body"); if(!tbody) return; tbody.innerHTML = "";
+    console.log(categories);
     if (!categories || categories.length === 0) { /*...*/ return; }
     categories.forEach(cat => {
         tbody.innerHTML += `
@@ -994,8 +997,8 @@ function displayCategoryTable(categories) {
                 <th scope="row">${cat.categoryType}</th>
                 <td>${cat.categoryDesc}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning edit-category-btn" data-id="${cat.categoryType}" data-desc="${cat.categoryDesc}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
-                    <button class="btn btn-sm ${cat.rec_status ? "btn-success":"btn-danger"} delete-category-btn" data-id="${cat.categoryType}" data-name="${cat.categoryDesc}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
+                    <button class="btn btn-sm btn-warning edit-category-btn" id="${cat.categoryID}" data-id="${cat.categoryType}" data-desc="${cat.categoryDesc}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
+                    <button class="btn btn-sm ${(cat.rec_status ==1) ? "btn-success":"btn-danger"} delete-category-btn" id="${cat.categoryID}" data-id="${cat.categoryType}" data-name="${cat.categoryDesc}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
                 </td>
             </tr>`;
     });
@@ -1030,13 +1033,13 @@ function handleEditCategory(e) {
 }
 function handleDeleteCategory(e) {
     const button = e.target.closest('.delete-category-btn');
-    const id = button.dataset.id; const name = button.dataset.name;
+    const id = button.id; const name = button.dataset.name;
     if (confirm(`Delete Category: ${name} (${id})?\n(Check products)`)) {
         displayMessage('#result-category', 'Deleting...', true);
         fetch('../knft/deleteCategory.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ categoryType: id }) }) // New endpoint needed
             .then(response => { if (!response.ok) throw response; return response.json(); })
             .then(data => { displayMessage('#result-category', data.message, data.success); if(data.success) getCategoryData(); })
-            .catch(errorResponse => handleFetchError(errorResponse, '#result-category'));
+            //.catch(errorResponse => handleFetchError(errorResponse, '#result-category'));
     }
 }
 
@@ -1062,8 +1065,8 @@ function displayProductTable(products) {
                 <td>${prod.UoM_id || ''}</td>
                 <td>${price}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning edit-product-btn" data-id="${prod.prod_id}" data-name="${prod.product||''}" data-categoryid="${prod.category_id||''}" data-uomid="${prod.UoM_id||''}" data-price="${prod.price||''}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
-                    <button class="btn btn-sm ${prod.rec_status ? "btn-success": "btn-danger"} delete-product-btn" data-id="${prod.prod_id}" data-name="${prod.product}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
+                    <button class="btn btn-sm btn-warning edit-product-btn" id="${prod.prod_id}" data-id="${prod.prod_id}" data-name="${prod.product||''}" data-categoryid="${prod.category_id||''}" data-uomid="${prod.UoM_id||''}" data-price="${prod.price||''}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
+                    <button class="btn btn-sm ${prod.rec_status ? "btn-success": "btn-danger"}  delete-product-btn" id="${prod.prod_id}" data-id="${prod.prod_id}" data-name="${prod.product}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
                 </td>
             </tr>`;
     });
