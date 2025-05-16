@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // SQL query to fetch category
-$sql = "SELECT categoryType, categoryDesc FROM category WHERE rec_status = 1";
+$sql = "SELECT categoryID, categoryType, categoryDesc, rec_status FROM category";
 $result = $conn->query($sql);
 
 $units = array();

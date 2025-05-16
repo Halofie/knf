@@ -7,7 +7,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 // SQL query to fetch units of measure
-$sql = "SELECT UoMID, UoM FROM uom WHERE rec_status = 1";
+$sql = "SELECT id,UoMID, UoM FROM uom";
 $result = $conn->query($sql);
 
 $units = array();

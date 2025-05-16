@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 
 try {
     // SQL query to fetch products
-    $sql = "SELECT * FROM product WHERE rec_status = 1";
+    $sql = "SELECT * FROM product ";
     $result = $conn->query($sql);
     if ($result === false) {
         throw new Exception("Query failed: " . $conn->error);

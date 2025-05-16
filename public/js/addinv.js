@@ -299,7 +299,9 @@ async function initialize() {
         const productSelect  = document.querySelector(".itmProduct");
         productSelect .innerHTML = '<option value="">Select Product</option>';
         globalProductMasterData.data.forEach(p => {
-            productSelect.innerHTML += `<option value="${p.prod_id}">${p.product}</option>`;
+            if(p.rec_status==1){
+                productSelect.innerHTML += `<option value="${p.prod_id}">${p.product}</option>`;
+            }
         });
     } else {
         document.querySelector(".itmProduct").innerHTML = '<option value="">Error loading products</option>';
