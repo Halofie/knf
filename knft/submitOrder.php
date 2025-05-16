@@ -10,7 +10,6 @@ if ($conn->connect_error) {
 // Get the raw POST data
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
-
 // Extract data from the decoded JSON
 $week_id = $data['week_id'];
 $customer_id = $data['customer_id'];
