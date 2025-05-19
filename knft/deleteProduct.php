@@ -19,7 +19,7 @@ if (isset($data['prod_id'])) {
     $productsID = (int)$data['prod_id'];
 
     // 1) Fetch current rec_status
-    $sql = "SELECT rec_status FROM products WHERE prod_id = ?";
+    $sql = "SELECT rec_status FROM product WHERE prod_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $productsID);
     $stmt->execute();
@@ -32,7 +32,7 @@ if (isset($data['prod_id'])) {
 
         // 3) Update
         $update = $conn->prepare(
-            "UPDATE products SET rec_status = ? WHERE prod_id = ?"
+            "UPDATE product SET rec_status = ? WHERE prod_id = ?"
         );
         $update->bind_param("ii", $newStatus, $productsID);
         if ($update->execute()) {

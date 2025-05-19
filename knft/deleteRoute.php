@@ -57,7 +57,7 @@ if (isset($data['id'])) {
 } else {
     echo json_encode([
         "success" => false,
-        "message" => "Missing 'prod_id' in request"
+        "message" => "Missing 'id' in request"
     ]);
 }
 

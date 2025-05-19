@@ -896,7 +896,7 @@ function displayUomTable(uoms) {
                 <td>${uom.UoM || ''}</td>
                 <td>
                     <button class="btn btn-sm btn-danger edit-uom-btn" id="${uom.id}" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/edit.png" alt="Edit" class="icon-sm"></button>
-                    <button class="btn btn-sm ${uom.rec_status ? "btn-success": "btn-danger"} id="${uom.id}" delete-uom-btn" data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/delete.png" alt="Delete" class="icon-sm"></button>
+                    <button class="btn btn-sm ${(uom.rec_status == 1) ? "btn-success": "btn-danger"} delete-uom-btn" id="${uom.id}"  data-id="${uom.UoMID}" data-name="${uom.UoM}"><img src="../public/Assets/delete.png" alt="Delete" class="icon-sm"></button>
                 </td>
             </tr>`;
     });
@@ -962,14 +962,14 @@ function handleEditUom(e) {
 }
 function handleDeleteUom(e) {
     const button = e.target.closest('.delete-uom-btn');
-    const id = button.dataset.id;
+    const id = button.id;
     const name = button.dataset.name;
     if (confirm(`Delete UoM: ${name} (${id})?\n(Action might fail if UoM is in use)`)) {
         displayMessage('#result-uom', 'Deleting...', true);
         fetch('../knft/deleteUoM.php', { // New endpoint needed
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ UoMID: id }) // Send PK
+              body: JSON.stringify({ id: id }) // Send PK
           })
           .then(response => { if (!response.ok) throw response; return response.json(); })
           .then(data => {
@@ -989,7 +989,6 @@ function getCategoryData() {
 }
 function displayCategoryTable(categories) {
     const tbody = document.querySelector(".category-body"); if(!tbody) return; tbody.innerHTML = "";
-    console.log(categories);
     if (!categories || categories.length === 0) { /*...*/ return; }
     categories.forEach(cat => {
         tbody.innerHTML += `
@@ -1066,7 +1065,7 @@ function displayProductTable(products) {
                 <td>${price}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-product-btn" id="${prod.prod_id}" data-id="${prod.prod_id}" data-name="${prod.product||''}" data-categoryid="${prod.category_id||''}" data-uomid="${prod.UoM_id||''}" data-price="${prod.price||''}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
-                    <button class="btn btn-sm ${prod.rec_status ? "btn-success": "btn-danger"}  delete-product-btn" id="${prod.prod_id}" data-id="${prod.prod_id}" data-name="${prod.product}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
+                    <button class="btn btn-sm ${(prod.rec_status == 1) ? "btn-success": "btn-danger"}  delete-product-btn" id="${prod.prod_id}" data-id="${prod.prod_id}" data-name="${prod.product}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
                 </td>
             </tr>`;
     });
@@ -1119,7 +1118,7 @@ function handleEditProduct(e) {
 }
 function handleDeleteProduct(e) {
     const button = e.target.closest('.delete-product-btn');
-    const id = button.dataset.id; const name = button.dataset.name;
+    const id = button.id; const name = button.dataset.name;
     if (confirm(`Delete Product: ${name} (${id})?\n(Check inventory/orders)`)) {
         displayMessage('#result-product', 'Deleting...', true);
         fetch('../knft/deleteProduct.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({prod_id: id}) }) // New endpoint needed
@@ -1148,7 +1147,7 @@ function displayRouteTable(routes) {
                 <td>${rate}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-route-btn" data-id="${route.id}" data-route="${route.route||''}" data-type="${route.deliveryType||''}" data-rate="${route.rate||''}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
-                    <button class="btn btn-sm ${route.rec_status ? "btn-success": "btn-danger"} delete-route-btn" data-id="${route.id}" data-name="${route.route}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
+                    <button class="btn btn-sm ${(route.rec_status==1) ? "btn-success": "btn-danger"} delete-route-btn" data-id="${route.id}" data-name="${route.route}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
                 </td>
             </tr>`;
     });
@@ -1192,7 +1191,7 @@ function handleDeleteRoute(e) {
      const id = button.dataset.id; const name = button.dataset.name;
      if (confirm(`Delete Route: ${name} (${id})?\n(Check customers)`)) {
          displayMessage('#result-route', 'Deleting...', true);
-         fetch('../knft/deleteRoute.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({route_id: id}) }) // New endpoint needed, send ID
+         fetch('../knft/deleteRoute.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id: id}) }) // New endpoint needed, send ID
               .then(response => { if (!response.ok) throw response; return response.json(); })
               .then(data => { displayMessage('#result-route', data.message, data.success); if(data.success) { getRouteData(); populateRouteDropdownForCustomerForm(); } })
               .catch(errorResponse => handleFetchError(errorResponse, '#result-route'));
@@ -1220,7 +1219,7 @@ function displayCustomerTable(customers) {
                 <td>${cust.emailId || ''}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-customer-btn" data-email="${cust.emailId}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
-                    <button class="btn btn-sm ${cust.rec_status ? "btn-success": "btn-danger"} delete-customer-btn" data-email="${cust.emailId}" data-name="${cust.customerName}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
+                    <button class="btn btn-sm ${(cust.rec_status==1) ? "btn-success": "btn-danger"} delete-customer-btn" id="${cust.emailId}" data-name="${cust.customerName}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
                 </td>
             </tr>`;
      });
@@ -1281,7 +1280,7 @@ function handleEditCustomer(e) {
 }
 function handleDeleteCustomer(e) {
      const button = e.target.closest('.delete-customer-btn');
-     const email = button.dataset.email; const name = button.dataset.name;
+     const email = button.id; const name = button.dataset.name;
      if (confirm(`Delete Customer: ${name} (${email})? \n(This will also delete their login account)`)) {
          displayMessage('#result-customer', 'Deleting...', true);
          fetch('../knft/deleteCustomer.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({emailID: email}) }) // New endpoint needed
@@ -1312,7 +1311,7 @@ function displaySupplierTable(suppliers) {
                 <td>${sup.emailID || ''}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-supplier-btn" data-email="${sup.emailID}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
-                    <button class="btn btn-sm ${sup.rec_status ? "btn-success": "btn-danger"} delete-supplier-btn" data-email="${sup.emailID}" data-name="${sup.supplierName}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
+                    <button class="btn btn-sm ${(sup.rec_status==1) ? "btn-success": "btn-danger"} delete-supplier-btn" id="${sup.emailID}" data-name="${sup.supplierName}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
                 </td>
             </tr>`;
      });
@@ -1357,10 +1356,10 @@ function handleEditSupplier(e) {
 }
 function handleDeleteSupplier(e) {
     const button = e.target.closest('.delete-supplier-btn');
-    const email = button.dataset.email; const name = button.dataset.name;
+    const email = button.id; const name = button.dataset.name;
      if (confirm(`Delete Supplier: ${name} (${email})?\n(Also deletes login account)`)) {
          displayMessage('#result-supplier', 'Deleting...', true);
-         fetch('../knft/deleteSupplier.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({emailID: email}) }) // New endpoint needed
+         fetch('../knft/deleteSupplier.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id: email}) }) // New endpoint needed
              .then(response => { if (!response.ok) throw response; return response.json(); })
              .then(data => { displayMessage('#result-supplier', data.message, data.success); if(data.success) getSupplierData(); })
              .catch(errorResponse => handleFetchError(errorResponse, '#result-supplier'));
