@@ -130,7 +130,7 @@ function renderMenu() {
                 <td><p class="price" id="p${productId}">Rs.${productPrice}/unit</p><p>Available: ${availableQuantity}</p></td>
                 <td><input type="number" id="q${productId}" value="${purchasedQuantity}"></td>
                 <td>
-                    <button class="btn btn-success btn-sm purchaseButton" id="${productId}" ${(availableQuantity) ? "" : "disabled"}>+ Purchase</button>
+                    <button class="btn btn-success btn-sm purchaseButton" id="${productId <= 0}" ${(availableQuantity) ? "" : "disabled"}>+ Purchase</button>
                 </td>
             </tr>`;
     });
@@ -316,7 +316,7 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
             renderCart();
             // Re-render the menu to reflect updated quantities
         }
-        renderMenu(); 
+        loadMenu(); 
     } catch (error) {
         console.error('Error placing order:', error);
         alert('An error occurred while placing your order. Please try again.');
