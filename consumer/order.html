@@ -111,6 +111,27 @@
           </table>
       </div>
   </div>
+  
+  <div class="container my-4">
+    <div class="row align-items-center">
+      <div class="col-md-6 mb-2 mb-md-0">
+        <label for="deliveryRoute" class="form-label fw-bold">Select Delivery Route:</label>
+        <select class="form-select" id="deliveryRoute">
+          <option selected disabled>Choose route...</option>
+          <option value="route1">Route 1</option>
+          <option value="route2">Route 2</option>
+          <option value="route3">Route 3</option>
+          <!-- Add more routes as needed -->
+        </select>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <div class="fw-bold fs-5">
+          Total Cost: <span id="totalCost">₹0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="text-center m-3">
       <button class="btn btn-primary btn-lg" id="placeOrderButton">Place Your Order</button>
   </div>
