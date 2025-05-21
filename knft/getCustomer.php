@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // SQL query to fetch customer
-$sql = "SELECT customerID, customerName, routeID, contact, alternativeContact, address, emailID FROM customers";
+$sql = "SELECT * FROM customers";
 $result = $conn->query($sql);
 
 $units = array();

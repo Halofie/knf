@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // SQL query to fetch supplier
-$sql = "SELECT supplierID, supplierName, farmLocation, contact, alternativeContact, farmSize, emailID FROM suppliers";
+$sql = "SELECT * FROM suppliers";
 $result = $conn->query($sql);
 
 $units = array();
