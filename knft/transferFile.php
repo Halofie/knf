@@ -68,15 +68,15 @@ $finalOrders = $result->fetch_all(MYSQLI_ASSOC);
 foreach ($finalOrders as $order) {
     $custId = $order['customer_id'];
     $prodId = $order['product_id'];
-    
+
     // Skip if product ID is missing in map
     if (!isset($productMap[$prodId])) continue;
-    
+
     // Initialize customer data if not already set
     if (!isset($customerOrders[$custId])) {
         $customerOrders[$custId] = [];
     }
-    
+
     // Map the order quantity
     $col = $productMap[$prodId];
     $customerOrders[$custId][$col] = (int)$order['total_quantity'];
@@ -85,6 +85,16 @@ foreach ($finalOrders as $order) {
 // Insert into finalorder Table
 foreach ($customers as $cust) {
     $custId = $cust['customerID'];
+
+    // Check if customer has any non-zero product order
+    $hasOrder = false;
+    foreach ($productMap as $col) {
+        if (!empty($customerOrders[$custId][$col]) && (int)$customerOrders[$custId][$col] > 0) {
+            $hasOrder = true;
+            break;
+        }
+    }
+    if (!$hasOrder) continue; // skip customer with no orders
 
     // Fetch Route for Customer
     $routeStmt = $conn->prepare("SELECT route FROM routes WHERE id = ?");
@@ -135,13 +145,13 @@ $rows = $result->fetch_all(MYSQLI_ASSOC);
 if (!empty($rows)) {
     // Get all columns
     $allColumns = array_keys($rows[0]);
-    
+
     // Find zero-only columns (except fixed columns)
     $fixedCols = ['id', 'Timestamp', 'Name', 'Contact_Number', 'Delivery_Pickup_Route'];
     $zeroColumns = [];
-    
+
     foreach ($allColumns as $col) {
-        if (in_array($col, $fixedCols)) continue; // never remove fixed columns
+        if (in_array($col, $fixedCols)) continue;
 
         $allZero = true;
         foreach ($rows as $row) {
@@ -161,9 +171,9 @@ if (!empty($rows)) {
             unset($row[$col]);
         }
     }
-    unset($row); // break reference
+    unset($row);
 
-    // Also remove zero-only columns from header
+    // Final headers
     $finalHeaders = array_diff($allColumns, $zeroColumns);
 } else {
     $finalHeaders = [];
@@ -176,10 +186,7 @@ header('Content-Disposition: attachment; filename="finalorder.csv"');
 $output = fopen('php://output', 'w');
 
 if (!empty($rows)) {
-    // Write headers
     fputcsv($output, $finalHeaders);
-
-    // Write rows with final headers order
     foreach ($rows as $row) {
         $line = [];
         foreach ($finalHeaders as $col) {
