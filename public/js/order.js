@@ -274,8 +274,12 @@ function renderCart() {
 
     if (Object.keys(purchasedItems).length === 0) {
         cartBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Your cart is empty</td></tr>`;
+        // Update total cost to zero if cart is empty
+        document.getElementById('totalCost').innerText = "₹0.00";
         return;
     }
+
+    let total = 0;
 
     Object.entries(purchasedItems).forEach(([productId, item]) => {
         const product = prodlist[productId - 1] || { product: "Unknown", category: "Unknown" }; // Match product
@@ -292,7 +296,13 @@ function renderCart() {
         `;
 
         cartBody.appendChild(row);
+
+        // Add to total
+        total += item.price * item.quantity;
     });
+
+    // Update the total cost display
+    document.getElementById('totalCost').innerText = `₹${total.toFixed(2)}`;
 
     attachDeleteEventListeners();
 }
