@@ -110,19 +110,44 @@ function renderMenu() {
         const productName = prodlist[productId - 1]?.product || "Unknown";
         const productPrice = product.price;
         const availableQuantity = product.quantity;
-        const purchasedQuantity = purchasedItems[productId] || 0;
+        const purchasedQuantity = purchasedItems[productId]?.quantity || 0;
         
         tbody.innerHTML += `
             <tr>
                 <th scope="row">${productName}</th>
-                <td><p class="price" id="p${productId}">Rs.${productPrice}/unit</p><p>Available: <b >${availableQuantity}</b></p></td>
-                <td><input type="number" id="q${productId}" value="${purchasedQuantity}"></td>
                 <td>
-                    <button class="btn btn-success btn-sm purchaseButton" id="${productId}" ${(availableQuantity <= 0) ? "disabled" : ""}>+ Purchase</button>
+                    <p class="price" id="p${productId}">Rs.${productPrice}/unit</p>
+                    <p>Available: <b id="ava${productId}">${availableQuantity}</b></p>
+                </td>
+                <td><input type="number" id="q${productId}" value="${purchasedQuantity}" min="0" max="${availableQuantity}"></td>
+                <td>
+                    <button class="btn btn-primary btn-sm addToCartButton" id="${productId}" ${(availableQuantity <= 0) ? "disabled" : ""}>Add to Cart</button>
                 </td>
             </tr>`;
     });
-    attachPurchaseEventListeners();
+    attachAddToCartEventListeners();
+}
+
+function attachAddToCartEventListeners() {
+    document.querySelectorAll('.addToCartButton').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const productId = e.currentTarget.id;
+            const quantityInput = document.querySelector(`#q${productId}`);
+            const quantity = parseInt(quantityInput.value, 10);
+            const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
+            const availableElem = document.querySelector(`#ava${productId}`);
+            const availableQuantity = availableElem ? parseInt(availableElem.innerText, 10) : 0;
+
+            if (quantity > 0 && quantity <= availableQuantity) {
+                // Only update the cart, do not update availability
+                purchasedItems[productId] = { quantity, price };
+                renderCart();
+            } else {
+                alert('Quantity must be greater than 0 and less than or equal to available.');
+                quantityInput.value = 0;
+            }
+        });
+    });
 }
 
 function deleteRow(week_id, customer_id, product_id) {
@@ -257,24 +282,24 @@ function attachPurchaseEventListeners() {
             const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
             const availableElem = document.querySelector(`#ava${productId}`);
             const availableQuantity = availableElem ? parseInt(availableElem.innerText, 10) : 0;
+            // ...existing code...
             if (quantity > 0 && quantity <= availableQuantity) {
                 // Add product to the cart
                 purchasedItems[productId] = { quantity, price };
 
                 // Update the cart UI
-                // Optionally, send data to the server
-                await sendPurchaseData(productId, quantity);
-                await insertData(productId, quantity, price);
                 renderCart();
             } else {
-                alert('Quantity cannot be less than 0 or greter than available');
+                alert('Quantity cannot be less than 0 or greater than available');
                 quantityInput.value = 0; // Reset to 0 if invalid
             }
+            // ...existing code...
         });
     });
 }
 
 // Attach event listener to "Place Your Order" button
+// ...existing code...
 document.getElementById('placeOrderButton').addEventListener('click', async () => {
     if (Object.keys(purchasedItems).length === 0) {
         alert('Your cart is empty. Please add items to the cart before placing an order.');
@@ -287,7 +312,6 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
             week_id: weekId,
             customer_id: cId,
             routeId: cRoute,
-            // date_time: currentDateTime,
             items: Object.entries(purchasedItems).map(([productId, item]) => ({
                 product_id: productId,
                 quantity: item.quantity,
@@ -303,29 +327,20 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
             body: JSON.stringify(orderData)
         });
 
-        const result = await response.text(); // Get the response as text
-        alert(result); // Show success or error message
+        const result = await response.text();
+        alert(result);
 
-        if (result.includes('Data inserted successfully')) {
-            // Update available quantities
-            Object.entries(purchasedItems).forEach(([productId, item]) => {
-                const product = prodData.find(p => p.product_id == productId);
-                if (product) {
-                    product.quantity -= item.quantity; // Reduce available quantity
-                }
-            });
+        // Always reload inventory and menu after placing order
+        purchasedItems = {};
+        renderCart();
+        await loadMenu(); // This will fetch latest temp_inventory and update the table
 
-            // Clear the cart after successful order placement
-            purchasedItems = {};
-            renderCart();
-            // Re-render the menu to reflect updated quantities
-        }
-        loadMenu(); 
     } catch (error) {
         console.error('Error placing order:', error);
         alert('An error occurred while placing your order. Please try again.');
     }
 });
+// ...existing code...
 
 // const now = new Date();
 // // const currentDateTime = now.toLocaleString();
