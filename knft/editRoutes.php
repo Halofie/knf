@@ -1,7 +1,6 @@
 <?php
 require('header.php');
 
-
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -13,10 +12,11 @@ if ($conn->connect_error) {
 header("Content-Type: application/json");
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (isset($data['oldRoute'], $data['newRoute'], $data['newDeliveryType'])) {
+if (isset($data['oldRoute'], $data['newRoute'], $data['newDeliveryType'], $data['newRate'])) {
     $oldRoute = $data['oldRoute'];
     $newRoute = $data['newRoute'];
     $newDeliveryType = $data['newDeliveryType'];
+    $newRate = $data['newRate'];
 
     // Check if the new route already exists
     $checkQuery = "SELECT * FROM routes WHERE route = ?";
@@ -30,10 +30,10 @@ if (isset($data['oldRoute'], $data['newRoute'], $data['newDeliveryType'])) {
         exit;
     }
 
-    // Update query
-    $query = "UPDATE routes SET route = ?, deliveryType = ? WHERE route = ?";
+    // Update query (now includes rate)
+    $query = "UPDATE routes SET route = ?, deliveryType = ?, rate = ? WHERE route = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("sss", $newRoute, $newDeliveryType, $oldRoute);
+    $stmt->bind_param("ssds", $newRoute, $newDeliveryType, $newRate, $oldRoute);
 
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "Route updated successfully!"]);
