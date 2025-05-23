@@ -30,9 +30,25 @@ async function runNextProgram(email) {
     await loadMenu();
 }
 
+async function fetchRoutes() {
+    try {
+        const response = await fetch('../knft/getRoutes.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (!response.ok) throw new Error('Failed to fetch routes');
+        const data = await response.json();
+        // If data is an array, return it directly; else, try data.routes or empty array
+        return Array.isArray(data) ? data : (data.routes || []);
+    } catch (error) {
+        console.error('Error fetching routes:', error);
+        return [];
+    }
+}
+
 async function main_load(email) {
     try {
-        const [customerResponse, weekResponse] = await Promise.all([
+        const [customerResponse, weekResponse, routes] = await Promise.all([
             fetch('../knft/getCustomer2.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -41,27 +57,52 @@ async function main_load(email) {
             fetch('../knft/getLastWeek.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' }
-            })
+            }),
+            fetchRoutes()
         ]);
-        
+
         const customerData = await customerResponse.json();
         const weekData = await weekResponse.json();
-        console.log(customerData);
         const details = customerData.details;
         if (details) {
             cId = details.customerID;
             custID = cId;
             cRoute = details.routeID;
+
+            // Populate dropdown
+            const routeDropdown = document.getElementById('deliveryRoute');
+            routeDropdown.innerHTML = '';
+            const defaultOption = document.createElement('option');
+            defaultOption.text = 'Choose route...';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            routeDropdown.appendChild(defaultOption);
+
+            routes.forEach(route => {
+                const option = document.createElement('option');
+                option.value = route.id;
+                option.text = `${route.id} - ${route.route}`;
+                if (route.id == cRoute) {
+                    option.selected = true;
+                    defaultOption.selected = false;
+                }
+                routeDropdown.appendChild(option);
+            });
+
+            routeDropdown.addEventListener('change', (e) => {
+                cRoute = e.target.value;
+            });
+
             document.querySelector("#name").innerText = details.customerName;
             document.querySelector("#phone").innerText = details.contact;
             document.querySelector("#address").innerText = details.address;
-            document.querySelector("#route").innerText = details.routeID+"-"+details.routeName;
+            document.querySelector("#route").innerText = details.routeID + "-" + details.routeName;
         }
         if (weekData[0]) {
             weekId = weekData[0].weekID;
             document.querySelector("#week").innerText = weekData[0].weekdate;
         }
-        // document.querySelector("#date").innerText = currentDateTime;
+        console.log('Fetched routes:', routes);
     } catch (error) {
         console.error('Error:', error);
     }
