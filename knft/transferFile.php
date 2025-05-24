@@ -2,11 +2,6 @@
 require('header.php');
 
 // Database Connection
-$host = '127.0.0.1';
-$dbname = 'knf';
-$user = 'root';
-$pass = '';
-
 $conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error) {
     die("❌ Connection failed: " . $conn->connect_error);
