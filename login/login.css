@@ -1,39 +1,280 @@
-.lightGreen{
+/* Original color classes - keeping exactly as they were */
+.lightGreen {
     background-color: #4c7a4c;
-  }
-  .darkGreen{
-    background-color: #3a5c3a;
-  }
-  .paleGreen{
-    background-color: #d9e7d9;
-  }
-  .Green{
-    background-color: #4caf50;
-  }
-  .White{
-    background-color: #f2f2f2;
-  }
-  .color-paleGreen{
-    color:#d9e7d9;
-  }
-  .profile{
-    border-radius: 100%;
-    border: 2px solid black;
+}
 
-  }
-  .topbar{
+.darkGreen {
+    background-color: #3a5c3a;
+}
+
+.paleGreen {
+    background-color: #d9e7d9;
+}
+
+.Green {
+    background-color: #4caf50;
+}
+
+.White {
+    background-color: #f2f2f2;
+}
+
+.color-paleGreen {
+    color: #d9e7d9;
+}
+
+/* Original profile styles - optimized */
+.profile {
+    border-radius: 100%;
+    border: 3px solid #d9e7d9;
+    width: 180px;
+    height: 180px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    will-change: transform;
+}
+
+.profile:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #4caf50;
+}
+
+/* Original topbar styles */
+.topbar {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
-  }
-  .profile{
-    width: 180px;
-    height:180px;
-  }
-@media(min-width: 400px){
-    .profile{
+}
+
+/* Optimized body styling */
+body.paleGreen {
+    background: linear-gradient(135deg, #d9e7d9 0%, #c5d9c5 100%);
+    min-height: 100vh;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Optimized header section */
+.h-auto.d-flex.justify-content-center.row.darkGreen.d-fixed {
+    background: linear-gradient(135deg, #3a5c3a 0%, #2d4a2d 100%);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem 0;
+}
+
+/* Simple title styling */
+.title {
+    font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+
+/* Optimized login card */
+.bg-white.p-4.p-md-5.rounded.shadow-sm {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform;
+}
+
+.bg-white.p-4.p-md-5.rounded.shadow-sm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Optimized form controls */
+.form-control {
+    border: 2px solid #e8f5e8;
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.form-control:focus {
+    border-color: #4caf50 !important;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15) !important;
+    background: rgba(255, 255, 255, 1);
+    outline: none;
+}
+
+.form-control:hover {
+    border-color: #4caf50;
+}
+
+/* Optimized input groups */
+.input-group-text {
+    background: linear-gradient(135deg, #4caf50, #45a049) !important;
+    border: 2px solid #4caf50 !important;
+    color: white !important;
+    border-radius: 8px 0 0 8px !important;
+    transition: background 0.2s ease;
+}
+
+.input-group .form-control {
+    border-radius: 0 8px 8px 0 !important;
+    border-left: none !important;
+}
+
+.input-group:hover .input-group-text {
+    background: linear-gradient(135deg, #45a049, #3d8b40) !important;
+}
+
+/* Optimized button styling */
+.btn-primary {
+    background: linear-gradient(135deg, #4caf50, #45a049) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.875rem 2rem !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+    will-change: transform;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #45a049, #3d8b40) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3) !important;
+}
+
+.btn-primary:active {
+    transform: translateY(0) !important;
+    transition: transform 0.05s ease;
+}
+
+/* Optimized link styling */
+.link-secondary {
+    color: #4caf50 !important;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    text-decoration: none !important;
+    position: relative;
+}
+
+.link-secondary::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background: #4caf50;
+    transition: width 0.2s ease;
+}
+
+.link-secondary:hover::after {
+    width: 100%;
+}
+
+.link-secondary:hover {
+    color: #45a049 !important;
+}
+
+/* Enhanced border styling */
+.border-secondary-subtle {
+    border-color: rgba(76, 175, 80, 0.2) !important;
+}
+
+/* Media queries - optimized */
+@media(min-width: 400px) {
+    .profile {
         width: 110px;
-        height:110px;
-      }
+        height: 110px;
+    }
+}
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 1.6rem;
+    }
+    
+    .bg-white.p-4.p-md-5.rounded.shadow-sm {
+        margin: 1rem;
+        border-radius: 12px !important;
+    }
+    
+    .profile {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .title {
+        font-size: 1.3rem;
+        padding: 0 1rem;
+    }
+    
+    .profile {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .btn-primary {
+        padding: 0.75rem 1.5rem !important;
+        font-size: 0.95rem !important;
+    }
+}
+
+/* Performance optimizations */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Form styling improvements */
+.form-label {
+    font-weight: 600;
+    color: #2d4a2d;
+    margin-bottom: 0.5rem;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+/* Focus improvements for accessibility */
+.form-control:focus,
+.btn:focus {
+    outline: 2px solid #4caf50;
+    outline-offset: 1px;
+}
+
+/* Button loading state */
+.btn-primary:disabled {
+    background: #a5d6a7 !important;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Remove any laggy transforms on mobile */
+@media (max-width: 768px) {
+    .profile:hover {
+        transform: none;
+    }
+    
+    .bg-white.p-4.p-md-5.rounded.shadow-sm:hover {
+        transform: none;
+    }
+    
+    .btn-primary:hover {
+        transform: none;
+    }
 }
