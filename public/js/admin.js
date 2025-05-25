@@ -779,32 +779,35 @@ function displayMessage(selector, message, isSuccess) {
 }
 
 async function handleFetchError(response, resultSelector) {
-    console.error("Fetch Error:", response.status, response.statusText);
-    let msg = `Request failed: ${response.status} ${response.statusText}. `;
-    try {
-        const errorText = await response.text(); // Get raw response text
-        console.error("Raw Error Response:", errorText);
-        // Attempt to parse as JSON
+    let msg = "Request failed. ";
+    if (response && typeof response.text === "function") {
         try {
-             const errJson = JSON.parse(errorText);
-             if (errJson && errJson.message) {
-                 msg += errJson.message;
-             } else if (errorText) {
-                 msg += "Details: " + errorText.substring(0, 150) + (errorText.length > 150 ? '...' : '');
-             }
-        } catch (e) { // If not JSON, use raw text snippet
-             if (errorText) {
-                 msg += "Details: " + errorText.substring(0, 150) + (errorText.length > 150 ? '...' : '');
-             }
+            const errorText = await response.text();
+            try {
+                const errJson = JSON.parse(errorText);
+                if (errJson && errJson.message) {
+                    msg += errJson.message;
+                } else if (errorText) {
+                    msg += "Details: " + errorText.substring(0, 150) + (errorText.length > 150 ? '...' : '');
+                }
+            } catch (e) {
+                if (errorText) {
+                    msg += "Details: " + errorText.substring(0, 150) + (errorText.length > 150 ? '...' : '');
+                }
+            }
+        } catch (e) {
+            msg += "Error reading error response body.";
         }
-    } catch (e) {
-        console.error("Error reading error response body", e);
+    } else if (response && response.message) {
+        msg += response.message;
+    } else {
+        msg += "Unknown error.";
     }
 
     if (resultSelector) {
         displayMessage(resultSelector, msg, false);
     } else {
-        alert("Fetch Error: " + msg); // Fallback
+        alert("Fetch Error: " + msg);
     }
 }
 

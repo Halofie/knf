@@ -271,7 +271,7 @@ async function fetchOrders(week_id, customer_id) {
 function renderCart() {
     const cartBody = document.querySelector('.cart-body');
     cartBody.innerHTML = ''; // Clear previous data
-
+    document.getElementById('itemCount').innerText = Object.keys(purchasedItems).length;
     if (Object.keys(purchasedItems).length === 0) {
         cartBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Your cart is empty</td></tr>`;
         // Update total cost to zero if cart is empty
@@ -303,6 +303,8 @@ function renderCart() {
 
     // Update the total cost display
     document.getElementById('totalCost').innerText = `₹${total.toFixed(2)}`;
+
+    
 
     attachDeleteEventListeners();
 }
