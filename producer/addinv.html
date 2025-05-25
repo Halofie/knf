@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Bootstrap CSS -->
-    <link href="../public/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="../public/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Custom CSS -->
+    <!-- Enhanced Custom CSS -->
     <link rel="stylesheet" href="../public/css/addinv.css">
     <link rel="icon" href="../public/Assets/pic.jpeg">
 
     <title>KNF Producers</title>
 </head>
 <body class="paleGreen">
-    <!-- this is the offcanvas-->
+    <!-- Enhanced Offcanvas Sidebar -->
     <div class="offcanvas offcanvas-start sidebar " tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasExampleLabel">MENU</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">MENU</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
             <div class="col d-flex justify-content-center">
@@ -34,152 +34,156 @@
         </div>
     </div>
       
-    <!-- the top bar-->
-    <div class=" h-auto p-2 d-flex justify-content-between row darkGreen d-fixed">
-        <div class="col-1 d-flex justify-content-center ">
-            <button class="btn d-block p-0 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-                <img src="../public/Assets/three-bars.svg">
-            </button>
-        </div>
-        <div class="col-2 d-none d-lg-flex justify-content-center">
-            <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
-        </div>
-        <div class="col-6 color-paleGreen" >
-            <h1 id="name">.</h1>
-            <p class="navinfo m-0"id="phone">.</p>
-            <p class="navinfo m-0"id="address">.</p>
-            <p class="navinfo m-0"id="week">.</p>
-        </div>
-        <div class="col-3 d-flex justify-content-end">
-            <div class="m-0 d-block color-paleGreen justify-content-end" id="date">date</div>
+    <!-- Enhanced Top Bar -->
+   <!-- Enhanced Top Bar -->
+    <div class="container-fluid">
+        <div class="row align-items-center p-2 darkGreen">
+            <div class="col-auto d-flex align-items-center">
+                <button class="btn p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                    <img src="../public/Assets/three-bars.svg" alt="Menu" style="width: 24px;">
+                </button>
+            </div>
+            <div class="col-2 d-none d-lg-flex justify-content-center">
+                <img src="../public/Assets/pic.jpeg" class="profile rounded-circle border p-0 border-dark" alt="logo">
+            </div>
+            <div class="col-6 color-paleGreen">
+                <h1 id="name">.</h1>
+                <p class="navinfo m-0" id="phone">.</p>
+                <p class="navinfo m-0" id="address">.</p>
+                <p class="navinfo m-0" id="week">.</p>
+            </div>
+            <div class="col-3 d-flex justify-content-end">
+                <div class="m-0 d-block color-paleGreen justify-content-end">
+                    <div class="clock" id="date">date</div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="m-2 text-center">
-        <h2 class="text-center pt-4">ADD PRODUCT TO INVENTORY</h3>
-        <section class="d-flex justify-content-center">
-            <div class="addzone">
-                <div class="addbox bg-white p-3 m-3 rounded shadow-sm">
-                    <div class="row g-3 align-items-end">
-                        <div class="col-md">
-                            <label for="itmProduct" class="form-label">Product:</label>
-                            <select class="form-select itmProduct" name="itmProduct" id="itmProduct" aria-label="Select Product">
-                                <option value="">Select products...</option>
-                            </select>
-                        </div>
-                        <div class="col-md">
-                            <label for="itmQuantity" class="form-label">Quantity:</label>
-                            <input type="number" class="form-control" name="itmQuantity" id="itmQuantity" required min="1">
-                        </div>
-                        <div class="col-md-auto">
-                            <button type="button" class="ADDPRODUCT btn btn-success" aria-label="Add selected product to temporary list">ADD</button>
+
+    <!-- Enhanced Main Content -->
+    <div class="main-content">
+        <div class="content-section">
+            <h2 class="section-title">ADD PRODUCT TO INVENTORY</h2>
+            <section class="d-flex justify-content-center">
+                <div class="addzone-enhanced">
+                    <div class="addbox-enhanced bg-white p-4 m-3 rounded shadow">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-12 col-md">
+                                <label for="itmProduct" class="form-label label-enhanced">Product:</label>
+                                <select class="form-select form-control-enhanced itmProduct" name="itmProduct" id="itmProduct" aria-label="Select Product">
+                                    <option value="">Select products...</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md">
+                                <label for="itmQuantity" class="form-label label-enhanced">Quantity:</label>
+                                <input type="number" class="form-control form-control-enhanced" name="itmQuantity" id="itmQuantity" required min="1">
+                            </div>
+                            <div class="col-12 col-md-auto">
+                                <button type="button" class="ADDPRODUCT btn btn-enhanced btn-success" aria-label="Add selected product to temporary list">ADD</button>
+                            </div>
                         </div>
                     </div>
+                    <div id="add-item-result" class="alert-enhanced mt-3 alert" style="display: none;"></div>
                 </div>
-                <div id="add-item-result" class="mt-3 alert" style="display: none;"></div>
-            </div>
-        </section>
-    </div>
+            </section>
+        </div>
 
-    <!-- added products part-->
-    <div class="items">
-        <div class="item d-none border py-1 m-3 constainer h-auto">
-            <h4 class="m-2">Spinach</h4>
-            <div class="d-block container d-flex">
-                <div class="col-10 d-flex">
-                    <table class="table table-striped border ">
-                        <thead>
-                          <tr>
-                            <th scope="col">PRODUCT ID</th>
-                            <th scope="col">QUANTITY</th>
-                            <th scope="col">UNIT MEASURE</th>
-                            <th scope="col">PRICE/unit</th>
-                            <th scope="col">TOTAL</th>
-                          </tr>
+        <!-- Enhanced Added Products Section -->
+        <div class="items items-enhanced">
+            <div class="item item-enhanced d-none border py-3 m-3 container h-auto">
+                <h4 class="item-title m-3">Spinach</h4>
+                <div class="d-block container d-flex">
+                    <div class="col-10 d-flex">
+                        <table class="table table-enhanced table-striped border">
+                            <thead class="table-head-enhanced">
+                                <tr>
+                                    <th scope="col">PRODUCT ID</th>
+                                    <th scope="col">QUANTITY</th>
+                                    <th scope="col">UNIT MEASURE</th>
+                                    <th scope="col">PRICE/unit</th>
+                                    <th scope="col">TOTAL</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="col-2 m-1 d-none d-sm-block container text-center action-buttons">
+                        <button type="button" class="col mt-1 btn btn-enhanced btn-success">EDIT</button>
+                        <button type="button" class="col mt-1 btn btn-enhanced btn-danger">DELETE</button>
+                    </div>
+                </div>
+                <div class="col-2 m-1 d-sm-none d-inline container text-center action-buttons-mobile">
+                    <button type="button" class="col mt-1 btn btn-enhanced btn-success">EDIT</button>
+                    <button type="button" class="col mt-1 btn btn-enhanced btn-danger">DELETE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Submit Section -->
+        <div class="submit-section mt-4 text-center">
+            <button type="button" class="col btn btn-enhanced my-2 mx-5 submission btn-success">SUBMIT SELECTION</button>
+        </div>
+        <div id="submission-result" class="alert-enhanced m-3 alert" style="display: none;"></div>
+        
+        <!-- Enhanced Current Inventory Section -->
+        <div class="inventory-section">
+            <h2 class="section-title">Current Inventory</h2>
+            <div id="currentinventory-result" class="m-3"></div>
+            <div class="inventory-container currentinventoryHolder m-3 p-3 White w-auto h-auto d-flex align-center justify-content-center">
+                <div class="d-flex justify-content-center container align-center">
+                    <table class="table table-enhanced table-success table-striped border">
+                        <thead class="table-head-enhanced">
+                            <tr>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Action</th>
+                            </tr>
                         </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">1234</th>
-                            <td>95</td>
-                            <td>kotthu</td>
-                            <td>25</td>
-                            <td>2375</td>
-                          </tr>
-                        </tbody>
+                        <tbody class="currentinventory-body"></tbody>
                     </table>
                 </div>
-                <div class="col-2 m-1 d-none d-sm-block container text-center">
-                    <button type="button " class="col  mt-1 btn  btn-success">  EDIT  </button>
-                    <button type="button " class="col mt-1 btn  btn-danger">DELETE</button>
+            </div>
+
+            <!-- Enhanced Week Selection -->
+            <div class="d-flex justify-content-center week-selection">
+                <div class="col-6">
+                    <form class="form-enhanced form-control White p-4" id="weekForm">
+                        <label for="weekDropdown" class="form-label label-enhanced">Select Week</label>
+                        <select class="form-select form-control-enhanced" id="weekDropdown" required>
+                            <option value="">Loading weeks...</option>
+                        </select>
+                        <input type="submit" class="btn-success btn-enhanced m-3 submit-week btn" value="Load Inventory">
+                    </form>
                 </div>
             </div>
-            <div class="col-2 m-1 d-sm-none d-inline container text-center">
-                <button type="button " class="col  mt-1 btn  btn-success">  EDIT  </button>
-                <button type="button " class="col mt-1 btn  btn-danger">DELETE</button>
+
+            <div id="inventory-result" class="m-3"></div>
+            <div class="inventory-container inventoryHolder m-3 p-3 White w-auto h-auto d-flex align-center justify-content-center">
+                <div class="d-flex justify-content-center container align-center">
+                    <table class="table table-enhanced table-success table-striped border">
+                        <thead class="table-head-enhanced">
+                            <tr>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody class="inventory-body"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="submit mt-3 text-center">
-        <button type="button" class="col btn my-1 mx-5 submission btn-success">SUBMIT SELECTION</button>
-    </div>
-    <div id="submission-result" class="m-3 alert" style="display: none;"></div>
-    
-    <h1 class="text-center pt-4">Current Inventory</h1>
-    <div id="currentinventory-result" class="m-3"></div>
-    <div class="currentinventoryHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-        <div class="d-flex justify-content-center container align-center">
-            <table class="table table-success table-striped border">
-                <thead>
-                    <tr>
-                        <th scope="col">Product Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="currentinventory-body"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="d-flex justify-content-center">
-        <div class="col-6">
-            <form class="form-control White" id="weekForm">
-                <label for="weekDropdown">Select Week</label>
-                <select class="form-select" id="weekDropdown" required>
-                    <option value="">Loading weeks...</option>
-                </select>
-                <input type="submit" class="btn-success m-3 submit-week btn" value="Load Inventory">
-            </form>
-        </div>
-    </div>
-
-    <div id="inventory-result" class="m-3"></div>
-    <div class="inventoryHolder m-3 p-2 White w-auto h-auto d-flex align-center justify-content-center">
-        <div class="d-flex justify-content-center container align-center">
-            <table class="table table-success table-striped border">
-                <thead>
-                    <tr>
-                        <th scope="col">Product Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Date</th>
-                    </tr>
-                </thead>
-                <tbody class="inventory-body"></tbody>
-            </table>
-        </div>
-    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="../public/js/jquery.js" ></script>
-    <script src="../public/js/bootstrap.min.js" ></script>
+    <script src="../public/js/jquery.js"></script>
+    <script src="../public/js/bootstrap.min.js"></script>
     <script src="../public/js/addinv.js"></script>
     <script src="../public/js/clock.js"></script>  
 </body>
 </html>
-
-<!-- //dropdown  select product name. (dont use id's as input anywhere) -->
