@@ -1,4 +1,137 @@
-/* The side navigation menu */
+/* Responsive design */
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 30%;
+    height: 100%;
+  }
+  
+  .profile {
+    width: 80px;
+    height: 80px;
+  }
+
+  .table {
+    padding: 0 10px;
+  }
+  .table thead th, .table tbody td {
+    padding: 0.75rem;
+  }
+  .table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .table tbody tr:hover {
+    background-color: rgba(76,175,80,0.1);
+  }
+  .table tbody td {
+    display: block;
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(76,175,80,0.2);
+  }
+  .table tbody td:last-child {
+    border-bottom: none;
+  }
+  .table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .table thead {
+    display: none; /* Hide headers on mobile */
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar {
+    width: 15%;
+    height: 100%;
+  }
+  
+  .profile {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .sidebar a {
+    padding: 12px 8px;
+    font-size: 0.85rem;
+  }
+
+  .table {
+    padding: 0 10px;
+  }
+  .table thead th, .table tbody td {
+    padding: 0.75rem;
+  }
+  .table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .table tbody tr:hover {
+    background-color: rgba(76,175,80,0.1);
+  }
+  .table tbody td {
+    display: block;
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(76,175,80,0.2);
+  }
+  .table tbody td:last-child {
+    border-bottom: none;
+  }
+  .table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .table thead {
+    display: none; /* Hide headers on mobile */
+  }
+}
+
+/* Profile sizing */
+.profile {
+  width: 100px;
+  height: 100px;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}/* Optimized transitions - only for specific properties */
+* {
+  box-sizing: border-box;
+}
+
+/* Only animate transform and opacity for better performance */
+.animate-smooth {
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimized body styling */
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #d9e7d9;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Optimized sidebar */
 .sidebar {
   margin: 0;
   padding: 0;
@@ -7,100 +140,260 @@
   position: fixed;
   height: 100%;
   overflow: auto;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  will-change: transform;
 }
-.profile{
-  border-radius: 100%;
-  border: 2px solid black;
-  margin: 3% 0;
 
+/* Optimized profile image */
+.profile {
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  margin: 3% 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+  will-change: transform;
 }
-/* Sidebar links */
+
+.profile:hover {
+  transform: scale(1.02);
+}
+
+/* Optimized sidebar links */
 .sidebar a {
   display: block;
-  color: black;
-  padding: 16px;
+  color: #333;
+  padding: 16px 20px;
   text-decoration: none;
+  position: relative;
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  will-change: transform;
 }
 
 /* Active/current link */
 .sidebar a.active {
-  background-color: #04AA6D;
+  background-color: #4caf50;
   color: white;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
-/* Links on mouse-over */
+/* Optimized hover effects */
 .sidebar a:hover:not(.active) {
   background-color: #555;
   color: white;
-} 
-  /* Page content. The value of the margin-left property should match the value of the sidebar's width property */
-  div.content {
-    margin-left: 200px;
-    padding: 1px 16px;
-    height: 1000px;
-  }
-  @media screen and (max-width: 700px) {
-    .sidebar {
-      width: 30%;
-      height: 100%;
-    }
-    /*.sidebar a {float: left;}
-    div.content {margin-left: 0;} */
-  }
-  
-  /* On screens that are less than 400px, display the bar vertically, instead of horizontally */
-  @media screen and (max-width: 400px) {
-    .sidebar {
-        width: 15%;
-        height: 100%;
-      }
-  }
-  
-  .profile{
-    width: 100px;
-    height:100px;
-  }
-  .topbar{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .lightGreen{
-    background-color: #4c7a4c;
-  }
-  .darkGreen{
-    background-color: #3a5c3a;
-  }
-  .paleGreen{
-    background-color: #d9e7d9;
-  }
-  .Green{
-    background-color: #4caf50;
-  }
-  .White{
-    background-color: #f2f2f2;
-  }
-  .color-paleGreen{
-    color:#d9e7d9;
-  }
+  transform: translateX(4px);
+}
 
-  .body {
-    margin: 0em;
-  }
-  
-  .page {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: -100vw;
-    overflow-y: auto;
-    z-index: 0;
-    background-color: #d9e7d9;
-  }
-  
-  .page:target {
-    left: 0vw;
-    z-index: 1;
-  }
+/* Enhanced content styling */
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  min-height: 100vh;
+}
+
+/* Simplified color classes */
+.lightGreen {
+  background-color: #4c7a4c;
+}
+
+.darkGreen {
+  background-color: #3a5c3a;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.paleGreen {
+  background-color: #d9e7d9;
+}
+
+.Green {
+  background-color: #4caf50;
+}
+
+.White {
+  background-color: #f2f2f2;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+}
+
+.color-paleGreen {
+  color: #d9e7d9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Optimized table styling - No alternating colors */
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table thead th {
+  background-color: #4caf50;
+  color: white;
+  font-weight: 600;
+  padding: 1rem;
+  border: none;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+  background-color: white; /* Ensure uniform background */
+}
+
+.table tbody tr:hover {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-color: rgba(76, 175, 80, 0.2);
+  background-color: white; /* Ensure uniform background for all cells */
+}
+
+/* Override any Bootstrap striped table styling */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: white !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+  background-color: white !important;
+}
+
+/* Override any alternating column colors */
+.table tbody td:nth-child(odd) {
+  background-color: white !important;
+}
+
+.table tbody td:nth-child(even) {
+  background-color: white !important;
+}
+
+/* Optimized buttons */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+/* Optimized form elements */
+.form-select, .form-control {
+  border-radius: 8px;
+  border: 2px solid rgba(76, 175, 80, 0.2);
+  padding: 0.75rem 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+/* Simplified cart holder */
+.cartHolder {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Simplified headings */
+h1, h2, h3 {
+  font-weight: 700;
+}
+
+/* Simplified alerts */
+.alert {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced clock */
+.clock {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Enhanced total cost display */
+#totalCost {
+  color: #4caf50;
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+/* Simplified page styling - removed heavy animations */
+.body {
+  margin: 0em;
+}
+
+.page {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: -100vw;
+  overflow-y: auto;
+  z-index: 0;
+  background-color: #d9e7d9;
+  transition: left 0.3s ease;
+}
+
+.page:target {
+  left: 0vw;
+  z-index: 1;
+}
+
+/* Simplified offcanvas */
+.offcanvas {
+  background-color: rgba(248, 249, 250, 0.95);
+}
+
+.offcanvas-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.offcanvas-title {
+  font-weight: 700;
+  color: #333;
+}
+
+/* Simplified scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4caf50;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #45a049;
+}
+

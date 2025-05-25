@@ -1,4 +1,6 @@
-/* The side navigation menu */
+/* Enhanced Admin CSS for Kovai Natural Farmers - Updated to match order.css */
+
+/* The side navigation menu - simplified to match order.css */
 .sidebar {
     margin: 0;
     padding: 0;
@@ -7,66 +9,98 @@
     position: fixed;
     height: 100%;
     overflow: auto;
-  }
-  .profile{
-    border-radius: 100%;
-    border: 2px solid black;
-    margin: 3% 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    will-change: transform;
+}
 
-  }
-  /* Sidebar links */
-  .sidebar a {
+.profile {
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    margin: 3% 0;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+    will-change: transform;
+}
+
+.profile:hover {
+    transform: scale(1.02);
+}
+
+/* Sidebar links - simplified to match order.css */
+.sidebar a {
     display: block;
-    color: black;
-    padding: 16px;
+    color: #333;
+    padding: 16px 20px;
     text-decoration: none;
-  }
-  
-  /* Active/current link */
-  .sidebar a.active {
-    background-color: #04AA6D;
+    position: relative;
+    font-weight: 500;
+    border-radius: 8px;
+    margin: 4px 8px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    will-change: transform;
+}
+
+/* Active/current link - matches order.css */
+.sidebar a.active {
+    background-color: #4caf50;
     color: white;
-  }
-  
-  /* Links on mouse-over */
-  .sidebar a:hover:not(.active) {
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Links on mouse-over - matches order.css */
+.sidebar a:hover:not(.active) {
     background-color: #555;
     color: white;
-  }
-  .profile{
-    width: 100px;
-    height:100px;
-  }
-  .topbar{
+    transform: translateX(4px);
+}
+
+.topbar {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
-  }
-  .lightGreen{
-    background-color: #4c7a4c;
-  }
-  .darkGreen{
-    background-color: #3a5c3a;
-  }
-  .paleGreen{
-    background-color: #d9e7d9;
-  }
-  .Green{
-    background-color: #4caf50;
-  }
-  .White{
-    background-color: #f2f2f2;
-  }
-  .color-paleGreen{
-    color:#d9e7d9;
-  }
+}
 
-  .body {
+/* Simplified color classes to match order.css */
+.lightGreen {
+    background-color: #4c7a4c;
+}
+
+.darkGreen {
+    background-color: #3a5c3a;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.paleGreen {
+    background-color: #d9e7d9;
+}
+
+.Green {
+    background-color: #4caf50;
+}
+
+.White {
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 8px;
+}
+
+.color-paleGreen {
+    color: #d9e7d9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.body {
     margin: 0em;
-  }
-  
-  .page {
+    font-family: 'Nunito', sans-serif;
+    background-color: #d9e7d9;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.page {
     width: 100vw;
     height: 100vh;
     position: fixed;
@@ -75,16 +109,378 @@
     overflow-y: auto;
     z-index: 0;
     background-color: #d9e7d9;
-  }
-  
-  .page:target {
+    transition: left 0.3s ease;
+}
+
+.page:target {
     left: 0vw;
     z-index: 1;
-  }
+}
 
-  .icon-sm {
+.icon-sm {
     width: 18px;
     height: 18px;
     object-fit: contain;
     vertical-align: middle;
+    filter: brightness(0) invert(1);
+}
+
+/* Enhanced form styles - simplified to match order.css */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 2px solid rgba(76, 175, 80, 0.2);
+    padding: 0.75rem 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #2c4a2c;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Enhanced button styles - simplified to match order.css */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-success:hover {
+    background-color: #1e7e34;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+}
+
+.btn-dark {
+    background-color: #343a40;
+    border: none;
+    box-shadow: 0 2px 8px rgba(52, 58, 64, 0.3);
+}
+
+.btn-dark:hover {
+    background-color: #23272b;
+    box-shadow: 0 4px 15px rgba(52, 58, 64, 0.4);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.btn-secondary:hover {
+    background-color: #495057;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+}
+
+.btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Enhanced table styles - simplified to match order.css */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table thead th {
+    background-color: #4caf50;
+    color: white;
+    font-weight: 600;
+    padding: 1rem;
+    border: none;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+    background-color: white;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-color: rgba(76, 175, 80, 0.2);
+    background-color: white;
+}
+
+/* Override any Bootstrap striped table styling */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: white !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: white !important;
+}
+
+.table tbody td:nth-child(odd) {
+    background-color: white !important;
+}
+
+.table tbody td:nth-child(even) {
+    background-color: white !important;
+}
+
+/* Enhanced container styles */
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    margin-top: 20px;
+    padding: 20px;
+}
+
+/* Card-like containers for forms - simplified */
+.uomHolder, .categoryHolder, .productHolder, .routeHolder, .customerHolder, .supplierHolder, .weekHolder {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced alert styles - simplified to match order.css */
+.alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Enhanced offcanvas styles - simplified */
+.offcanvas {
+    background-color: rgba(248, 249, 250, 0.95);
+}
+
+.offcanvas-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.offcanvas-title {
+    font-weight: 700;
+    color: #333;
+}
+
+/* Enhanced radio button styles */
+input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #4c7a4c;
+    border-radius: 50%;
+    margin-right: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+input[type="radio"]:checked {
+    background: #4c7a4c;
+    border-color: #3a5c3a;
+}
+
+input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Enhanced header styling */
+h1, h2, h3, h4, h5 {
+    font-weight: 700;
+    color: #2c4a2c;
+}
+
+/* Top bar enhancements */
+.darkGreen h1, .darkGreen h2 {
+    color: #d9e7d9;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Clock styling - matches order.css */
+.clock {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+@media screen and (max-width: 700px) {
+    .sidebar {
+        width: 30%;
+        height: 100%;
+    }
+    
+    .profile {
+        width: 80px;
+        height: 80px;
+    }
+
+  .table {
+    padding: 0 10px;
   }
+  .table thead th, .table tbody td {
+    padding: 0.75rem;
+  }
+  .table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .table tbody tr:hover {
+    background-color: rgba(76,175,80,0.1);
+  }
+  .table tbody td {
+    display: block;
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(76,175,80,0.2);
+  }
+  .table tbody td:last-child {
+    border-bottom: none;
+  }
+  .table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .table thead {
+    display: none; /* Hide headers on mobile */
+  }
+}
+
+@media screen and (max-width: 400px) {
+    .sidebar {
+        width: 15%;
+        height: 100%;
+    }
+    
+    .profile {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .sidebar a {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+  .table {
+    padding: 0 10px;
+  }
+  .table thead th, .table tbody td {
+    padding: 0.75rem;
+  }
+  .table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .table tbody tr:hover {
+    background-color: rgba(76,175,80,0.1);
+  }
+  .table tbody td {
+    display: block;
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(76,175,80,0.2);
+  }
+  .table tbody td:last-child {
+    border-bottom: none;
+  }
+  .table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .table thead {
+    display: none; /* Hide headers on mobile */
+  }
+}
+
+/* Simplified scrollbar styling to match order.css */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #4caf50;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #45a049;
+}
+
+/* Focus indicators for accessibility */
+*:focus {
+    outline: 2px solid #4c7a4c;
+    outline-offset: 2px;
+}
+
+
+/* Enhanced content styling to match order.css */
+div.content {
+    margin-left: 200px;
+    padding: 1px 16px;
+    min-height: 100vh;
+}

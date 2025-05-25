@@ -1,82 +1,339 @@
-/* The side navigation menu */
-.sidebar {
-    margin: 0;
-    padding: 0;
-    width: 200px;
-    background-color: #f1f1f1;
-    position: fixed;
-    height: 100%;
-    overflow: auto;
-  }
-  .profile{
-    border-radius: 100%;
-    border: 2px solid black;
-    margin: 3% 0;
+/* Optimized transitions - only for specific properties */
 
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* Only animate transform and opacity for better performance */
+.animate-smooth {
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- Color Scheme and Base Styles --- */
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #d9e7d9;
+  min-height: 100vh;
+  overflow-x: hidden;
+  margin: 0em;
+}
+
+.lightGreen { background-color: #4c7a4c; }
+.darkGreen { background-color: #3a5c3a; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+.paleGreen { background-color: #d9e7d9; }
+.Green { background-color: #4caf50; }
+.White { background-color: #f2f2f2; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-radius: 8px;}
+.color-paleGreen { color: #d9e7d9; text-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+
+/* --- Optimized Sidebar --- */
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #f1f1f1;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  will-change: transform;
+}
+
+.sidebar a {
+  display: block;
+  color: #333;
+  padding: 16px 20px;
+  text-decoration: none;
+  position: relative;
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  will-change: transform;
+}
+
+/* Active/current link */
+.sidebar a.active {
+  background-color: #4caf50;
+  color: white;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* Optimized hover effects */
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+  transform: translateX(4px);
+}
+
+/* Enhanced content styling */
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  min-height: 100vh;
+}
+
+/* --- Optimized Profile Image --- */
+.profile {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid rgba(0,0,0,0.1);
+  margin: 3% 0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
+  will-change: transform;
+}
+.profile:hover { transform: scale(1.02); }
+
+/* --- Topbar/Header --- */
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  background-color: #3a5c3a;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: #d9e7d9;
+  padding: 1rem 2rem;
+  align-items: center;
+}
+
+.clock {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* --- Optimized Table Styles --- */
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  background: white;
+}
+
+.table thead th {
+  background-color: #4caf50;
+  color: white;
+  font-weight: 600;
+  padding: 1rem;
+  border: none;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+  background-color: white;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(76,175,80,0.1);
+}
+
+.table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-color: rgba(76,175,80,0.2);
+  background-color: white;
+}
+
+/* Override any Bootstrap striped table styling */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: white !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+  background-color: white !important;
+}
+
+/* Override any alternating column colors */
+.table tbody td:nth-child(odd) {
+  background-color: white !important;
+}
+
+.table tbody td:nth-child(even) {
+  background-color: white !important;
+}
+
+/* --- Optimized Buttons --- */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,123,255,0.3);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  box-shadow: 0 4px 15px rgba(0,123,255,0.4);
+}
+
+.btn-success {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #388e3c;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* --- Optimized Form Elements --- */
+.form-select, .form-control {
+  border-radius: 8px;
+  border: 2px solid rgba(76, 175, 80, 0.2);
+  padding: 0.75rem 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.form-select:focus, .form-control:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+/* --- Alerts --- */
+.alert {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* --- Enhanced Headings --- */
+h1, h2, h3 {
+  font-weight: 700;
+}
+
+/* --- Card Styling --- */
+.card {
+  transition: transform 0.2s ease;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* --- Optimized Scrollbar --- */
+::-webkit-scrollbar { 
+  width: 8px; 
+}
+
+::-webkit-scrollbar-track { 
+  background: rgba(0,0,0,0.1); 
+  border-radius: 4px; 
+}
+
+::-webkit-scrollbar-thumb { 
+  background-color: #4caf50; 
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover { 
+  background-color: #45a049; 
+}
+
+@media screen and (max-width: 768px) {
+  .offcanvas {
+    width: 250px !important; /* Ensure visible width */
   }
-  /* Sidebar links */
-  .sidebar a {
+
+  .offcanvas-body {
+    padding: 1rem;
+  }
+
+  .sidebar a.btn {
     display: block;
-    color: black;
-    padding: 16px;
-    text-decoration: none;
+    margin-bottom: 10px;
+  }
+
+  /*Table edges are cutting off on mobile, so we need to add padding to the table*/
+  .table {
+    padding: 0 10px;
+  }
+  .table thead th, .table tbody td {
+    padding: 0.75rem;
+  }
+  .table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .table tbody tr:hover {
+    background-color: rgba(76,175,80,0.1);
+  }
+  .table tbody td {
+    display: block;
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(76,175,80,0.2);
+  }
+  .table tbody td:last-child {
+    border-bottom: none;
+  }
+  .table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .table thead {
+    display: none; /* Hide headers on mobile */
   }
   
-  /* Active/current link */
-  .sidebar a.active {
-    background-color: #04AA6D;
-    color: white;
-  }
-  
-  /* Links on mouse-over */
-  .sidebar a:hover:not(.active) {
-    background-color: #555;
-    color: white;
-  }
-  .profile{
-    width: 100px;
-    height:100px;
-  }
-  .topbar{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  .week-selection {
     width: 100%;
+    margin: 0;
+    padding: 0 5px;
+    justify-content: center;
   }
-  .lightGreen{
-    background-color: #4c7a4c;
+  .week-selection .col-6 {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
   }
-  .darkGreen{
-    background-color: #3a5c3a;
+  #weekForm {
+    padding: 1rem !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(76,175,80,0.08);
   }
-  .paleGreen{
-    background-color: #d9e7d9;
+  #weekDropdown, .submit-week {
+    width: 100%;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
   }
-  .Green{
-    background-color: #4caf50;
+  .submit-week {
+    padding: 1rem 0;
   }
-  .White{
-    background-color: #f2f2f2;
-  }
-  .color-paleGreen{
-    color:#d9e7d9;
-  }
-  .body {
-    margin: 0em;
-  }
-  
-  .page {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: -100vw;
-    overflow-y: auto;
-    z-index: 0;
-    background-color: #d9e7d9;
-  }
-  
-  .page:target {
-    left: 0vw;
-    z-index: 1;
-  }
+}
