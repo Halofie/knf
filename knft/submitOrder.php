@@ -28,10 +28,10 @@ foreach ($data["items"] as $product) {
         if ($conn->query($updateSql) === TRUE) {
             // Success
         } else {
-            echo "Error updating temp_inventory: " . $conn->error;
+            echo json_encode("Error updating temp_inventory: " . $conn->error);
         }
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        echo json_encode("Error: " . $sql . "<br>" . $conn->error);
     }
 }
 $conn->close();

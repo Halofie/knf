@@ -19,9 +19,10 @@ $stmt->bind_param("ss", $categoryType, $categoryDesc);
 
 // Execute the query
 if ($stmt->execute()) {
-    echo "New record created successfully";
+    echo json_encode(['success' => true, 'message' => 'New record created successfully']);
 } else {
-    echo "Error: " . $stmt->error;
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Error: ' . $stmt->error]);
 }
 // Close connections
 $stmt->close();
