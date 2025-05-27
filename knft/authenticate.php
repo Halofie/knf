@@ -42,6 +42,7 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
             session_regenerate_id(true);
             $_SESSION['loggedin'] = TRUE;
             $_SESSION['email'] = $sanitized_email;
+            $_SESSION['role'] = $category;
             $_SESSION['account_id'] = $acc_id;
 
             // Redirect based on user category
