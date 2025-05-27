@@ -3,7 +3,7 @@
 session_start();
 
 // Check if user is logged in; redirect to login page if not authenticated
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SESSION['role'] !== 'A') {
     header("Location: ../login/login.html");
     exit();
 }
