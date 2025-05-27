@@ -1,17 +1,18 @@
 <?php
 require('header.php');
 
-
 // Connect to MySQL database
 $con = mysqli_connect($servername, $username, $password, $dbname);
 if (mysqli_connect_errno()) {
     error_log('Failed to connect to MySQL: ' . mysqli_connect_error());
-    exit('Login failed. Please try again later.');
+    header("Location: ../login/login.html?error=server");
+    exit();
 }
 
 // Check if login form data was submitted
 if (!isset($_POST['username'], $_POST['password'])) {
-    exit('Please fill both the username and password fields!');
+    header("Location: ../login/login.html?error=missing");
+    exit();
 }
 
 $submitted_username = $_POST['username'];
@@ -19,7 +20,8 @@ $submitted_password = $_POST['password'];
 
 // Validate email address
 if (!filter_var($submitted_username, FILTER_VALIDATE_EMAIL)) {
-    exit('Invalid email format!');
+    header("Location: ../login/login.html?error=email");
+    exit();
 }
 
 // Sanitize inputs
@@ -37,7 +39,7 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
         $stmt->close();
 
         // Verify password using password_verify()
-        if (password_verify($submitted_password, $hashed_password) && $rec_status == '1') {  //Fixed the condition to check rec_status
+        if (password_verify($submitted_password, $hashed_password) && $rec_status == '1') {
             // Successful login - create session variables
             session_regenerate_id(true);
             $_SESSION['loggedin'] = TRUE;
@@ -58,12 +60,11 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
                     if ($stmt_supplier->num_rows > 0) {
                         $stmt_supplier->bind_result($supplier_specific_id);
                         $stmt_supplier->fetch();
-                        $_SESSION['farmer_id'] = $supplier_specific_id; // This is the crucial part
+                        $_SESSION['farmer_id'] = $supplier_specific_id;
                     } else {
                         error_log("Login Error: Farmer '$sanitized_email' (Account PK ID: $acc_id) has no entry in suppliers table.");
-                        // Destroy session and redirect with error to prevent partial login
                         session_destroy();
-                        header("Location: login.html?error=farmerdatamissing");
+                        header("Location: ../login/login.html?error=farmerdatamissing");
                         exit();
                     }
                     $stmt_supplier->close();
@@ -74,22 +75,25 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
                 header("Location: consumer.php");
                 exit();
             } else {
-                // Handle unknown category if necessary
                 error_log("Unknown category '$category' for user '$sanitized_email'");
-                exit('Login successful, but redirect failed. Please contact support.');
+                header("Location: ../login/login.html?error=unknowncategory");
+                exit();
             }
         } else {
             // Invalid login credentials (generic message)
-            exit('Invalid login credentials!');
+            header("Location: ../login/login.html?error=1");
+            exit();
         }
     } else {
         // Invalid login credentials (generic message)
-        exit('Invalid login credentials!');
+        header("Location: ../login/login.html?error=1");
+        exit();
     }
-    $stmt->close();
+    // $stmt->close(); // Already closed above
 } else {
     error_log('Failed to prepare statement: ' . $con->error);
-    exit('Login failed. Please try again later.');
+    header("Location: ../login/login.html?error=server");
+    exit();
 }
 $con->close();
 ?>
