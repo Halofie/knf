@@ -24,3 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+  // Show error if ?error=1 in URL
+const params = new URLSearchParams(window.location.search);
+  if (params.get('error') === '1') {
+    document.getElementById('loginError').style.display = 'block';
+}
