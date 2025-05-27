@@ -263,7 +263,7 @@ async function initialize() {
     const email = await fetchEmail();
     if (!email) {
         alert("Session expired or not logged in. Redirecting to home.");
-        window.location.href = '../../home.html';
+        window.location.href = '../login/login.html';
         return;
     }
     console.log("User's session email:", email);

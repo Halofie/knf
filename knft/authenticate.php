@@ -46,9 +46,11 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
             $_SESSION['email'] = $sanitized_email;
             $_SESSION['role'] = $category;
             $_SESSION['account_id'] = $acc_id;
+            $_SESSION['is_admin'] = false; // Store admin ID in session
 
             // Redirect based on user category
             if ($category == "A") {
+                $_SESSION['is_admin'] = true; // Store admin ID in session
                 header("Location: admin.php");
                 exit();
             } else if ($category == "F") {
