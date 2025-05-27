@@ -254,3 +254,36 @@ footer {
     width: 30px;
     height: 30px;
 }
+
+.benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-height: 600px; /* Adjust as needed */
+    overflow-y: auto;
+    padding-right: 8px;
+}
+@media (min-width: 992px) {
+    .benefits {
+        flex-direction: row;
+        max-height: none;
+        overflow-y: visible;
+        justify-content: center;
+        align-items: stretch;
+    }
+}
+.benefit {
+    flex: 1 0 160px;
+    min-width: 140px;
+    text-align: center;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    padding: 1rem;
+    margin-bottom: 0;
+}
+.benefit img {
+    width: 80%;
+    height: 80%;
+    margin-bottom: 0.5rem;
+}

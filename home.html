@@ -37,16 +37,28 @@
     </div>
 
     <!-- Header -->
-    <header>
-        <div class="logo"><img src="public/Assets/pic.jpeg" alt="logo">Kovai Natural Farmers</div>
-        <nav>
-            <ul>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-        <div class="auth-buttons">
-            <a href="login/login.html"><button>Login</button></a>
+    <header class="navbar navbar-expand-lg navbar-light darkGreen shadow-sm py-2">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center logo" href="#">
+                <img src="public/Assets/pic.jpeg" alt="logo" class="rounded-circle" style="object-fit:cover;">
+                <span class="ms-2 fw-bold fs-5 d-none d-sm-inline">Kovai Natural Farmers</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center text-center">
+                    <li class="nav-item">
+                        <a class="nav-link " href="#about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="#contact">Contact</a>
+                    </li>
+                </ul>
+                <div class="d-flex justify-content-center hero-buttons align-items-center ms-lg-3 mt-lg-0" style="height:100%;">
+                    <button class="button btn-primary px-4 text-white"><a href="login/login.html">Login</a></button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -63,15 +75,45 @@
     <!-- Featured Products -->
     <section id="products" class="featured-products">
         <h2>Our Farms</h2>
-        <div class="product-grid">
-            <div class="product">
-                <img src="public/Assets/P1.jpg" alt="P1">
+        <!-- Carousel for small/medium screens -->
+        <div class="d-block d-lg-none mb-4">
+            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active text-center">
+                        <img src="public/Assets/P1.jpg" class="d-block mx-auto w-100 rounded" alt="P1">
+                    </div>
+                    <div class="carousel-item text-center">
+                        <img src="public/Assets/P2.jpg" class="d-block mx-auto w-100 rounded" alt="P2">
+                    </div>
+                    <div class="carousel-item text-center">
+                        <img src="public/Assets/P3.jpg" class="d-block mx-auto w-100 rounded" alt="P3">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
-            <div class="product">
-                <img src="public/Assets/P2.jpg" alt="P2">
-            </div>
-            <div class="product">
-                <img src="public/Assets/P3.jpg" alt="P3">
+        </div>
+
+        <!-- Gallery grid for large screens -->
+        <div class="d-none d-lg-block mb-4">
+            <div class="container">
+                <div class="row g-4 justify-content-center">
+                    <div class="col-lg-4 col-md-6">
+                        <img src="public/Assets/P1.jpg" class="img-fluid rounded shadow-sm" alt="P1">
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <img src="public/Assets/P2.jpg" class="img-fluid rounded shadow-sm" alt="P2">
+                    </div>
+                    <div class="col-lg-4 col-md-6">
+                        <img src="public/Assets/P3.jpg" class="img-fluid rounded shadow-sm" alt="P3">
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -79,24 +121,24 @@
     <!-- Why Choose Us -->
     <section class="why-choose-us">
         <h2>Why Shop from Us?</h2>
-        <div class="benefits">
-            <div class="benefit">
-                <img src="public/Assets/farm-fresh.png" alt="Farm Fresh">
-                <p>Farm Fresh Guarantee</p>
-            </div>
-            <div class="benefit">
-                <img src="public/Assets/local-farmers.png" alt="Local Farmers">
-                <p>Support Local Farmers</p>
-            </div>
-            <div class="benefit">
-                <img src="public/Assets/sustainable.png" alt="Sustainable">
-                <p>Sustainable Practices</p>
-            </div>
-            <div class="benefit">
-                <img src="public/Assets/quality.png" alt="Quality">
-                <p>Quality You Can Trust</p>
-            </div>
-        </div>
+<div class="benefits">
+    <div class="benefit">
+        <img src="public/Assets/farm-fresh.png" alt="Farm Fresh">
+        <p>Farm Fresh Guarantee</p>
+    </div>
+    <div class="benefit">
+        <img src="public/Assets/local-farmers.png" alt="Local Farmers">
+        <p>Support Local Farmers</p>
+    </div>
+    <div class="benefit">
+        <img src="public/Assets/sustainable.png" alt="Sustainable">
+        <p>Sustainable Practices</p>
+    </div>
+    <div class="benefit">
+        <img src="public/Assets/quality.png" alt="Quality">
+        <p>Quality You Can Trust</p>
+    </div>
+</div>
     </section>
 
     <!-- About Us Teaser -->
