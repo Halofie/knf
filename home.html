@@ -36,21 +36,32 @@
     </div>
 
     <!-- Header -->
-    <header class="header-enhanced">
-        <div class="logo-container">
-            <img src="public/Assets/pic.jpeg" alt="logo" class="logo-img">
-            <span class="logo-text">Kovai Natural Farmers</span>
+<header class="header-enhanced shadow-sm py-2">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+        <!-- Logo and Brand -->
+        <div class="d-flex align-items-center">
+            <img src="public/Assets/pic.jpeg" alt="logo" class="logo-img" style="height:40px;width:40px;object-fit:cover;">
+            <!-- Show full name on md+ screens, short on mobile -->
+            <span class="logo-text ms-2 fw-bold fs-5 d-none d-md-inline">Kovai Natural Farmers</span>
+            <span class="logo-text ms-2 fw-bold fs-5 d-inline d-md-none">KNF</span>
         </div>
-        <nav class="nav-enhanced">
-            <ul>
+        <!-- Desktop Nav -->
+        <nav class="nav-enhanced d-none d-md-block">
+            <ul class="mb-0 d-flex align-items-center" style="list-style:none;gap:1.5rem;">
                 <li><a href="#about" class="nav-link">About Us</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
         </nav>
-        <div class="auth-buttons">
-            <a href="login/login.html"><button class="login-btn">Login</button></a>
+        <!-- Login and Hamburger -->
+        <div class="d-flex align-items-center">
+            <a href="login/login.html" class="btn btn-success login-btn px-3 py-1 me-2">Login</a>
+            <!-- Hamburger for mobile only -->
+            <button class="btn d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample" aria-label="Menu">
+                <img src="../knf/public/Assets/three-bars.svg" alt="Menu" class="hamburger-icon" style="height:30px;width:30px;object-fit:cover;">
+            </button>
         </div>
-    </header>
+    </div>
+</header>
 
     <!-- Hero Section -->
     <section class="hero-enhanced">
