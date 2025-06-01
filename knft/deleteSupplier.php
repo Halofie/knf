@@ -36,6 +36,12 @@ if (isset($data['id'])) {
             "UPDATE suppliers SET rec_status = ? WHERE emailId = ?"
         );
         $update->bind_param("is", $newStatus, $categoryID);
+
+        $update = $conn->prepare(
+            "UPDATE accounts SET rec_status = ? WHERE email = ?"
+        );
+        $update->bind_param("is", $newStatus, $categoryID);
+        
         if ($update->execute()) {
             echo json_encode([
                 "success" => true,

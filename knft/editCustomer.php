@@ -40,6 +40,10 @@ if (isset($data['oldEmailID'], $data['customerName'], $data['routeID'], $data['c
     $stmt = $conn->prepare($query);
     $stmt->bind_param("sssssss", $customerName, $routeID, $contact, $alternativeContact, $address, $newEmailID, $oldEmailID);
 
+    $query = "UPDATE accounts SET username = ?, email = ? WHERE email = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("sss", $customerName, $newEmailID, $oldEmailID);
+
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "Customer updated successfully!"]);
     } else {

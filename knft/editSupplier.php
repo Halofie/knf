@@ -39,6 +39,10 @@ if (isset($data['oldEmailID'], $data['supplierName'], $data['farmLocation'], $da
     $query = "UPDATE suppliers SET supplierName = ?, farmLocation = ?, contact = ?, alternativeContact = ?, farmSize = ?, emailID = ? WHERE emailID = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("sssssss", $supplierName, $farmLocation, $contact, $alternativeContact, $farmSize, $newEmailID, $oldEmailID);
+    
+    $query = "UPDATE accounts SET username = ?, email = ? WHERE email = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("sss", $supplierName, $newEmailID, $oldEmailID);
 
     if ($stmt->execute()) {
         echo json_encode(["success" => true, "message" => "Supplier updated successfully!"]);
