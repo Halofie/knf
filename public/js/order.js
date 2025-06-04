@@ -158,7 +158,7 @@ function renderMenu() {
                 <th scope="row">${productName}</th>
                 <td>
                     <p class="price" id="p${productId}">Rs.${productPrice}/unit</p>
-                    <p>Available: <b id="ava${productId}">${availableQuantity}</b></p>
+                    <p>Available: <b id="ava${productId}">${(availableQuantity < 0) ? 0 : availableQuantity }</b></p>
                 </td>
                 <td><input type="number" id="q${productId}" value="${purchasedQuantity}" min="0" max="${availableQuantity}"></td>
                 <td>
