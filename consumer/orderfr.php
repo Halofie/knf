@@ -37,7 +37,7 @@ if ($_SESSION['role'] !== 'C') {
       </div>
       <div>
         <a class="btn" href="../knft/logout.php">HOME</a>
-        <a class="btn" href="orderfr.php">ORDER PRODUCTS</a> 
+        <a class="btn" href="orderfr.php" >ORDER PRODUCTS</a> 
         <a class="btn" href="#two">PURCHASE HISTORY</a> 
         <a class="btn" href="../knft/logout.php">LOGOUT</a>
       </div>
@@ -67,7 +67,7 @@ if ($_SESSION['role'] !== 'C') {
       </div>
     </div>
   </div>
-
+<section class="container <?php if (!empty($_SESSION['userLock'])) echo 'd-none'; ?>">
   <div class="products m-5">
     <table class="table table-success border border-success">
       <thead>
@@ -203,8 +203,7 @@ if ($_SESSION['role'] !== 'C') {
         </div>
       </div>
     </div>
-
-
+</section>
 <div class="page" id="two">
   <div class=" h-auto p-2 d-flex justify-content-between row darkGreen">
     <div class="col-1 d-flex justify-content-center ">

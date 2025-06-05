@@ -4,6 +4,25 @@ let custID = 0;
 let weekId = 0;
 let cRoute = "";
 let cId = 0;
+let lock = 0; // Global variable to store userLock status
+
+async function fetchUserLock() {
+    try {
+        const response = await fetch('../knft/getUserLock.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (!response.ok) throw new Error('Failed to fetch user lock status');
+        const data = await response.json();
+        // Store the status in the global variable
+        lock = typeof data.Status !== "undefined" ? parseInt(data.Status, 10) : 0;
+        console.log("User lock status:", lock);
+    } catch (error) {
+        console.error('Error fetching user lock status:', error);
+        lock = 0; // Default to unlocked if error
+    }
+}
+fetchUserLock();
 
 async function fetchEmailAndRunProgram() {
     try {

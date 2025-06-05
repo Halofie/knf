@@ -47,7 +47,7 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
             $_SESSION['role'] = $category;
             $_SESSION['account_id'] = $acc_id;
             $_SESSION['is_admin'] = false; // Store admin ID in session
-
+            
             // Redirect based on user category
             if ($category == "A") {
                 $_SESSION['is_admin'] = true; // Store admin ID in session
@@ -74,6 +74,8 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
                 header("Location: supplier.php");
                 exit();
             } else if ($category == "C") {
+                $sql = "SELECT value FROM update_variables WHERE topic = 'userLock'";
+                $_SESSION['userLock'] = $con->query($sql);
                 header("Location: consumer.php");
                 exit();
             } else {
