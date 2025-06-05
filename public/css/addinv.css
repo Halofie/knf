@@ -337,3 +337,38 @@ h1, h2, h3 {
     padding: 1rem 0;
   }
 }
+
+/* ...existing code... */
+.btn-gradient {
+    background: linear-gradient(90deg, #388e3c 0%, #04ea27 100%);
+    color: #fff;
+    border: none;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 50px;
+    box-shadow: 0 2px 10px rgba(76,175,80,0.15);
+    padding: 0.85rem 2.2rem 0.85rem 1.2rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.btn-gradient:hover, .btn-gradient:focus {
+    background: linear-gradient(90deg, #388e3c 0%, #04ea27 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 6px 24px rgba(76,175,80,0.18);
+    text-decoration: none;
+}
+.btn-gradient img {
+    filter: brightness(0) invert(1);
+    margin-right: 0.5rem;
+    width: 28px;
+    height: 28px;
+    transition: transform 0.2s;
+}
+.btn-gradient:hover img {
+    transform: scale(1.1) rotate(-8deg);
+}
+/* ...existing code... */
