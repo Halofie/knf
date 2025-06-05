@@ -37,14 +37,13 @@ if ($_SESSION['role'] !== 'C') {
       </div>
       <div>
         <a class="btn" href="../knft/logout.php">HOME</a>
-        <a class="btn" href="#one">ORDER PRODUCTS</a> 
+        <a class="btn" href="orderfr.php">ORDER PRODUCTS</a> 
         <a class="btn" href="#two">PURCHASE HISTORY</a> 
         <a class="btn" href="../knft/logout.php">LOGOUT</a>
       </div>
   </div>
 </div>
 
-<div class="page" id="one">
   <!-- the top bar-->
   <div class=" h-auto p-2 d-flex justify-content-between row darkGreen">
     <div class="col-1 d-flex justify-content-center ">
@@ -205,7 +204,6 @@ if ($_SESSION['role'] !== 'C') {
       </div>
     </div>
 
-</div>
 
 <div class="page" id="two">
   <div class=" h-auto p-2 d-flex justify-content-between row darkGreen">
