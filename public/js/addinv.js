@@ -122,11 +122,12 @@ function populateInventoryTableInternal(tableBodySelector, products, addDeleteBu
         return;
     }
 
+    // ...existing code...
     products.forEach(product => {
         const row = document.createElement("tr");
-        // Ensure property names match your PHP output
+        // Add data-product-id for copy logic
         row.innerHTML = `
-            <td>${product.product_name || 'N/A'}</td>
+            <td data-product-id="${product.prod_id || product.product_id || ''}">${product.product_name || 'N/A'}</td>
             <td>${product.category_id || 'N/A'}</td>
             <td>₹${typeof product.price === 'number' ? product.price.toFixed(2) : (product.price || '0.00')}</td>
             <td>${product.quantity || '0'} ${product.unit_id || ''}</td>
@@ -137,6 +138,7 @@ function populateInventoryTableInternal(tableBodySelector, products, addDeleteBu
         `;
         tableBody.appendChild(row);
     });
+    // ...existing code...
 }
 
 
@@ -568,6 +570,82 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeClock();
     loadWeekDropdown();
     initialize(); // Ensure the rest of the page functionality is initialized
+});
+
+// ...existing code...
+
+// Show/hide the copy button based on whether history is loaded
+document.getElementById('weekForm').addEventListener('submit', function(event) {
+    setTimeout(() => {
+        const inventoryRows = document.querySelectorAll('.inventory-body tr');
+        const btn = document.getElementById('copyToCurrentWeekBtn');
+        // Show button only if there are products in history
+        btn.style.display = (inventoryRows.length && !inventoryRows[0].textContent.includes('No inventory')) ? 'block' : 'none';
+    }, 500); // Wait for inventory to load
+});
+
+// Copy products from history to current week
+// ...inside the copyToCurrentWeekBtn click handler...
+document.getElementById('copyToCurrentWeekBtn').addEventListener('click', async function() {
+    const rows = document.querySelectorAll('.inventory-body tr');
+    if (!rows.length || rows[0].textContent.includes('No inventory')) {
+        alert('No products to copy.');
+        return;
+    }
+    if (!globalFarmerId || !globalCurrentWeekId) {
+        alert('Farmer or week not loaded.');
+        return;
+    }
+    // Gather products from history table
+    const productsToCopy = [];
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 5) {
+            let productId = cells[0].dataset.productId || '';
+            const productName = cells[0].textContent.trim();
+            // If productId is missing, try to find it from master data (case-insensitive)
+            if (!productId && globalProductMasterData && globalProductMasterData.data) {
+                const found = globalProductMasterData.data.find(
+                    p => (p.product && p.product.toLowerCase() === productName.toLowerCase()) ||
+                        (p.product_name && p.product_name.toLowerCase() === productName.toLowerCase())
+                );
+                if (found) productId = found.prod_id || found.product_id || '';
+            }
+            console.log('Copying:', productName, 'Resolved productId:', productId);
+            productsToCopy.push({
+                p_id: productId,
+                p_name: productName,
+                cat_id: cells[1].textContent.trim(),
+                price: parseFloat(cells[2].textContent.replace(/[^\d.]/g, '')) || 0,
+                quantity: parseFloat(cells[3].textContent) || 0,
+                uom_id: (cells[3].textContent.split(' ')[1] || '').trim(),
+                week_id: globalCurrentWeekId,
+                farmer_Id: globalFarmerId,
+                DateTime: new Date().toLocaleString()
+            });
+        }
+    });
+    if (!productsToCopy.length) {
+        alert('No valid products found to copy.');
+        return;
+    }
+    // Send to backend in batch
+    try {
+        const response = await fetch('../knft/submitINV.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(productsToCopy)
+        });
+        const data = await response.json();
+        if (data && data.status === 'success') {
+            displayMessage('#submission-result', data.message || 'Products copied to current week!', true);
+            fetchAndDisplayInventory(globalFarmerId, globalCurrentWeekId, ".currentinventory-body", true);
+        } else {
+            displayMessage('#submission-result', data.message || 'Copy failed.', false);
+        }
+    } catch (err) {
+        displayMessage('#submission-result', 'Error copying products: ' + err.message, false);
+    }
 });
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

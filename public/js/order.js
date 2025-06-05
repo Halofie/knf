@@ -119,6 +119,7 @@ async function loadMenu() {
 let prodData = [];
 let prodlist = [];
 let purchasedItems = {};
+let prodMap = {};
 
 async function fetchInventory() {
     try {
@@ -136,7 +137,14 @@ async function fetchProductList() {
         const response = await fetch('../knft/getProduct.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }});
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
-        if (data.data) prodlist = data.data;
+        if (data.data) {
+            prodlist = data.data;
+            // Build a map for fast lookup by product_id
+            prodMap = {};
+            prodlist.forEach(p => {
+                prodMap[p.prod_id || p.product_id] = p;
+            });
+        }
     } catch (error) {
         console.error('Error fetching product list:', error.message);
     }
@@ -148,7 +156,8 @@ function renderMenu() {
     
     prodData.forEach(product => {
         const productId = product.product_id;
-        const productName = prodlist[productId - 1]?.product || "Unknown";
+        const productObj = prodMap[productId] || {};
+        const productName = productObj.product || productObj.product_name || "Unknown";
         const productPrice = product.price;
         const availableQuantity = product.quantity;
         const purchasedQuantity = purchasedItems[productId]?.quantity || 0;
@@ -270,11 +279,10 @@ async function fetchOrders(week_id, customer_id) {
 // Function to render the cart
 function renderCart() {
     const cartBody = document.querySelector('.cart-body');
-    cartBody.innerHTML = ''; // Clear previous data
+    cartBody.innerHTML = '';
     document.getElementById('itemCount').innerText = Object.keys(purchasedItems).length;
     if (Object.keys(purchasedItems).length === 0) {
         cartBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Your cart is empty</td></tr>`;
-        // Update total cost to zero if cart is empty
         document.getElementById('totalCost').innerText = "₹0.00";
         return;
     }
@@ -282,30 +290,22 @@ function renderCart() {
     let total = 0;
 
     Object.entries(purchasedItems).forEach(([productId, item]) => {
-        const product = prodlist[productId - 1] || { product: "Unknown", category: "Unknown" }; // Match product
-
+        const product = prodMap[productId] || { product: "Unknown", category: "Unknown" };
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${product.product}</td>
-            <td>${product.category_id}</td>
+            <td>${product.product || product.product_name || "Unknown"}</td>
+            <td>${product.category_id || ""}</td>
             <td>Rs.${item.price.toFixed(2)}</td>
             <td>${item.quantity}</td>
             <td>
                 <button class="btn btn-danger btn-sm deleteButton" data-id="${productId}">Delete</button>
             </td>
         `;
-
         cartBody.appendChild(row);
-
-        // Add to total
         total += item.price * item.quantity;
     });
 
-    // Update the total cost display
     document.getElementById('totalCost').innerText = `₹${total.toFixed(2)}`;
-
-    
-
     attachDeleteEventListeners();
 }
 
