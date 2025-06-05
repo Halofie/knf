@@ -215,11 +215,11 @@ if ($_SESSION['role'] !== 'C') {
         <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
     </div>
     <div class="col-6 color-paleGreen" >
-        <h1 id="name">.</h1>
-        <p class="navinfo m-0" id="phone">.</p>
-        <p class="navinfo m-0" id="address">.</p>
-        <p class="navinfo m-0" id="week">.</p>
-        <p class="navinfo m-0" id="route">.</p>
+        <h1 id="history_name">.</h1>
+        <p class="navinfo m-0" id="history_phone">.</p>
+        <p class="navinfo m-0" id="history_address">.</p>
+        <p class="navinfo m-0" id="history_week">.</p>
+        <p class="navinfo m-0" id="history_route">.</p>
     </div>
     <div class="col-3 d-flex justify-content-end">
       <div class="m-0 d-block color-paleGreen justify-content-end">
@@ -227,8 +227,83 @@ if ($_SESSION['role'] !== 'C') {
       </div>
     </div>
   </div>
-  <div>
-     ->> Sangit put the order history thing here. i need a table to generate it. copy n paste the history layout from addinv.html
+  <!-- Enhanced Purchase History Section -->
+  <div class="container my-5" id="purchaseHistorySection"> <!-- Added ID for easy navigation -->
+    <h2 class="text-center mb-4 display-5 fw-bold text-success">
+        <i class="fas fa-history me-2"></i>My Purchase History
+    </h2>
+
+    <!-- Week Filter for Order History -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-lg-7 col-md-9">
+        <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #e9f7ef 0%, #d4edda 100%);">
+          <div class="card-body p-4">
+            <form id="orderHistoryWeekForm" class="row g-3 align-items-end">
+              <div class="col-md">
+                  <label for="orderHistoryWeekDropdown" class="form-label fw-bold text-success mb-1">
+                      <i class="fas fa-calendar-alt me-2"></i>Filter by Delivery Week:
+                  </label>
+                  <select class="form-select form-select-lg shadow-sm" id="orderHistoryWeekDropdown" style="border: 2px solid #28a745; border-radius: 12px;">
+                      <option value="" selected>Loading delivery weeks...</option>
+                      <option value="all">Show All Orders</option>
+                      <!-- Weeks will be populated by JS -->
+                  </select>
+              </div>
+              <div class="col-md-auto">
+                  <button type="submit" class="btn btn-lg btn-success shadow-sm w-100" style="border-radius: 12px;">
+                      <i class="fas fa-filter me-2"></i>Load Orders
+                  </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="order-history-result" class="m-3 alert" style="display: none;"></div> <!-- For general messages -->
+
+    <div class="purchase-history-container container mt-4"> <!-- Added container for better layout -->
+      <div class="card shadow-sm">
+          <div class="card-header bg-success text-white">
+              <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Purchase Details</h5>
+          </div>
+          <div class="card-body p-0"> <!-- p-0 to make table flush with card -->
+              <div class="table-responsive">
+                  <table class="table table-hover table-striped mb-0"> <!-- mb-0 to remove bottom margin -->
+                      <thead class="table-light"> <!-- Using table-light for a softer header -->
+                          <tr>
+                              <th scope="col">Product Name</th>
+                              <th scope="col">Category</th>
+                              <th scope="col" class="text-end">Price/Unit</th>
+                              <th scope="col" class="text-center">Quantity</th>
+                              <!-- <th scope="col">Unit</th> -->
+                              <th scope="col">Route (Delivery Type)</th>
+                              <th scope="col" class="text-end">Total Cost</th>
+                          </tr>
+                      </thead>
+                      <tbody class="purchase-history-body">
+                          <!-- Purchase items will be dynamically inserted here by JavaScript -->
+                          <!-- Example of a row (for structure reference):
+                          <tr>
+                              <td>Carrots</td>
+                              <td>Vegetable</td>
+                              <td class="text-end">₹50.00</td>
+                              <td class="text-center">2</td>
+                              <td>kg</td>
+                              <td>Route A (Home Delivery)</td>
+                              <td class="text-end">₹100.00</td>
+                          </tr>
+                          -->
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+      <p class="text-center text-muted p-4" id="no-orders-message" style="display: none; font-size: 1.2rem;">
+          <i class="fas fa-shopping-bag fa-2x mb-3 d-block"></i>
+          You have no past orders to display for the selected period.
+      </p>
+    </div>
   </div>
 </div>
     <!-- Optional JavaScript -->
