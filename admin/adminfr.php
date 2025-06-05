@@ -82,6 +82,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
             <a class="btn m-3 btn-primary" href="#seven">Week Master</a>
             <a class="btn m-3 btn-primary" href="../knft/trunc_temp.php">clear Temp_inv</a>
             <a class="btn m-3 btn-primary" href="../knft/loadTempInventory.php">load Temp_inv</a>
+            <a class="btn m-3" id="lockButton" href="../knft/editUserLock.php">lock/unlock button</a>
             <a class="btn m-3 btn-secondary" href="../knft/transferFile.php">Download Orders</a>
         </div>
     </div>

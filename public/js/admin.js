@@ -722,8 +722,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Initial Data Loading ---
     loadAllAdminData(); // Load data for all admin sections
-
+    initialiseLockButton();
     // --- Event Listeners ---
+    document.getElementById('lockButton')?.addEventListener('click', buttonLockToggle);
 
     // Form Submissions (Add New)
     document.getElementById('uomForm')?.addEventListener('submit', handleAddUom);
@@ -1426,3 +1427,70 @@ function handleDeleteWeek(e) {
               .catch(errorResponse => handleFetchError(errorResponse, '#result-week'));
      }
 }
+async function buttonLockToggle(e) {
+    e.preventDefault();
+    const btn = document.getElementById('lockButton');
+    if (!btn) return;
+
+    // Toggle lock status
+    try {
+        // Call the toggle API
+        const toggleResponse = await fetch('../knft/editUserLock.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const toggleData = await toggleResponse.json();
+
+        // Now get the current status
+        const statusResponse = await fetch('../knft/getUserLock.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const statusData = await statusResponse.json();
+
+        let status = (typeof statusData.Status !== "undefined") ? parseInt(statusData.Status, 10) : 0;
+
+        // Update button color and text
+        if (status === 1) {
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-danger');
+            btn.textContent = 'User Lock: ON';
+        } else {
+            btn.classList.remove('btn-danger');
+            btn.classList.add('btn-success');
+            btn.textContent = 'User Lock: OFF';
+        }
+    } catch (error) {
+        console.error('Error toggling user lock:', error);
+    }
+}
+async function initialiseLockButton() {
+    const btn = document.getElementById('lockButton');
+    if (!btn) return;
+
+    try {
+        const statusResponse = await fetch('../knft/getUserLock.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const statusData = await statusResponse.json();
+        let status = (typeof statusData.Status !== "undefined") ? parseInt(statusData.Status, 10) : 0;
+
+        if (status === 1) {
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-danger');
+            btn.textContent = 'User Lock: ON';
+        } else {
+            btn.classList.remove('btn-danger');
+            btn.classList.add('btn-success');
+            btn.textContent = 'User Lock: OFF';
+        }
+    } catch (error) {
+        console.error('Error fetching initial user lock status:', error);
+    }
+}
+
+// Call this after DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+    
+});
