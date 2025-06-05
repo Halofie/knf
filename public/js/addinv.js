@@ -312,11 +312,11 @@ async function initialize() {
     setupEventListeners(globalFarmerId, globalCurrentWeekId, globalProductMasterData);
     console.log("Initialization complete.");
 }
+let tempInv = {};
+const itemsContainer = document.querySelector('.items');
 
 function setupEventListeners(fId, currentLocalWeekId, productMasterList) {
-    let tempInv = {};
     const addProductButton = document.querySelector(".ADDPRODUCT");
-    const itemsContainer = document.querySelector(".items"); // For edit/delete of temp items
     const submissionButton = document.querySelector(".submission");
     const weekForm = document.getElementById("weekForm");
     const currentInventoryTableBody = document.querySelector(".currentinventory-body");
@@ -585,8 +585,9 @@ document.getElementById('weekForm').addEventListener('submit', function(event) {
 });
 
 // Copy products from history to current week
-// ...inside the copyToCurrentWeekBtn click handler...
-document.getElementById('copyToCurrentWeekBtn').addEventListener('click', async function() {
+// ...existing code...
+
+document.getElementById('copyToCurrentWeekBtn').addEventListener('click', function() {
     const rows = document.querySelectorAll('.inventory-body tr');
     if (!rows.length || rows[0].textContent.includes('No inventory')) {
         alert('No products to copy.');
@@ -596,8 +597,8 @@ document.getElementById('copyToCurrentWeekBtn').addEventListener('click', async 
         alert('Farmer or week not loaded.');
         return;
     }
-    // Gather products from history table
-    const productsToCopy = [];
+
+    let addedCount = 0;
     rows.forEach(row => {
         const cells = row.querySelectorAll('td');
         if (cells.length >= 5) {
@@ -611,42 +612,51 @@ document.getElementById('copyToCurrentWeekBtn').addEventListener('click', async 
                 );
                 if (found) productId = found.prod_id || found.product_id || '';
             }
-            console.log('Copying:', productName, 'Resolved productId:', productId);
-            productsToCopy.push({
+            // Avoid duplicates in tempInv
+            if (!productId || tempInv[productId]) return;
+
+            const catId = cells[1].textContent.trim();
+            const price = parseFloat(cells[2].textContent.replace(/[^\d.]/g, '')) || 0;
+            const quantity = parseFloat(cells[3].textContent) || 0;
+            const uomId = (cells[3].textContent.split(' ')[1] || '').trim();
+
+            tempInv[productId] = {
                 p_id: productId,
                 p_name: productName,
-                cat_id: cells[1].textContent.trim(),
-                price: parseFloat(cells[2].textContent.replace(/[^\d.]/g, '')) || 0,
-                quantity: parseFloat(cells[3].textContent) || 0,
-                uom_id: (cells[3].textContent.split(' ')[1] || '').trim(),
+                cat_id: catId,
+                price: price,
+                quantity: quantity,
+                uom_id: uomId,
                 week_id: globalCurrentWeekId,
                 farmer_Id: globalFarmerId,
                 DateTime: new Date().toLocaleString()
-            });
+            };
+
+            // Add to DOM (temporary items list)
+            const total = (price * quantity).toFixed(2);
+            itemsContainer.insertAdjacentHTML('beforeend',
+                `<div class="item border py-2 px-3 m-2 bg-light rounded shadow-sm" id="temp-${productId}">
+                     <h5 class="mb-1 d-flex justify-content-between">
+                        <span>${productName} (#${productId})</span>
+                        <div>
+                            <button type="button" class="btn btn-sm btn-outline-secondary edit-temp-item me-1" data-id="${productId}">Edit Qty</button>
+                            <button type="button" class="btn btn-sm btn-outline-danger delete-temp-item" data-id="${productId}">Del</button>
+                        </div>
+                     </h5>
+                     <p class="mb-0 small">Qty: <span class="temp-qty">${quantity}</span> ${uomId} @ ₹${price}/unit. Total: ₹<span class="temp-total">${total}</span>. Cat: ${catId}</p>
+                 </div>`);
+            addedCount++;
         }
     });
-    if (!productsToCopy.length) {
-        alert('No valid products found to copy.');
-        return;
-    }
-    // Send to backend in batch
-    try {
-        const response = await fetch('../knft/submitINV.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(productsToCopy)
-        });
-        const data = await response.json();
-        if (data && data.status === 'success') {
-            displayMessage('#submission-result', data.message || 'Products copied to current week!', true);
-            fetchAndDisplayInventory(globalFarmerId, globalCurrentWeekId, ".currentinventory-body", true);
-        } else {
-            displayMessage('#submission-result', data.message || 'Copy failed.', false);
-        }
-    } catch (err) {
-        displayMessage('#submission-result', 'Error copying products: ' + err.message, false);
+
+    if (addedCount === 0) {
+        alert('No new valid products found to copy (duplicates skipped).');
+    } else {
+        alert(`${addedCount} products copied to your selection. Review and submit.`);
     }
 });
+
+// ...existing code...
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
