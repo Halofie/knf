@@ -358,7 +358,7 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
         alert('Your cart is empty. Please add items to the cart before placing an order.');
         return;
     }
-
+    console.warn("Confirm Purchase By clicking Ok");
     try {
         // Prepare the data to send
         const orderData = {

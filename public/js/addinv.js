@@ -508,6 +508,7 @@ function setupEventListeners(fId, currentLocalWeekId, productMasterList) {
                 document.getElementById('inventory-result').textContent = 'Loading history...';
                 document.getElementById('inventory-result').style.display = 'block';
                 fetchAndDisplayInventory(fId, selectedWeekId, ".inventory-body", false);
+                document.getElementById('inventory-result').textContent = '';
             } else if (!selectedWeekId) {
                 alert("Please select a week.");
             } else {
