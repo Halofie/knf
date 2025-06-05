@@ -12,7 +12,6 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request method. Only POST is accepted.']);
     $id = $_POST['id'] ?? null;
 
     if (!$id) {
