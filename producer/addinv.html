@@ -147,6 +147,7 @@
             </div>
 
             <!-- Enhanced Week Selection -->
+            <!-- ...existing code... -->
             <div class="d-flex justify-content-center week-selection">
                 <div class="col-6">
                     <form class="form-enhanced form-control White p-4" id="weekForm">
@@ -156,6 +157,10 @@
                         </select>
                         <input type="submit" class="btn-success btn-enhanced m-3 submit-week btn" value="Load Inventory">
                     </form>
+                    <button type="button" id="copyToCurrentWeekBtn" class="btn btn-lg btn-gradient m-3 shadow rounded-pill d-flex align-items-center gap-2" style="display:none;">
+                        <img src="../public/Assets/copy.svg" alt="Copy" style="width: 24px; height: 24px;">
+                        <span>Copy These Products to <b>Current Week</b></span>
+                    </button>
                 </div>
             </div>
 
