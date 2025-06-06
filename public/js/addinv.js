@@ -125,6 +125,7 @@ function populateInventoryTableInternal(tableBodySelector, products, addDeleteBu
     // ...existing code...
     products.forEach(product => {
         const row = document.createElement("tr");
+        console.log("Rendering product for history:", product);
         // Add data-product-id for copy logic
         row.innerHTML = `
             <td data-product-id="${product.prod_id || product.product_id || ''}">${product.product_name || 'N/A'}</td>
@@ -133,7 +134,7 @@ function populateInventoryTableInternal(tableBodySelector, products, addDeleteBu
             <td>${product.quantity || '0'} ${product.unit_id || ''}</td>
             ${addDeleteButton ? 
                 `<td><button class="btn btn-sm btn-danger remove-from-inv" data-inventory-id="${product.id}">Delete</button></td>` :
-                `<td>${product.datetime || 'N/A'}</td>`
+                `<td>${product.inv_datetime || product.datetime || 'N/A'}</td>`
             }
         `;
         tableBody.appendChild(row);
