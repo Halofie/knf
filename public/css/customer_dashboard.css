@@ -1,0 +1,25 @@
+body.bg-light {
+    background-color: #f8f9fa !important; /* Bootstrap light grey */
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+}
+.navbar-dark .navbar-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #fff;
+}
+.dropdown-menu {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+.dropdown-item i {
+    width: 20px; /* Align icons nicely */
+}
+.card-header {
+    font-weight: bold;
+}
+.shadow-top {
+    box-shadow: 0 -0.125rem 0.25rem rgba(0,0,0,0.075) !important;
+}
+/* Add more custom styles as needed */

@@ -1,4 +1,3 @@
-```php
 <?php
 session_start();
  // Check 1: Is the user logged in?
@@ -70,7 +69,7 @@ session_start();
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a class="nav-link" href="orderfr.php#purchaseHistorySection"> <!-- Link to history section -->
+                         <a class="nav-link" href="orderfr.php#two"> <!-- Link to history section -->
                              <i class="fas fa-history me-1"></i>My Orders
                          </a>
                      </li>
@@ -118,7 +117,7 @@ session_start();
                      </div>
                      <ul class="list-group list-group-flush">
                          <li class="list-group-item"><a href="orderfr.php" class="text-decoration-none text-success"><i class="fas fa-plus-circle me-2"></i>Place New Order</a></li>
-                         <li class="list-group-item"><a href="orderfr.php#purchaseHistorySection" class="text-decoration-none text-info"><i class="fas fa-receipt me-2"></i>View Order History</a></li>
+                         <li class="list-group-item"><a href="orderfr.php#two" class="text-decoration-none text-info"><i class="fas fa-receipt me-2"></i>View Order History</a></li>
                          <!-- Add more links as needed -->
                      </ul>
                  </div>
@@ -166,5 +165,3 @@ session_start();
      <!-- <script src="../public/js/customer_dashboard.js"></script> -->
  </body>
  </html>
-
- ```
