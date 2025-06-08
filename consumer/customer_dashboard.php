@@ -39,19 +39,20 @@ session_start();
      <title>Welcome, <?php echo htmlspecialchars($customer_name); ?>!</title>
      <!-- Link your CSS: Bootstrap, your custom CSS for this dashboard -->
      <link href="../public/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="../public/css/order.css">
      <link rel="stylesheet" href="../public/css/customer_dashboard.css"> <!-- Create this CSS file -->
      <link rel="icon" href="../public/Assets/pic.jpeg">
      <!-- Font Awesome for icons (optional but nice) -->
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
  </head>
- <body class="bg-light"> <!-- Example body class -->
+ <body class="paleGreen"> <!-- Example body class -->
 
      <!-- Navigation Bar (similar to home.html but with customer context) -->
      <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
          <div class="container">
              <a class="navbar-brand" href="#">
                  <img src="../public/Assets/pic.jpeg" alt="KNF Logo" width="40" height="40" class="d-inline-block align-text-top rounded-circle me-2">
-                 Kovai Natural Farms
+                 Kovai Natural Farmers
              </a>
              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                  <span class="navbar-toggler-icon"></span>
