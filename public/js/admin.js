@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initialiseLockButton();
     // --- Event Listeners ---
     document.getElementById('lockButton')?.addEventListener('click', buttonLockToggle);
-
+    Fullfillform()
+    editFulfillListener(); // Initialize fulfill form event listeners
     // Form Submissions (Add New)
     document.getElementById('uomForm')?.addEventListener('submit', handleAddUom);
     document.getElementById('categoryForm')?.addEventListener('submit', handleAddCategory);
@@ -658,6 +659,8 @@ function getWeekData() {
 }
 function displayWeekTable(weeks) {
     const tbody = document.querySelector(".week-body"); if(!tbody) return; tbody.innerHTML = "";
+    const dropdownweek = document.querySelector("#weekDropdown");
+    dropdownweek.innerHTML = ""; // Clear existing options
     if (!weeks || weeks.length === 0) { /*...*/ return; }
     weeks.forEach(week => {
         tbody.innerHTML += `
@@ -669,6 +672,7 @@ function displayWeekTable(weeks) {
                     <button class="btn btn-sm btn-danger delete-week-btn" data-id="${week.weekID}" data-date="${week.weekdate}"><img src="../public/Assets/delete.png" class="icon-sm"></button>
                 </td>
             </tr>`;
+        dropdownweek.innerHTML += `<option value="${week.weekID}">${week.weekdate}</option>`;
     });
 }
 function handleAddWeek(e) {
@@ -768,8 +772,112 @@ async function initialiseLockButton() {
         console.error('Error fetching initial user lock status:', error);
     }
 }
+function Fullfillform() {
+    const form = document.getElementById('fullfillweekForm');
+    const weekDropdown = document.getElementById('weekDropdown');
+    const fulfillBody = document.querySelector('.fulfill-body');
 
-// Call this after DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function() {
-    
-});
+    if (form && weekDropdown && fulfillBody) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const week_id = weekDropdown.value;
+            console.log("Selected Week ID:", week_id);
+            if (!week_id) return;
+
+            fulfillBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>';
+
+            try {
+                const response = await fetch('../knft/getOrderFullfill.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ week_id: week_id })
+                });
+                const data = await response.json();
+                if (data.success && Array.isArray(data.orders)) {
+                    loadFulfillTable(data.orders);
+                } else {
+                    loadFulfillTable([]);
+                }
+            } catch (error) {
+                fulfillBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error loading data.</td></tr>';
+                console.error(error);
+            }
+        });
+    }
+};
+
+function loadFulfillTable(data) {
+    const fulfillBody = document.querySelector('.fulfill-body');
+    if (!fulfillBody) return;
+
+    if (Array.isArray(data) && data.length > 0) {
+        fulfillBody.innerHTML = '';
+        data.forEach(order => {
+            fulfillBody.innerHTML += `
+                <tr>
+                    <td>${order.rec_date_time || ''}</td>
+                    <td>${order.customerName || ''}</td>
+                    <td>${order.product || ''}</td>
+                    <td>${order.quantity} @ ₹${order.rate}</td>
+                    <td>
+                        <input type="number" min="0" value="${order.quantity}" class="form-control form-control-sm fulfill-qty" data-id="${order.id}">
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm update-fulfill" data-id="${order.id}">Update</button>
+                    </td>
+                </tr>
+            `;
+        });
+    } else {
+        fulfillBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No orders found for this week.</td></tr>';
+    }
+}
+function editFulfillListener() {
+
+    const fulfillBody = document.querySelector('.fulfill-body');
+    if (fulfillBody) {
+        fulfillBody.addEventListener('click', async function(e) {
+            const btn = e.target.closest('.update-fulfill');
+            if (!btn) return;
+
+            const id = btn.getAttribute('data-id');
+            const qtyInput = btn.closest('tr').querySelector('.fulfill-qty');
+            const quantity = qtyInput ? parseInt(qtyInput.value, 10) : null;
+            const weekDropdown = document.getElementById('weekDropdown');
+            const week_id = weekDropdown ? weekDropdown.value : null;
+
+            if (!id || quantity === null || !week_id) return;
+
+            btn.disabled = true;
+            btn.textContent = 'Updating...';
+
+            try {
+                const response = await fetch('../knft/editFulfillment.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id, quantity: quantity })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    // Reload the table for the current week
+                    const reloadResponse = await fetch('../knft/getOrderFullfill.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ week_id: week_id })
+                    });
+                    const reloadData = await reloadResponse.json();
+                    loadFulfillTable(reloadData.orders || []);
+                } else {
+                    alert(data.message || 'Update failed');
+                }
+            } catch (error) {
+                alert('Error updating fulfillment');
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Update';
+            }
+        });
+    }
+};

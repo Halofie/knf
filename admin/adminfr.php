@@ -45,6 +45,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                 <a class="btn" href="#five">CUSTOMER REGISTRATION</a>
                 <a class="btn" href="#six">SUPPLIER REGISTRATION</a>
                 <a class="btn" href="#seven">WEEK MASTER</a>
+                <a class="btn" href="#eight">ORDER FULFILL</a>
+
                 <a class="btn" href="../knft/logout.php">LOGOUT</a>
             </div>
         </div>
@@ -80,6 +82,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
             <a class="btn m-3 btn-primary" href="#five">Customer Registration</a>
             <a class="btn m-3 btn-primary" href="#six">Supplier Registration</a>
             <a class="btn m-3 btn-primary" href="#seven">Week Master</a>
+            <a class="btn m-3 btn-primary" href="#eight">Order Fulfillment</a>
             <a class="btn m-3 btn-primary" href="../knft/trunc_temp.php">clear Temp_inv</a>
             <a class="btn m-3 btn-primary" href="../knft/loadTempInventory.php">load Temp_inv</a>
             <a class="btn m-3" id="lockButton" href="../knft/editUserLock.php">lock/unlock button</a>
@@ -544,6 +547,63 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                         </tr>
                     </thead>
                     <tbody class="week-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 8 Order fullfill -->
+    <div class="page" id="eight">
+        <div class=" h-auto p-2 d-flex justify-content-between row darkGreen d-fixed">
+            <div class="col-1 d-flex justify-content-center ">
+                <button class="btn d-block p-0 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                    <img src="../public/Assets/three-bars.svg">
+                </button>
+            </div>
+            <div class="col-2 d-none d-lg-flex justify-content-center">
+                <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
+            </div>
+            <div class="col-6 color-paleGreen" >
+                <h1>WELCOME </h1>
+                <h2>ADMIN</h2>
+            </div>
+            <div class="col-3 d-flex justify-content-end">
+                <div class="m-0 d-block color-paleGreen justify-content-end">
+                    <div class="clock">date</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
+            <h2 class="m-0">Order fulfillment Master</h2>
+            <a class="btn btn-dark" href="#">Back</a>
+        </div>
+        <div class="d-flex justify-content-center week-selection">
+                <div class="col-6">
+                    <form class="form-enhanced form-control White p-4" id="fullfillweekForm">
+                        <label for="weekDropdown" class="form-label label-enhanced">Select Week</label>
+                        <select class="form-select form-control-enhanced" id="weekDropdown" required>
+                            <option value="">Loading weeks...</option>
+                        </select>
+                        <input type="submit" class="btn-success btn-enhanced m-3 submit-week btn" value="Load Inventory">
+                    </form>
+                </div>
+            </div>
+        <div id="result-week" class="m-3 alert" style="display: none;"></div>
+        <div class="fulFillHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Existing Weeks</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Product</th>
+                            <th scope="col">Ordered Quantity and Rate</th>
+                            <th scope="col">Fulfill Quantity</th>
+                            <th scope="col" style="width: 200px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="fulfill-body"></tbody>
                 </table>
             </div>
         </div>
