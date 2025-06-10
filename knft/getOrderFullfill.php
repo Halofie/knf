@@ -33,7 +33,7 @@ $sql = "
     JOIN customers c ON o.customer_id = c.customerID
     JOIN product p ON o.product_id = p.prod_id
     WHERE o.week_id = ?
-    ORDER BY o.rec_date_time DESC
+    ORDER BY o.rec_date_time ASC
 ";
 
 $stmt = $conn->prepare($sql);

@@ -25,6 +25,7 @@ async function fetchUserLock() {
 fetchUserLock();
 
 let globalCustomerId = 0;
+let customerFulfillmentData = [];
 
 async function fetchEmailAndRunProgram() {
     try {
@@ -142,8 +143,7 @@ async function main_load(email) {
 async function loadMenu() {
     await fetchProductList();
     await fetchInventory();
-    await renderMenu();
-    
+    renderMenu();
     await fetchOrders(weekId, custID);
 }
 
@@ -640,22 +640,3 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
         alert('An error occurred while placing your order. Please try again.');
     }
 });
-
-function setupPurchaseHistoryEventListeners() {
-    const historyForm = document.getElementById('orderHistoryWeekForm');
-    if (historyForm) {
-        historyForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const selectedWeekId = document.getElementById('orderHistoryWeekDropdown').value;
-            // globalCustomerId is `cId` from your existing code
-            if (!globalCustomerId || globalCustomerId === 0) {
-                // Attempt to re-fetch or show error
-                // Your main_load should set cId (globalCustomerId)
-                console.error("Customer ID not set. Cannot load history.");
-                displayOrderHistoryMessage("Cannot load history: Your user details are not fully loaded. Please try reloading.", false);
-                return;
-            }
-            fetchAndDisplayConsumerOrders(globalCustomerId, selectedWeekId);
-        });
-    }
-}
