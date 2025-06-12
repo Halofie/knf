@@ -21,33 +21,34 @@ try {
 
     // --- Fetch Fulfillment Line Items ---
     $sql = "SELECT
-                of.id AS fulfillment_item_id, -- Using 'fulfillment_item_id' to distinguish if needed, but JS mostly cares about the structure
-                p.product,
-                p.UoM_id as unit_id,
-                p.category_id,
-                of.quantity,
-                of.rate,
-                of.total_cost,
-                r.deliveryType,
-                r.route
-            FROM
-                order_fulfillment of -- THE ONLY MAJOR CHANGE IS THIS TABLE NAME
-            JOIN
-                product p ON of.product_id = p.prod_id
-            LEFT JOIN
-                routes r ON of.route_id = r.id
-            WHERE
-                of.customer_id = ? AND fo.rec_status = 1";
+            ofl.id AS fulfillment_item_id,
+            p.product,
+            p.UoM_id as unit_id,
+            p.category_id,
+            ofl.quantity,
+            ofl.rate,
+            ofl.total_cost,
+            r.deliveryType,
+            r.route,
+            ofl.date_time
+        FROM
+            order_fulfillment ofl
+        JOIN
+            product p ON ofl.product_id = p.prod_id
+        LEFT JOIN
+            routes r ON ofl.route_id = r.id
+        WHERE
+            ofl.customer_id = ? AND ofl.rec_status = 1";
 
-    $params = [$session_customer_id];
+    $params = [ $session_customer_id ];
     $types = "i";
 
     if ($filter_week_id !== 'all' && !empty($filter_week_id)) {
-        $sql .= " AND of.week_id = ?";
-        $params[] = intval($filter_week_id); // Assuming week_id is int
+        $sql .= " AND ofl.week_id = ?";
+        $params[] = intval($filter_week_id);
         $types .= "i";
     }
-    $sql .= " ORDER BY of.date_time DESC, of.id ASC";
+    $sql .= " ORDER BY ofl.date_time DESC, ofl.id ASC";
 
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
@@ -60,9 +61,10 @@ try {
 
     $fulfillment_items = [];
     while ($row = $result->fetch_assoc()) {
-        $route_display = $row['routeName'] ?? 'N/A';
-        if (!empty($row['delivery_type'])) {
-            $route_display .= " (" . $row['delivery_type'] . ")";
+        // Use correct field names from SELECT
+        $route_display = $row['route'] ?? 'N/A';
+        if (!empty($row['deliveryType'])) {
+            $route_display .= " (" . $row['deliveryType'] . ")";
         }
         $row['route_display'] = $route_display;
 
@@ -90,5 +92,6 @@ try {
 } catch (Exception $e) {
     http_response_code(500);
     error_log("getCustomerFulfillment.php Exception: " . $e->getMessage());
+    echo json_encode(["error" => $e->getMessage()]);
 }
 ?>
