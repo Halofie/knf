@@ -25,6 +25,7 @@ async function fetchUserLock() {
 fetchUserLock();
 
 let globalCustomerId = 0;
+let customerFulfillmentData = [];
 
 async function fetchEmailAndRunProgram() {
     try {
@@ -142,8 +143,7 @@ async function main_load(email) {
 async function loadMenu() {
     await fetchProductList();
     await fetchInventory();
-    await renderMenu();
-    
+    renderMenu();
     await fetchOrders(weekId, custID);
 }
 
@@ -641,21 +641,141 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
     }
 });
 
-function setupPurchaseHistoryEventListeners() {
-    const historyForm = document.getElementById('orderHistoryWeekForm');
-    if (historyForm) {
-        historyForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const selectedWeekId = document.getElementById('orderHistoryWeekDropdown').value;
-            // globalCustomerId is `cId` from your existing code
-            if (!globalCustomerId || globalCustomerId === 0) {
-                // Attempt to re-fetch or show error
-                // Your main_load should set cId (globalCustomerId)
-                console.error("Customer ID not set. Cannot load history.");
-                displayOrderHistoryMessage("Cannot load history: Your user details are not fully loaded. Please try reloading.", false);
-                return;
-            }
-            fetchAndDisplayConsumerOrders(globalCustomerId, selectedWeekId);
+// ...existing code...
+
+// Fetch fulfillment data for a customer and week
+async function fetchCustomerFulfillment(customerId, weekIdFilter) {
+    try {
+        const response = await fetch('../knft/getCustomerFulfillment.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ customer_id: customerId, week_id: weekIdFilter })
         });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching fulfillment data:', error);
+        return { error: error.message };
     }
 }
+
+// Render fulfillment data in the table
+function renderFulfillmentTable(items) {
+    const tbody = document.querySelector('.fulfillment-table-body');
+    const noMsg = document.getElementById('no-fulfillment-data-message');
+    tbody.innerHTML = '';
+    if (!items || items.length === 0) {
+        noMsg.style.display = 'block';
+        return;
+    }
+    noMsg.style.display = 'none';
+    items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item.product || ''}</td>
+            <td>${item.quantity || ''}</td>
+            <td>₹${item.rate ? Number(item.rate).toFixed(2) : '0.00'}</td>
+            <td>₹${item.total_cost ? Number(item.total_cost).toFixed(2) : '0.00'}</td>
+            <td>${item.route || ''}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Show fulfillment data message
+function showFulfillmentMessage(msg, isSuccess = true) {
+    const el = document.getElementById('fulfillment-data-message');
+    if (el) {
+        el.textContent = msg;
+        el.className = `m-3 alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
+        el.style.display = 'block';
+        setTimeout(() => { el.style.display = 'none'; }, 5000);
+    }
+}
+
+// Load fulfillment data for selected week
+async function loadFulfillmentData(customerId, weekId) {
+    const data = await fetchCustomerFulfillment(customerId, weekId);
+    if (Array.isArray(data)) {
+        renderFulfillmentTable(data);
+        showFulfillmentMessage('Fulfillment data loaded.', true);
+    } else if (data.items && Array.isArray(data.items)) {
+        renderFulfillmentTable(data.items);
+        showFulfillmentMessage(data.message || 'No fulfillment found.', true);
+    } else if (data.error) {
+        renderFulfillmentTable([]);
+        showFulfillmentMessage(data.error, false);
+    } else {
+        renderFulfillmentTable([]);
+        showFulfillmentMessage('No fulfillment data found.', true);
+    }
+}
+
+// Populate week dropdown for fulfillment filter (reuse fetchWeeksForHistory)
+async function populateFulfillmentWeekDropdown() {
+    const weekDropdown = document.getElementById('fulfillmentDataWeekDropdown');
+    if (!weekDropdown) return;
+    weekDropdown.innerHTML = '<option value="" disabled>Loading delivery weeks...</option><option value="all" selected>Show All Fulfillments</option>';
+    try {
+        const weeks = await fetchWeeksForHistory();
+        if (weeks && weeks.length > 0) {
+            weeks.forEach(week => {
+                if (week.weekID && week.weekdate) {
+                    const option = document.createElement('option');
+                    option.value = week.weekID;
+                    option.textContent = week.weekdate;
+                    weekDropdown.appendChild(option);
+                }
+            });
+            const loadingOption = weekDropdown.querySelector('option[disabled]');
+            if (loadingOption) loadingOption.remove();
+        } else {
+            const loadingOption = weekDropdown.querySelector('option[disabled]');
+            if (loadingOption) loadingOption.textContent = 'No specific weeks found';
+        }
+    } catch (error) {
+        const loadingOption = weekDropdown.querySelector('option[disabled]');
+        if (loadingOption) loadingOption.textContent = 'Error loading weeks';
+    }
+}
+
+// Setup event listener for fulfillment week filter form
+function setupFulfillmentWeekForm(customerId) {
+    const form = document.getElementById('fulfillmentDataWeekForm');
+    if (!form) return;
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const weekId = document.getElementById('fulfillmentDataWeekDropdown').value;
+        loadFulfillmentData(customerId, weekId);
+    });
+}
+
+// Call this after main_load or when customerId is available
+async function initializeFulfillmentSection() {
+    await populateFulfillmentWeekDropdown();
+    setupFulfillmentWeekForm(globalCustomerId);
+    // Load all fulfillments by default
+    if (globalCustomerId && globalCustomerId !== 0) {
+        loadFulfillmentData(globalCustomerId, 'all');
+    }
+}
+
+// After runNextProgram or after main_load, call initializeFulfillmentSection
+// ...existing code...
+async function runNextProgram(email) {
+    await main_load(email);
+    globalCustomerId = cId;
+    await loadMenu();
+
+    if (document.getElementById('purchaseHistorySection') && document.querySelector('.purchase-history-body')) {
+        await initializePurchaseHistory();
+    } else {
+        console.log("Purchase history section/table body not found on this page, skipping initialization.");
+    }
+
+    // Initialize fulfillment section if present
+    if (document.getElementById('fulfillmentDisplaySection')) {
+        await initializeFulfillmentSection();
+    }
+}
+// ...existing code...
