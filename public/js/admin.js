@@ -782,6 +782,7 @@ function Fullfillform() {
             e.preventDefault();
             const week_id = weekDropdown.value;
             console.log("Selected Week ID:", week_id);
+            const get_mode = document.querySelector('input[name="get_mode"]:checked')?.value || 0; // Default to 'all' if not selected
             if (!week_id) return;
 
             fulfillBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>';
@@ -790,7 +791,7 @@ function Fullfillform() {
                 const response = await fetch('../knft/getOrderFullfill.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ week_id: week_id })
+                    body: JSON.stringify({ week_id: week_id , get_mode: get_mode })
                 });
                 const data = await response.json();
                 if (data.success && Array.isArray(data.orders)) {
@@ -845,7 +846,7 @@ function editFulfillListener() {
             const quantity = qtyInput ? parseInt(qtyInput.value, 10) : null;
             const weekDropdown = document.getElementById('weekDropdown');
             const week_id = weekDropdown ? weekDropdown.value : null;
-
+            const get_mode = document.querySelector('input[name="get_mode"]:checked')?.value || 0; // Default to 'all' if not selected
             if (!id || quantity === null || !week_id) return;
 
             btn.disabled = true;
@@ -864,7 +865,7 @@ function editFulfillListener() {
                     const reloadResponse = await fetch('../knft/getOrderFullfill.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ week_id: week_id })
+                        body: JSON.stringify({ week_id: week_id , get_mode: get_mode })
                     });
                     const reloadData = await reloadResponse.json();
                     loadFulfillTable(reloadData.orders || []);

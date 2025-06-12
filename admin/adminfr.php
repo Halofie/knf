@@ -584,6 +584,23 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                         <select class="form-select form-control-enhanced" id="weekDropdown" required>
                             <option value="">Loading weeks...</option>
                         </select>
+                        <div class="mb-3 mt-3">
+                            <label class="form-label fw-bold">Order By:</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="get_mode" id="modeTimestamp" value="0" checked>
+                                    <label class="form-check-label" for="modeTimestamp">Timestamp</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="get_mode" id="modeCustomer" value="1">
+                                    <label class="form-check-label" for="modeCustomer">Customer</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="get_mode" id="modeProduct" value="2">
+                                    <label class="form-check-label" for="modeProduct">Product</label>
+                                </div>
+                            </div>
+                        </div>
                         <input type="submit" class="btn-success btn-enhanced m-3 submit-week btn" value="Load Inventory">
                     </form>
                 </div>
