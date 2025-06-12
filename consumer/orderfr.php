@@ -343,13 +343,24 @@ if ($_SESSION['role'] !== 'C') {
 
     <div id="fulfillment-data-message" class="m-3 alert" style="display: none;"></div> <!-- For general messages -->
 
-    <div class="accordion" id="fulfillmentAccordion"> <!-- New Accordion ID -->
-        <p class="text-center text-muted p-5" id="no-fulfillment-data-message" style="display: none; font-size: 1.2rem;">
-            <i class="fas fa-box-open fa-2x mb-3 d-block"></i>
-            No fulfillment records to display for the selected period.
-        </p>
-        <!-- Accordion items will be dynamically inserted here by JavaScript -->
-    </div>
+    <div class="table-responsive">
+    <table class="table table-hover table-striped mb-0" id="fulfillmentTable">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Rate</th>
+                <th>Total Cost</th>
+                <th>Route</th>
+            </tr>
+        </thead>
+        <tbody class="fulfillment-table-body"></tbody>
+    </table>
+    <p class="text-center text-muted p-5" id="no-fulfillment-data-message" style="display: none; font-size: 1.2rem;">
+        <i class="fas fa-box-open fa-2x mb-3 d-block"></i>
+        No fulfillment records to display for the selected period.
+    </p>
+</div>
 
     <!-- <div class="table-responsive shadow-sm bg-white p-3 rounded">
         <table class="table table-hover table-striped border">
