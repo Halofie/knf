@@ -44,6 +44,30 @@ try {
         $stmt->bind_param("i", $weekId);
         $stmt->execute();
 
+        $sql = "INSERT INTO farmer_rank (farmer_id, prod_id, `rank`)
+            SELECT 
+                Farmer_id, 
+                product_id, 
+                RANK() OVER (PARTITION BY product_id ORDER BY total_quantity DESC) AS `rank`
+            FROM (
+                SELECT 
+                    Farmer_id, 
+                    product_id, 
+                    SUM(quantity) AS total_quantity
+                FROM inventory
+                WHERE weekID = ?
+                GROUP BY product_id, Farmer_id
+            ) AS sub;
+            ";
+
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception("Failed to prepare SQL statement: " . $conn->error);
+        }
+
+        $stmt->bind_param("i", $weekId);
+        $stmt->execute();
+
         if ($stmt->affected_rows > 0) {
             $response["message"] = "Data successfully inserted into temp_inventory.";
         } else {

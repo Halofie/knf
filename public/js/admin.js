@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('lockButton')?.addEventListener('click', buttonLockToggle);
     Fullfillform()
     editFulfillListener(); // Initialize fulfill form event listeners
+    getFarmerRankData();
+    editFarmerRankListener();
     // Form Submissions (Add New)
     document.getElementById('uomForm')?.addEventListener('submit', handleAddUom);
     document.getElementById('categoryForm')?.addEventListener('submit', handleAddCategory);
@@ -882,3 +884,100 @@ function editFulfillListener() {
         });
     }
 };
+// Fetch farmer rank data from the server
+async function getFarmerRankData() {
+    try {
+        const response = await fetch('../knft/getFarmerRank.php', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        if (data.success && Array.isArray(data.ranks)) {
+            renderFarmerRankTable(data.ranks);
+        } else {
+            renderFarmerRankTable([]);
+        }
+    } catch (error) {
+        console.error('Error fetching farmer rank data:', error);
+        renderFarmerRankTable([]);
+    }
+}
+
+// Render the farmer rank table with product grouping
+function renderFarmerRankTable(ranks) {
+    const tbody = document.querySelector('.farmer-rank-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    if (!ranks || ranks.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No farmer rank data found.</td></tr>';
+        return;
+    }
+
+    // Group by product_name
+    const grouped = {};
+    ranks.forEach(row => {
+        if (!grouped[row.product_name]) grouped[row.product_name] = [];
+        grouped[row.product_name].push(row);
+    });
+
+    // Render rows with rowspan for product_name
+    Object.keys(grouped).forEach(product => {
+        const farmers = grouped[product];
+        farmers.forEach((row, idx) => {
+            tbody.innerHTML += `
+                <tr>
+                    ${idx === 0 ? `<td rowspan="${farmers.length}" class="align-middle fw-bold">${product}</td>` : ''}
+                    <td>${row.farmer_name || ''}</td>
+                    <td>${row.rank || ''}</td>
+                    <td>
+                        <input type="number" min="1" value="${row.rank}" class="form-control form-control-sm new-rank-input" id="rankfill${row.id}" data-id="${row.id}">
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-sm update-rank-btn" data-id="${row.id}">Update</button>
+                    </td>
+                </tr>
+            `;
+        });
+    });
+}
+function editFarmerRankListener() {
+    const tbody = document.querySelector('.farmer-rank-body');
+    if (!tbody) return;
+
+    tbody.addEventListener('click', async function(e) {
+        const btn = e.target.closest('.update-rank-btn');
+        if (!btn) return;
+
+        const id = btn.getAttribute('data-id');
+        const input = document.querySelector('#rankfill' + id);
+        if (!input) return; // Ensure input exists
+        const newRank = parseInt(input.value, 10) || 0;
+        if (!id || newRank === 0 || isNaN(newRank)) return;
+
+        btn.disabled = true;
+        btn.textContent = 'Updating...';
+        console.log(`Updating rank for ID: ${id}, New Rank: ${newRank}`);
+        try {
+            const response = await fetch('../knft/editFarmerRank.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, rank: newRank })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // Reload the farmer rank data
+                getFarmerRankData();
+            } else {
+                alert(data.message || 'Update failed');
+            }
+        } catch (error) {
+            alert('Error updating farmer rank');
+            console.error(error);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Update';
+        }
+    });
+}

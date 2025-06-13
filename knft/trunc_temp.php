@@ -29,7 +29,13 @@ if ($conn->query($sql) === TRUE) {
 } else {
     echo "Error clearing table: " . $conn->error;
 }
+$sql = "TRUNCATE TABLE farmer_rank";
 
+if ($conn->query($sql) === TRUE) {
+    echo "Table temp_inventory cleared successfully.";
+} else {
+    echo "Error clearing table: " . $conn->error;
+}
 // Close connection
 $conn->close();
 ?>
