@@ -2,7 +2,92 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Initial Data Loading ---
     loadAllAdminData(); // Load data for all admin sections
     initialiseLockButton();
-    // --- Event Listeners ---
+    
+    const allocationWeekDropdown = document.getElementById('allocationWeekId');
+    if (allocationWeekDropdown) {
+        console.log("Found #allocationWeekId dropdown. Attempting to populate...");
+        // Assuming populateAdminWeekDropdown is defined or we'll define a local one
+        // For now, let's define a local one if it's not already a global utility
+        if (typeof populateAdminWeekDropdown_Local === "function") {
+            populateAdminWeekDropdown_Local('allocationWeekId');
+        } else {
+            console.warn("populateAdminWeekDropdown_Local not defined. Week dropdown for allocation might not populate.");
+        }
+    } else {
+        console.log("#allocationWeekId dropdown NOT found on this page load."); // << ADD THIS LOG
+    }
+
+    const allocationForm = document.getElementById('allocationForm');
+    if (allocationForm) {
+        allocationForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const weekId = document.getElementById('allocationWeekId').value;
+            const resultDiv = document.getElementById('allocationResult');
+            const submitButton = this.querySelector('button[type="submit"]');
+
+            if (!weekId) {
+                alert('Please select a week for allocation.');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to run allocation for week ID ${weekId}? \nThis will:\n1. Clear any previous farmer assignments for this week.\n2. Assign customer orders to farmers based on rank and inventory.\n3. Enable fulfillment checklist visibility for farmers.`)) {
+                return;
+            }
+
+            if (resultDiv) { // Ensure resultDiv exists
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'mt-4 alert alert-info'; // Ensure mt-4 is applied if not in HTML
+                resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing allocation... This may take a moment.';
+            }
+            if (submitButton) submitButton.disabled = true;
+
+            try {
+                const response = await fetch('../knft/getFarmerProdMatching.php', { // Path to your new PHP
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ week_id: weekId })
+                });
+
+                let resultData;
+                const responseText = await response.text();
+                try {
+                    resultData = JSON.parse(responseText);
+                } catch (e) {
+                    console.error("Failed to parse JSON response from server:", responseText);
+                    throw new Error(`Server returned non-JSON response (status ${response.status}). Check PHP error logs. Raw response: ${responseText.substring(0, 200)}...`);
+                }
+
+                if (resultDiv) { // Check again before manipulating
+                    if (response.ok && resultData.status === 'success') {
+                        resultDiv.className = 'mt-4 alert alert-success';
+                    } else {
+                        resultDiv.className = 'mt-4 alert alert-danger';
+                    }
+                    let message = resultData.message || 'Process completed with an unknown server status.';
+                    if (resultData.unallocated_items && resultData.unallocated_items.length > 0) {
+                        message += ` <br><strong>Warning:</strong> ${resultData.unallocated_items.length} customer order line(s) could not be fully allocated. Check server logs for details.`;
+                        console.warn("Unallocated items details:", resultData.unallocated_items);
+                    }
+                    resultDiv.innerHTML = message; // Use innerHTML for <br>
+                } else {
+                    // Fallback if resultDiv is not found
+                    alert(resultData.message || (response.ok ? "Allocation successful." : "Allocation failed."));
+                }
+
+            } catch (error) {
+                console.error("Allocation Process Error:", error);
+                if (resultDiv) {
+                    resultDiv.className = 'mt-4 alert alert-danger';
+                    resultDiv.innerHTML = 'A critical client-side or network error occurred: ' + error.message;
+                } else {
+                    alert('A critical client-side or network error occurred: ' + error.message);
+                }
+            } finally {
+                if (submitButton) submitButton.disabled = false;
+            }
+        });
+    }
+
     document.getElementById('lockButton')?.addEventListener('click', buttonLockToggle);
     Fullfillform()
     editFulfillListener(); // Initialize fulfill form event listeners
@@ -38,13 +123,94 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Format Week Date Input (Handle date format change if needed)
-     document.getElementById('weekForm')?.addEventListener('submit', function(e) {
+    document.getElementById('weekForm')?.addEventListener('submit', function(e) {
         const dateInput = document.getElementById('weekDate').value;
         // Keep sending YYYY-MM-DD, assuming PHP is updated
         document.getElementById('formattedWeekDate').value = dateInput;
     });
 
 }); // --- END Document Ready ---
+
+async function populateAdminWeekDropdown_Local(dropdownId, includeAllOption = false, allOptionText = "All Weeks") {
+    const dropdown = document.getElementById(dropdownId);
+    if (!dropdown) {
+        console.error("Admin week dropdown not found:", dropdownId);
+        return;
+    }
+    console.log(`populateAdminWeekDropdown_Local: Populating '${dropdownId}'...`);
+    // Preserve the first option if it's a placeholder like "Loading..." or "Select Week"
+    let firstOptionHTML = dropdown.options.length > 0 && dropdown.options[0].value === "" ? 
+                          `<option value="" selected disabled>${dropdown.options[0].textContent}</option>` : 
+                          '<option value="" selected disabled>Loading weeks...</option>';
+    
+    dropdown.innerHTML = firstOptionHTML; // Set initial state
+
+    if (includeAllOption) {
+        dropdown.add(new Option(allOptionText, "all"));
+    }
+
+    try {
+        const response = await fetch('../knft/getWeek.php'); // Centralized week fetching
+        console.log(`populateAdminWeekDropdown_Local: Fetch response status for getWeek.php: ${response.status}`);
+        if (!response.ok) throw new Error(`Failed to fetch weeks, status: ${response.status}`);
+        const weeks = await response.json();
+        console.log(`populateAdminWeekDropdown_Local: Weeks data received from getWeek.php:`, weeks); // << LOG 3 (CRUCIAL)
+
+        if (weeks && Array.isArray(weeks)) {
+            if (weeks.length > 0) {
+                // Update placeholder text if it was "Loading weeks..."
+                if (dropdown.options.length > 0 && dropdown.options[0].value === "" && dropdown.options[0].textContent === "Loading weeks...") {
+                     dropdown.options[0].textContent = 'Select a Week';
+                } else if (dropdown.options.length === 0 || (dropdown.options[0].value !== "" && !includeAllOption) ) {
+                     // If no placeholder or 'all' option, ensure 'Select a Week' is there
+                     dropdown.innerHTML = '<option value="">Select a Week</option>';
+                     if (includeAllOption) {
+                         dropdown.add(new Option(allOptionText, "all"));
+                     }
+                }
+                
+                let weeksAddedCount = 0;
+                weeks.forEach(week => {
+                    // Assuming getWeek.php returns rec_status for each week
+                    if (String(week.rec_status) === '1') { // Only show active weeks
+                        if (week.weekID && week.weekdate) { // Ensure properties exist
+                            dropdown.add(new Option(`${week.weekdate} (ID: ${week.weekID})`, week.weekID));
+                            weeksAddedCount++;
+                        } else {
+                            console.warn("populateAdminWeekDropdown_Local: Week object missing weekID or weekdate", week);
+                        }
+                    }
+                });
+                console.log(`populateAdminWeekDropdown_Local: Added ${weeksAddedCount} active weeks to dropdown.`); // << LOG 4
+                if (weeksAddedCount === 0 && (dropdown.options.length === 0 || (dropdown.options[0].value === "" && dropdown.options[0].textContent === "Select a Week"))) {
+                    dropdown.options[0].textContent = 'No active weeks available';
+                }
+
+            } else { // Weeks array is empty
+                 console.log("populateAdminWeekDropdown_Local: getWeek.php returned an empty array."); // << LOG 5
+                 if (dropdown.options.length > 0 && dropdown.options[0].value === "") {
+                    dropdown.options[0].textContent = 'No weeks available';
+                 } else {
+                    dropdown.innerHTML = '<option value="">No weeks available</option>';
+                 }
+            }
+        } else {
+            console.error("populateAdminWeekDropdown_Local: Received unexpected data format for weeks (not an array or null):", weeks); // << LOG 6
+             if (dropdown.options.length > 0 && dropdown.options[0].value === "") {
+                dropdown.options[0].textContent = 'Error: Invalid week data';
+             } else {
+                dropdown.innerHTML = '<option value="">Error: Invalid week data</option>';
+             }
+        }
+    } catch (error) {
+        console.error("Error in populateAdminWeekDropdown_Local:", error); // << LOG 7
+        if (dropdown.options.length > 0 && dropdown.options[0].value === "") {
+            dropdown.options[0].textContent = 'Error loading weeks';
+        } else {
+            dropdown.innerHTML = '<option value="">Error loading weeks</option>';
+        }
+    }
+}
 
 // --- Helper Functions ---
 function displayMessage(selector, message, isSuccess) {
@@ -66,32 +232,12 @@ async function handleFetchError(response, resultSelector) {
     if (response && typeof response.text === "function") {
         try {
             const errorText = await response.text();
-            try {
-                const errJson = JSON.parse(errorText);
-                if (errJson && errJson.message) {
-                    msg += errJson.message;
-                } else if (errorText) {
-                    msg += "Details: " + errorText.substring(0, 150) + (errorText.length > 150 ? '...' : '');
-                }
-            } catch (e) {
-                if (errorText) {
-                    msg += "Details: " + errorText.substring(0, 150) + (errorText.length > 150 ? '...' : '');
-                }
-            }
-        } catch (e) {
-            msg += "Error reading error response body.";
-        }
+            msg += `Server Status: ${response.status}. Details: ${errorText.substring(0,200)}...`;
+        } catch (e) { msg += "Could not read server response body."}
     } else if (response && response.message) {
         msg += response.message;
-    } else {
-        msg += "Unknown error.";
     }
-
-    if (resultSelector) {
-        displayMessage(resultSelector, msg, false);
-    } else {
-        alert("Fetch Error: " + msg);
-    }
+    displayMessage(resultSelector, msg, false);
 }
 
 // --- Load All Data ---
@@ -151,7 +297,6 @@ function populateRouteDropdownForCustomerForm(routes) {
         });
     }
 }
-
 
 // --- UOM Section ---
 function getUomData() {

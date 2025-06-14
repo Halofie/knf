@@ -47,7 +47,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                 <a class="btn" href="#seven">WEEK MASTER</a>
                 <a class="btn" href="#eight">ORDER FULFILL</a>
                 <a class="btn" href="#nine">FARMER RANK</a>
-
+                <a class="btn" href="#ten">ALLOCATE TO FARMERS</a>
 
                 <a class="btn" href="../knft/logout.php">LOGOUT</a>
             </div>
@@ -86,7 +86,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
             <a class="btn m-3 btn-primary" href="#seven">Week Master</a>
             <a class="btn m-3 btn-primary" href="#eight">Order Fulfillment</a>
             <a class="btn m-3 btn-primary" href="#nine">Farmer Rank</a>
-
+            <a class="btn m-3 btn-primary" href="#ten">Allocate Orders to Farmers</a>
+            
             <a class="btn m-3 btn-primary" href="../knft/trunc_temp.php">clear Temp_inv</a>
             <a class="btn m-3 btn-primary" href="../knft/loadTempInventory.php">load Temp_inv</a>
             <a class="btn m-3" id="lockButton" href="../knft/editUserLock.php">lock/unlock button</a>
@@ -673,6 +674,68 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                 </table>
             </div>
         </div>
+    </div>
+
+    <!-- PAGE TEN: FARMER ORDER ALLOCATION & NOTIFICATION -->
+    <div class="page" id="ten">
+        <!-- Standard Page Top Bar (Copied from other pages) -->
+        <div class="h-auto p-2 d-flex justify-content-between row darkGreen d-fixed">
+            <div class="col-1 d-flex justify-content-center">
+                <button class="btn d-block p-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                    <img src="../public/Assets/three-bars.svg" alt="Menu">
+                </button>
+            </div>
+            <div class="col-2 d-none d-lg-flex justify-content-center">
+                <img src="../public/Assets/pic.jpeg" class="profile rounded-circle border p-0 border-dark" alt="logo">
+            </div>
+            <div class="col-6 color-paleGreen">
+                <h1>ADMIN PANEL</h1>
+                <h2>Farmer Allocation</h2>
+            </div>
+            <div class="col-3 d-flex justify-content-end">
+                <div class="m-0 d-block color-paleGreen justify-content-end">
+                    <div class="clock">date</div> <!-- Ensure your clock.js targets this -->
+                </div>
+            </div>
+        </div>
+        <!-- End Standard Page Top Bar -->
+
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
+            <h2 class="m-0">Allocate Customer Orders to Farmers</h2>
+            <a class="btn btn-dark" href="#">Back to Admin Home</a> <!-- Or simply href="#" -->
+        </div>
+
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-7">
+                    <div class="card shadow-sm White p-3">
+                        <div class="card-body">
+                            <h4 class="card-title text-center mb-4">Finalize Week & Assign Orders</h4>
+                            <p class="text-muted text-center mb-3">
+                                This process will assign customer orders for the selected week to farmers based on their rank and available inventory.
+                                It will also enable the fulfillment checklist visibility for farmers.
+                            </p>
+                            <form id="allocationForm">
+                                <div class="mb-3">
+                                    <label for="allocationWeekId" class="form-label fw-bold">Select Week to Process:</label>
+                                    <select id="allocationWeekId" class="form-select form-select-lg" required>
+                                        <option value="" selected disabled>Loading weeks...</option>
+                                        <!-- Weeks will be populated by JavaScript -->
+                                    </select>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-cogs me-2"></i>Run Allocation & Notify Farmers
+                                    </button>
+                                </div>
+                            </form>
+                            <div id="allocationResult" class="mt-4 alert" style="display:none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!-- <script src="../public/js/jquery.js" ></script> -->

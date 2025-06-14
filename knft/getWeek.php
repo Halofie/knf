@@ -9,7 +9,7 @@ if ($conn->connect_error) {
 }
 
 // SQL query to fetch units of measure
-$sql = "SELECT weekID, weekdate FROM week WHERE rec_status = 1 ORDER BY weekID DESC";
+$sql = "SELECT weekID, weekdate, rec_status FROM week WHERE rec_status = 1 ORDER BY weekID DESC";
 $result = $conn->query($sql);
 
 $units = array();

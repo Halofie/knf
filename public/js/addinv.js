@@ -1,5 +1,5 @@
-const now = new Date();
-const currentDateTime = now.toLocaleString();
+// const now = new Date();
+// const currentDateTime = now.toLocaleString();
 
 function displayMessage(selector, message, isSuccess) {
     const element = document.querySelector(selector);
@@ -9,6 +9,38 @@ function displayMessage(selector, message, isSuccess) {
         element.style.display = 'block';
     } else {
         console.warn("displayMessage: selector not found", selector);
+    }
+}
+
+function displayChecklistMessage(selector, message, isSuccess) {
+    const element = document.querySelector(selector);
+    if (!element) {
+        console.warn("displayChecklistMessage: selector not found", selector);
+        return;
+    }
+
+    // Always reset classes and hide first
+    element.textContent = '';
+    element.className = 'm-3 alert'; // Base classes, assuming m-3 is desired
+    element.style.display = 'none';
+
+    if (message && message.trim() !== '') {
+        if (isSuccess === true) {
+            element.classList.add('alert-success');
+        } else if (isSuccess === false) {
+            element.classList.add('alert-danger');
+        } else { // For neutral/info messages, or if isSuccess is not boolean
+            element.classList.add('alert-info');
+        }
+        element.textContent = message;
+        element.style.display = 'block';
+
+        // Auto-hide for success/error messages
+        if (isSuccess === true || isSuccess === false) {
+            setTimeout(() => {
+                if (element) element.style.display = 'none';
+            }, 7000); // Slightly longer timeout
+        }
     }
 }
 
@@ -77,6 +109,8 @@ async function fetchWeeks() {
 
 // Combined function for fetching and populating inventory tables
 async function fetchAndDisplayInventory(farmerId, weekId, tableSelector, addDeleteButton = false) {
+    const messageDivId = tableSelector === ".inventory-body" ? '#inventory-result' : '#currentinventory-result';
+    displayMessage(messageDivId, 'Loading inventory...', true);
     try {
         const response = await fetch('../knft/getFarmerHistory.php', {
             method: 'POST',
@@ -88,7 +122,7 @@ async function fetchAndDisplayInventory(farmerId, weekId, tableSelector, addDele
             throw new Error(`HTTP error! status: ${response.status}, Response: ${errorText}`);
         }
         const data = await response.json();
-
+        console.log(`Data from getFarmerHistory.php for week ${weekId} (selector ${tableSelector}):`, JSON.stringify(data, null, 2));
         if (data.error) { // Assuming PHP might send {error: "message"}
             console.error("Error fetching inventory:", data.error);
             displayMessage(tableSelector === ".inventory-body" ? '#inventory-result' : '#currentinventory-result', `Error: ${data.error}`, false);
@@ -101,8 +135,7 @@ async function fetchAndDisplayInventory(farmerId, weekId, tableSelector, addDele
 
     } catch (error) {
         console.error(`Fetch Error for inventory (${tableSelector}):`, error);
-        const resultDivId = tableSelector === ".inventory-body" ? '#inventory-result' : '#currentinventory-result';
-        displayMessage(resultDivId, `Failed to load inventory. ${error.message || ''}`, false);
+        displayMessage(messageDivId, `Failed to load inventory. ${error.message || ''}`, false);
         populateInventoryTableInternal(tableSelector, [], addDeleteButton); // Show empty on fetch error
     }
 }
@@ -117,14 +150,14 @@ function populateInventoryTableInternal(tableBodySelector, products, addDeleteBu
     tableBody.innerHTML = ""; // Clear existing table data
 
     if (!products || products.length === 0) {
-        const colspan = addDeleteButton ? 5 : 5; // Number of columns
-        tableBody.innerHTML = `<tr><td colspan="${colspan}" class="text-center">No inventory found.</td></tr>`;
+        const colspan = 5; 
+        tableBody.innerHTML = `<tr><td colspan="${colspan}" class="text-center">No inventory records found.</td></tr>`;
         return;
     }
 
-    // ...existing code...
     products.forEach(product => {
         const row = document.createElement("tr");
+        const dateTimeDisplay = product.inv_datetime || product.datetime || 'N/A';
         console.log("Rendering product for history:", product);
         // Add data-product-id for copy logic
         row.innerHTML = `
@@ -134,14 +167,12 @@ function populateInventoryTableInternal(tableBodySelector, products, addDeleteBu
             <td>${product.quantity || '0'} ${product.unit_id || ''}</td>
             ${addDeleteButton ? 
                 `<td><button class="btn btn-sm btn-danger remove-from-inv" data-inventory-id="${product.id}">Delete</button></td>` :
-                `<td>${product.inv_datetime || product.datetime || 'N/A'}</td>`
+                `<td>${dateTimeDisplay}</td>`
             }
         `;
         tableBody.appendChild(row);
     });
-    // ...existing code...
 }
-
 
 async function deleteInventoryItemAPI(inventoryId) { // Renamed to avoid conflict if any
     try {
@@ -166,6 +197,183 @@ async function deleteInventoryItemAPI(inventoryId) { // Renamed to avoid conflic
 let globalFarmerId = null;
 let globalCurrentWeekId = null;
 let globalProductMasterData = null;
+let tempInv = {};
+const itemsContainer = document.querySelector('.items');
+let canShowFarmerChecklist = false;
+
+async function fetchFarmerNotifyStatus() {
+    try {
+        const response = await fetch('../knft/getFarmerFulfillment.php');
+        if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Notify status fetch failed: ${response.status}. ${errText}`);
+        }
+        const data = await response.json();
+        if (data.status === 'success') {
+            canShowFarmerChecklist = (data.notify_status === 1);
+        } else {
+            console.warn("Could not fetch farmer notification status:", data.message);
+            canShowFarmerChecklist = false;
+        }
+    } catch (error) {
+        console.error("Error fetching farmer notification status:", error);
+        canShowFarmerChecklist = false;
+    }
+    toggleFarmerChecklistSectionVisibility(); // Update UI based on fetched status
+}
+
+function toggleFarmerChecklistSectionVisibility() {
+    const checklistSection = document.getElementById('farmerFulfillmentReportSection');
+    const displayArea = document.getElementById('farmerChecklistDisplayArea');
+
+    if (checklistSection) {
+        if (canShowFarmerChecklist) {
+            checklistSection.style.display = 'block';
+            if (displayArea && displayArea.querySelector('#no-checklist-message')) { // If initial message exists
+                 displayArea.querySelector('#no-checklist-message').textContent = 'Select a week to view your fulfillment checklist.';
+            } else if (displayArea && displayArea.innerHTML.trim() === '') { // If empty, add prompt
+                displayArea.innerHTML = '<p class="text-center text-muted p-3" id="no-checklist-message">Select a week to view your fulfillment checklist.</p>';
+            }
+        } else {
+            checklistSection.style.display = 'none';
+            // Optional: display message elsewhere if section is hidden
+            // For example, by creating a specific div for this message outside the section
+            // displayMessage('#some-other-area', 'Fulfillment reports are currently disabled by admin.', false);
+        }
+    }
+}
+
+async function loadFarmerChecklistWeekDropdown() {
+    const dropdown = document.getElementById('farmerChecklistWeekDropdown');
+    if (!dropdown) {
+        console.error("Farmer Checklist: Week dropdown (#farmerChecklistWeekDropdown) not found.");
+        return;
+    }
+    dropdown.innerHTML = '<option value="">Loading weeks...</option>';
+
+    try {
+        const weeksData = await fetchWeeks(); // Re-uses existing fetchWeeks
+
+        if (weeksData && Array.isArray(weeksData) && weeksData.length > 0) {
+            dropdown.innerHTML = '<option value="">Select a Week</option>';
+            weeksData.forEach(week => {
+                if (week.weekID && week.weekdate) {
+                    dropdown.add(new Option(`${week.weekdate} (ID: ${week.weekID})`, week.weekID));
+                }
+            });
+        } else if (weeksData) { // Empty array
+            dropdown.innerHTML = '<option value="">No weeks found</option>';
+        } else { // Null or undefined
+            throw new Error("Failed to fetch weeks or no data returned.");
+        }
+    } catch (error) {
+        console.error('Error loading weeks for farmer checklist filter:', error);
+        if (dropdown) dropdown.innerHTML = '<option value="">Error loading weeks</option>';
+    }
+}
+
+async function fetchAndDisplayFarmerChecklist(selectedWeekId) {
+    const displayArea = document.getElementById('farmerChecklistDisplayArea');
+    const messageAreaSelector = '#farmer-checklist-message';
+
+    if (displayArea) displayArea.innerHTML = '<p class="text-center text-muted p-3"><i class="fas fa-spinner fa-spin"></i> Loading checklist...</p>';
+    displayChecklistMessage(messageAreaSelector, null, null); // Clear previous
+
+    if (!globalFarmerId) {
+        displayMessage("Your farmer details are not loaded. Cannot fetch checklist.", false, '#farmer-checklist-message');
+        displayArea.innerHTML = '<p class="text-center text-danger p-3">Error: Farmer ID not available.</p>';
+        return;
+    }
+
+    try {
+        const response = await fetch('../knft/getFarmerChecklist.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ week_id: selectedWeekId }) // PHP uses $_SESSION['farmer_id']
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server error: ${response.status}. ${errorText}`);
+        }
+        const data = await response.json();
+        console.log("Farmer Checklist Data:", data);
+
+        if (data.status === 'success') {
+            renderFarmerChecklist(data);
+            displayChecklistMessage(messageAreaSelector, data.message || 'Checklist loaded.', true);
+        } else {
+            renderFarmerChecklist(null); // Clear or show no data
+            displayChecklistMessage(messageAreaSelector, data.message || 'Failed to load checklist.', false);
+        }
+    } catch (error) {
+        console.error("Error fetching/displaying farmer checklist:", error);
+        renderFarmerChecklist(null);
+        displayChecklistMessage(messageAreaSelector, `Error: ${error.message}`, false);
+    }
+}
+
+function renderFarmerChecklist(data) {
+    const displayArea = document.getElementById('farmerChecklistDisplayArea');
+    if (!displayArea) return;
+    displayArea.innerHTML = ''; // Clear loading/previous
+
+    if (!data || data.status !== 'success' || !data.checklist_items || data.checklist_items.length === 0) {
+        let message = (data && data.message) ? data.message : "No fulfillment tasks found for you for the selected week.";
+        displayArea.innerHTML = `<p class="text-center text-muted p-3">${message}</p>`;
+        return;
+    }
+
+    let reportHtml = `<div class="card mb-3"><div class="card-body">`;
+    if (data.farmer_details) {
+        reportHtml += `<h4 class="card-title">Checklist for: ${htmlspecialchars(data.farmer_details.name || '')} (ID: ${data.farmer_details.id || 'N/A'})</h4>`;
+    }
+    if (data.report_week_id) {
+        const weekOption = document.querySelector(`#farmerChecklistWeekDropdown option[value="${data.report_week_id}"]`);
+        const weekDisplayText = weekOption ? weekOption.textContent : `ID: ${htmlspecialchars(data.report_week_id.toString())}`;
+        reportHtml += `<h5 class="card-subtitle mb-3 text-muted">Week: ${weekDisplayText}</h5>`;
+    }
+    reportHtml += `</div></div>`;
+
+    data.checklist_items.forEach(product_assignment => {
+        const productName = product_assignment.product_name;
+        const totalQty = product_assignment.total_quantity_for_product; // Check this name
+        const unitId = product_assignment.unit_id;
+        console.log(`DEBUG: Name=${productName}, TotalQty=${totalQty}, Unit=${unitId}`);
+        reportHtml += `
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        ${productName} 
+                        - Total to Prepare: 
+                        <strong>
+                            ${totalQty} 
+                            ${unitId} 
+                        </strong>
+                    </h5>
+                </div>
+        `;
+        const customerDetails = product_assignment.customer_details_for_product; // Check this name
+        console.log(`DEBUG: CustomerDetailsString='${customerDetails}'`);
+        if (customerDetails && typeof customerDetails === 'string' && customerDetails.trim() !== '') {
+            // ...
+        } else {
+            console.log("DEBUG: customer_details_for_product condition was FALSE");
+            reportHtml += `<li class="list-group-item text-muted">No specific customer details available. (Debug: condition false)</li>`;
+        }
+        reportHtml += `
+                    </ul>
+                </div>
+            </div>`;
+    });
+    displayArea.innerHTML = reportHtml;
+}
+
+function htmlspecialchars(str) {
+    if (typeof str !== 'string') return String(str);
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' };
+    return str.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
 
 async function initialize() {
     console.log("Initializing page...");
@@ -178,19 +386,19 @@ async function initialize() {
     console.log("User's session email:", email);
     
     const supplierData = await fetchSupplierDetails(email);
-    if (!supplierData) return;
+    if (!supplierData || !supplierData.details || (supplierData.status && supplierData.status !== 'success')) {
+        console.error("Failed to initialize: Supplier details missing or errored.", supplierData); return;
+    }
     
     const details = supplierData.details;
     globalFarmerId = details.supplierID;
-    // const fId = details.supplierID;
-    const fName = details.supplierName;
+    const fName = details.supplierName || email;
     const fAddress = details.farmLocation;
     const fPhone = details.contact;
     
     document.querySelector("#name").innerText = fName || "Farmer Name";
     document.querySelector("#phone").innerText = fPhone || "Contact";
     document.querySelector("#address").innerText = fAddress || "Location";
-    // document.querySelector("#date").innerText = currentDateTime;
     
     const lastWeekData = await fetchLastWeek();
     globalCurrentWeekId = lastWeekData;
@@ -215,12 +423,15 @@ async function initialize() {
     } else {
         document.querySelector(".itmProduct").innerHTML = '<option value="">Error loading products</option>';
     }
+
+    await fetchFarmerNotifyStatus(); // Check admin toggle
+    if (canShowFarmerChecklist && document.getElementById('farmerFulfillmentReportSection')) {
+        await loadFarmerChecklistWeekDropdown(); // Populate its week dropdown
+    }
     
     setupEventListeners(globalFarmerId, globalCurrentWeekId, globalProductMasterData);
     console.log("Initialization complete.");
 }
-let tempInv = {};
-const itemsContainer = document.querySelector('.items');
 
 function setupEventListeners(fId, currentLocalWeekId, productMasterList) {
     const addProductButton = document.querySelector(".ADDPRODUCT");
@@ -425,6 +636,22 @@ function setupEventListeners(fId, currentLocalWeekId, productMasterList) {
             }
         });
     }
+
+    const farmerChecklistForm = document.getElementById('farmerChecklistWeekForm');
+    if (farmerChecklistForm) {
+        farmerChecklistForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const selectedWeek = document.getElementById('farmerChecklistWeekDropdown').value;
+            if (selectedWeek) {
+                fetchAndDisplayFarmerChecklist(selectedWeek);
+            } else {
+                alert("Please select a week for the checklist.");
+                // Optionally clear the display area if no week is selected
+                const displayArea = document.getElementById('farmerChecklistDisplayArea');
+                if (displayArea) displayArea.innerHTML = '<p class="text-center text-muted p-3">Please select a week to view the checklist.</p>';
+            }
+        });
+    }
 }
 
 // Function to load week options in the dropdown
@@ -458,7 +685,22 @@ async function loadWeekDropdown() {
 // Function to initialize and update the clock
 function initializeClock() {
     const dateElement = document.getElementById('date');
-    if (!dateElement) return;
+    if (!dateElement) {
+        // Check for .clock if #date is not found (some pages might use class)
+        const clockElement = document.querySelector('.clock');
+        if (!clockElement) {
+            console.warn("Date/Clock element not found for header.");
+            return;
+        }
+        function updateDynamicClock() {
+            const now = new Date();
+            // Using a more standard locale string for combined date and time
+            clockElement.textContent = now.toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'medium' });
+        }
+        updateDynamicClock();
+        setInterval(updateDynamicClock, 1000);
+        return; // Exit if .clock was found and handled
+    }
 
     function updateClock() {
         const now = new Date();
@@ -467,8 +709,7 @@ function initializeClock() {
         dateElement.textContent = `${formattedDate} ${formattedTime}`;
     }
     // Initial call to display the clock immediately
-    updateClock();
-    // Update the clock every second
+    updateClock();  
     setInterval(updateClock, 1000);
 }
 
@@ -478,8 +719,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadWeekDropdown();
     initialize(); // Ensure the rest of the page functionality is initialized
 });
-
-// ...existing code...
 
 // Show/hide the copy button based on whether history is loaded
 document.getElementById('weekForm').addEventListener('submit', function(event) {
@@ -491,8 +730,6 @@ document.getElementById('weekForm').addEventListener('submit', function(event) {
     }, 500); // Wait for inventory to load
 });
 
-// Copy products from history to current week
-// ...existing code...
 
 document.getElementById('copyToCurrentWeekBtn').addEventListener('click', function() {
     const rows = document.querySelectorAll('.inventory-body tr');
@@ -562,4 +799,3 @@ document.getElementById('copyToCurrentWeekBtn').addEventListener('click', functi
         alert(`${addedCount} products copied to your selection. Review and submit.`);
     }
 });
-

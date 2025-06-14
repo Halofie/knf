@@ -183,6 +183,36 @@
             </div>
         </div>
     </div>
+    <!-- In addinv.php (Farmer's Page) -->
+
+    <hr class="my-5">
+    <div class="container mt-4" id="farmerFulfillmentReportSection" style="display: none;"> <!-- Hidden by default -->
+        <h2 class="text-center mb-4">My Fulfillment Checklist</h2>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8 col-lg-6">
+                <form class="form-control bg-white p-3 shadow-sm" id="farmerChecklistWeekForm">
+                    <label for="farmerChecklistWeekDropdown" class="form-label fw-bold">Select Week for Checklist:</label>
+                    <div class="input-group">
+                        <select class="form-select" id="farmerChecklistWeekDropdown" required>
+                            <option value="">Loading weeks...</option>
+                            <!-- Weeks will be populated by JS -->
+                        </select>
+                        <button type="submit" class="btn btn-primary">View Checklist</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="farmer-checklist-message" class="m-3 alert" style="display: none;"></div>
+
+        <div id="farmerChecklistDisplayArea" class="mt-3">
+            <!-- Checklist will be built here by JavaScript -->
+            <div class="text-center p-4 text-muted" id="no-checklist-message">
+                Select a week to view your fulfillment checklist.
+            </div>
+        </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
