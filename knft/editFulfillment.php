@@ -37,7 +37,7 @@ $total = $quantity * $rate;
 
 // Update quantity and total_cost
 $update = $conn->prepare("UPDATE order_fulfillment SET quantity = ?, total_cost = ? WHERE id = ?");
-$update->bind_param("idi", $quantity, $total, $id);
+$update->bind_param("ddi", $quantity, $total, $id);
 
 if ($update->execute()) {
     echo json_encode(["success" => true, "message" => "Order updated"]);

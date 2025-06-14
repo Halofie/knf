@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Step 2: Update the quantity in temp_inventory
         $sql_update = "UPDATE temp_inventory SET quantity = quantity + ? WHERE weekID = ? AND product_id = ?";
         $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->bind_param("iii", $quantity, $week_id, $product_id);
+        $stmt_update->bind_param("dii", $quantity, $week_id, $product_id);
         $stmt_update->execute();
         $stmt_update->close();
 

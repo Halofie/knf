@@ -29,7 +29,7 @@ try {
     foreach ($order as $product => $quantity) {
         $columns .= ", `" . $conn->real_escape_string($product) . "`";
         $values .= ", ?";
-        $types .= "i";
+        $types .= "d";
         $params[] = $quantity;
     }
 

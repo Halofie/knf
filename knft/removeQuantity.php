@@ -32,7 +32,7 @@ try {
             // Update the quantity in the database
             $sql = "UPDATE temp_inventory SET quantity = quantity - ? WHERE product_id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ii", $quantity, $productId);
+            $stmt->bind_param("di", $quantity, $productId);
             $stmt->execute();
         
             if ($stmt->affected_rows > 0) {

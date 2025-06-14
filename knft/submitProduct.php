@@ -20,7 +20,7 @@ try {
 
         // Prepare and bind
         $stmt = $conn->prepare("INSERT INTO product (category_id, product, UoM_id, price) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $category_id, $product, $UoM_id, $price);
+        $stmt->bind_param("sssd", $category_id, $product, $UoM_id, $price);
 
         // Execute the query
         if ($stmt->execute()) {

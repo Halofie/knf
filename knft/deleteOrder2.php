@@ -27,14 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Step 2: Update the quantity in temp_inventory
         $sql_update = "UPDATE temp_inventory SET quantity = quantity + ? WHERE weekID = ? AND product_id = ?";
         $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->bind_param("iii", $quantity, $week_id, $product_id);
+        $stmt_update->bind_param("dii", $quantity, $week_id, $product_id);
         $stmt_update->execute();
         $stmt_update->close();
 
         // Step 3: Delete the row from your_table
         $sql_delete = "DELETE FROM final_order WHERE id = ? AND customer_id = ? AND product_id = ? AND quantity = ? LIMIT 1";
         $stmt_delete = $conn->prepare($sql_delete);
-        $stmt_delete->bind_param("iiii", $week_id, $customer_id, $product_id, $quantity);
+        $stmt_delete->bind_param("iiid", $week_id, $customer_id, $product_id, $quantity);
 
         if ($stmt_delete->execute()) {
             echo json_encode(["success" => true, "message" => "Row deleted and inventory updated successfully"]);
