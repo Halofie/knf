@@ -22,7 +22,7 @@ try {
             $datetime = $product['DateTime'];
             // Prepare the SQL statement for inserting into temp_inventory
             $stmt = $conn->prepare("INSERT INTO temp_inventory (weekID, product_id, quantity, price, temp_inv_datetime) VALUES (?, ?, ?, NOW())");
-            $stmt->bind_param("iiid", $product_id, $weekID, $quantity, $price);
+            $stmt->bind_param("iidd", $product_id, $weekID, $quantity, $price);
             // Execute the prepared statement
             $stmt->execute();
         }

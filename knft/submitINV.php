@@ -30,7 +30,7 @@ try {
 
             $sql = "INSERT INTO inventory (weekId, Farmer_id , product_id, product_name, category_id, price, quantity, unit_id, inv_datetime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("iisssdis",$weekId, $Farmer_id, $product_id, $product_name, $category_id, $price, $quantity, $unit_id);
+            $stmt->bind_param("iisssdds",$weekId, $Farmer_id, $product_id, $product_name, $category_id, $price, $quantity, $unit_id);
             $stmt->execute();
         }
         $stmt->close();

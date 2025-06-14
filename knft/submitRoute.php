@@ -17,7 +17,7 @@ $rate = $data['rate'];
 
 // Prepare and bind
 $stmt = $conn->prepare("INSERT INTO routes (route, deliveryType, rate) VALUES (?, ?, ?)");
-$stmt->bind_param("ssi", $route, $deliveryType, $rate);
+$stmt->bind_param("ssd", $route, $deliveryType, $rate);
 
 // Execute the statement
 if ($stmt->execute()) {
