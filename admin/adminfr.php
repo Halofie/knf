@@ -95,6 +95,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
             <a class="btn m-3 btn-secondary" href="../knft/customer_order_fulfillment_report.php?download=1">Download Customer Order Fulfillment Report</a>
             <a class="btn m-3 btn-secondary" href="../knft/delivery_routes_report.php?download=1">Download Delivery Routes Report</a>
             <a class="btn m-3 btn-secondary" href="../knft/weekly_report.php?download=1">Download Weekly Report</a>
+            <a class="btn m-3 btn-secondary" href="../knft/weekly_invoice_report.php?download=1">Download Weekly Invoice Report</a>
         </div>
     </div>
 
