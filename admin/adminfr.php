@@ -48,6 +48,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                 <a class="btn" href="#eight">ORDER FULFILL</a>
                 <a class="btn" href="#nine">FARMER RANK</a>
                 <a class="btn" href="#ten">ALLOCATE TO FARMERS</a>
+                <a class="btn" href="#eleven">TRAY STATUS</a>
+
 
                 <a class="btn" href="../knft/logout.php">LOGOUT</a>
             </div>
@@ -87,6 +89,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
             <a class="btn m-3 btn-primary" href="#eight">Order Fulfillment</a>
             <a class="btn m-3 btn-primary" href="#nine">Farmer Rank</a>
             <a class="btn m-3 btn-primary" href="#ten">Allocate Orders to Farmers</a>
+            <a class="btn m-3 btn-primary" href="#eleven">Tray Status</a>
             
             <a class="btn m-3 btn-primary" href="../knft/trunc_temp.php">clear Temp_inv</a>
             <a class="btn m-3 btn-primary" href="../knft/loadTempInventory.php">load Temp_inv</a>
@@ -737,6 +740,48 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="page" id="eleven">
+        <div class=" h-auto p-2 d-flex justify-content-between row darkGreen d-fixed">
+            <div class="col-1 d-flex justify-content-center ">
+                <button class="btn d-block p-0 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                    <img src="../public/Assets/three-bars.svg">
+                </button>
+            </div>
+            <div class="col-2 d-none d-lg-flex justify-content-center">
+                <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
+            </div>
+            <div class="col-6 color-paleGreen" >
+                <h1>WELCOME </h1>
+                <h2>ADMIN</h2>
+            </div>
+            <div class="col-3 d-flex justify-content-end">
+                <div class="m-0 d-block color-paleGreen justify-content-end">
+                    <div class="clock">date</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center m-3 mt-4">
+            <h2 class="m-0">Tray tray_management</h2>
+            <a class="btn btn-dark" href="#">Back</a>
+        </div>
+        
+        <div class="trayStatusHolder m-3 p-2 White w-auto h-auto">
+            <h5 class="text-center mb-3">Tray Status</h5>
+            <div class="table-responsive">
+                <table class="table table-success table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Route</th>
+                            <th scope="col">Tray Status</th>
+                            <th scope="col" style="width: 200px;">Toggle</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tray-status-body"></tbody>
+                </table>
             </div>
         </div>
     </div>

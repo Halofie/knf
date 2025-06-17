@@ -2,7 +2,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Initial Data Loading ---
     loadAllAdminData(); // Load data for all admin sections
     initialiseLockButton();
-    
+    getTrayStatusData();
+    editTrayStatusListener();
     const allocationWeekDropdown = document.getElementById('allocationWeekId');
     if (allocationWeekDropdown) {
         console.log("Found #allocationWeekId dropdown. Attempting to populate...");
@@ -1123,6 +1124,93 @@ function editFarmerRankListener() {
         } finally {
             btn.disabled = false;
             btn.textContent = 'Update';
+        }
+    });
+}
+// Fetch and display tray status table
+async function getTrayStatusData() {
+    try {
+        const response = await fetch('../knft/getTrayStatus.php', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await response.json();
+        if (data.success && Array.isArray(data.data)) {
+            renderTrayStatusTable(data.data);
+        } else {
+            renderTrayStatusTable([]);
+        }
+    } catch (error) {
+        console.error('Error fetching tray status data:', error);
+        renderTrayStatusTable([]);
+    }
+}
+
+function renderTrayStatusTable(rows) {
+    const tbody = document.querySelector('.tray-status-body');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    if (!rows || rows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No tray status data found.</td></tr>';
+        return;
+    }
+
+    rows.forEach(row => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${row.customerName }</td>
+                <td>${row.route }</td>
+                <td>
+                    <span class="badge ${row.trayStatus == 1 ? 'bg-success' : 'bg-danger'}">
+                        ${row.trayStatus == 1 ? 'Returned' : 'Not Returned'}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-${row.trayStatus == 1 ? 'danger' : 'success'} btn-sm toggle-tray-btn" data-id="${row.id}">
+                        ${row.trayStatus == 1 ? 'Mark Not Returned' : 'Mark Returned'}
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+}
+// Attach event delegation for toggle-tray-btn
+function editTrayStatusListener() {
+    const tbody = document.querySelector('.tray-status-body');
+    if (!tbody) return;
+
+    tbody.addEventListener('click', async function(e) {
+        const btn = e.target.closest('.toggle-tray-btn');
+        if (!btn) return;
+
+        const id = btn.getAttribute('data-id');
+        if (!id) return;
+
+        btn.disabled = true;
+        btn.textContent = 'Updating...';
+        console.log(`Toggling tray status for ID: ${id}`);
+
+        try {
+            const response = await fetch('../knft/editTrayStatus.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id })
+            });
+            const data = await response.json();
+
+            if (data.success) {
+                // Reload the tray status table
+                getTrayStatusData();
+            } else {
+                alert(data.message || 'Failed to update tray status');
+            }
+        } catch (error) {
+            alert('Error updating tray status');
+            console.error(error);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = (btn.classList.contains('btn-danger')) ? 'Mark Not Returned' : 'Mark Returned';
         }
     });
 }
