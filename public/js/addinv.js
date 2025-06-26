@@ -334,11 +334,12 @@ function renderFarmerChecklist(data) {
         reportHtml += `<h5 class="card-subtitle mb-3 text-muted">Week: ${weekDisplayText}</h5>`;
     }
     reportHtml += `</div></div>`;
-
+    console.log(data.checklist_items);
     data.checklist_items.forEach(product_assignment => {
         const productName = product_assignment.product_name;
         const totalQty = product_assignment.total_quantity_for_product; // Check this name
         const unitId = product_assignment.unit_id;
+
         console.log(`DEBUG: Name=${productName}, TotalQty=${totalQty}, Unit=${unitId}`);
         reportHtml += `
             <div class="card mb-3 shadow-sm">
@@ -353,10 +354,10 @@ function renderFarmerChecklist(data) {
                     </h5>
                 </div>
         `;
-        const customerDetails = product_assignment.customer_details_for_product; // Check this name
+        const customerDetails = product_assignment.customer_breakdown_details; // Check this name
         console.log(`DEBUG: CustomerDetailsString='${customerDetails}'`);
         if (customerDetails && typeof customerDetails === 'string' && customerDetails.trim() !== '') {
-            // ...
+            reportHtml += `<li class="list-group-item text-muted">${customerDetails}</li>`;
         } else {
             console.log("DEBUG: customer_details_for_product condition was FALSE");
             reportHtml += `<li class="list-group-item text-muted">No specific customer details available. (Debug: condition false)</li>`;
