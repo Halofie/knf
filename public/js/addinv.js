@@ -357,7 +357,9 @@ function renderFarmerChecklist(data) {
         const customerDetails = product_assignment.customer_breakdown_details; // Check this name
         console.log(`DEBUG: CustomerDetailsString='${customerDetails}'`);
         if (customerDetails && typeof customerDetails === 'string' && customerDetails.trim() !== '') {
-            reportHtml += `<li class="list-group-item text-muted">${customerDetails}</li>`;
+            customerDetails.split('|||').forEach((detail) => {
+                reportHtml += `<li class="list-group-item text-muted">${detail}</li>`;
+            });
         } else {
             console.log("DEBUG: customer_details_for_product condition was FALSE");
             reportHtml += `<li class="list-group-item text-muted">No specific customer details available. (Debug: condition false)</li>`;
