@@ -67,6 +67,15 @@ if ($_SESSION['role'] !== 'C') {
       </div>
     </div>
   </div>
+
+<section class="container <?php if (empty($_SESSION['userLock'])) echo 'd-none'; ?>">
+  <div class="alert alert-danger m-5" role="alert">
+    <h4 class="alert-heading">ADMIN HAS LOCKED PURCHASE!</h4>
+    <p><?php echo $_SESSION['cust_msg'] ?></p>
+    <hr>
+    <p class="mb-0">If you have any questions, please reach out to support.</p>
+  </div>
+</section>
 <section class="container <?php if (!empty($_SESSION['userLock'])) echo 'd-none'; ?>">
   <div class="products m-5">
     <table class="table table-success border border-success">

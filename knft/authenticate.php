@@ -61,6 +61,20 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
             }
             $_SESSION['userLock'] = $userLockStatus;
             
+            $sql_lock = "SELECT topic FROM update_variables WHERE id = 3";
+            $_SESSION['cust_msg'] = "unavailable";
+            if ($result_lock = $con->query($sql_lock)) {
+                if ($row_lock = $result_lock->fetch_assoc()) {
+                    $userLockStatus = $row_lock['topic']; // Should be '0' or '1'
+                }
+                $result_lock->free();
+            } else {
+                error_log("Failed to query userLock status: " . $con->error);
+                // Decide handling: proceed as unlocked or deny login? For now, proceed.
+            }
+            $_SESSION['cust_msg'] = $userLockStatus;
+
+            
             // Redirect based on user category
             if ($category == "A") {
                 $_SESSION['is_admin'] = true; // Store admin ID in session
@@ -92,7 +106,7 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
                     $stmt_customer->bind_param('s', $sanitized_email);
                     $stmt_customer->execute();
                     $stmt_customer->store_result(); // Use store_result before bind_result if checking num_rows
-
+                    
                     if ($stmt_customer->num_rows > 0) {
                         $stmt_customer->bind_result($customer_id, $customer_name, $customer_contact, $customer_address);
                         $stmt_customer->fetch();

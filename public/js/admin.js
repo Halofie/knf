@@ -862,7 +862,7 @@ async function buttonLockToggle(e) {
     e.preventDefault();
     const btn = document.getElementById('lockButton');
     if (!btn) return;
-
+    promptAndUpdateCustomMessage();
     // Toggle lock status
     try {
         // Call the toggle API
@@ -893,6 +893,36 @@ async function buttonLockToggle(e) {
         }
     } catch (error) {
         console.error('Error toggling user lock:', error);
+    }
+}
+async function promptAndUpdateCustomMessage() {
+    // Show prompt to user
+    const newMessage = prompt("Enter the new custom message for users:     (cancel for previous message to stay)");
+    if (newMessage === null) return; // User cancelled
+
+    if (!newMessage.trim()) {
+        alert("Message cannot be empty.");
+        return;
+    }
+
+    try {
+        // Send to PHP
+        const response = await fetch('../knfts/editMessage.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ topic: newMessage })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            alert("Custom message updated successfully!");
+            document.getElementById('lock-message').innerText = newMessage; // Update displayed message
+        } else {
+            alert("Failed to update message: " + (data.message || "Unknown error"));
+        }
+    } catch (error) {
+        console.warn("Error updating custom message:", error);
+        alert("Error updating custom message. See console for details.");
     }
 }
 async function initialiseLockButton() {
