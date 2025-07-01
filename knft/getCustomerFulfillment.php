@@ -28,6 +28,7 @@ try {
             ofl.quantity,
             ofl.rate,
             ofl.total_cost,
+            ofl.route_id,
             r.deliveryType,
             r.route,
             ofl.date_time

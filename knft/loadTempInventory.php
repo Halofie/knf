@@ -48,17 +48,18 @@ try {
             SELECT 
                 Farmer_id, 
                 product_id, 
-                RANK() OVER (PARTITION BY product_id ORDER BY total_quantity DESC) AS `rank`
+                RANK() OVER (PARTITION BY product_id ORDER BY earliest_time ASC) AS `rank`
             FROM (
                 SELECT 
                     Farmer_id, 
                     product_id, 
-                    SUM(quantity) AS total_quantity
+                    MIN(rec_date_time) AS earliest_time
                 FROM inventory
                 WHERE weekID = ?
                 GROUP BY product_id, Farmer_id
             ) AS sub;
-            ";
+        ";
+        
 
         $stmt = $conn->prepare($sql);
         if (!$stmt) {

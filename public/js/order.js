@@ -279,7 +279,7 @@ async function fetchAndDisplayConsumerOrders(customerId, weekIdFilter) {
 
 
         if (items.length > 0) {
-            populateConsumerHistoryTable('.purchase-history-body', items);
+            populateConsumerHistoryTable('.purchase-history-body', items, payload.week_id);
             if (purchaseData.message) { // Display message if PHP sent one (e.g. "No items for criteria but query ok")
                  displayOrderHistoryMessage(purchaseData.message, true);
             } else {
@@ -490,7 +490,7 @@ async function loadOrderHistoryWeekDropdown() {
     }
 }
 
-function populateConsumerHistoryTable(tableBodySelector, purchaseItems) {
+function populateConsumerHistoryTable(tableBodySelector, purchaseItems, weekId) {
     const tableBody = document.querySelector(tableBodySelector);
     const noOrdersMessage = document.getElementById('no-orders-message');
 
@@ -506,7 +506,6 @@ function populateConsumerHistoryTable(tableBodySelector, purchaseItems) {
         noOrdersMessage.style.display = 'block';
         return;
     }
-
     purchaseItems.forEach(item => {
         const row = document.createElement("tr");
         const formattedRate = typeof item.rate === 'number' ? item.rate.toFixed(2) : parseFloat(item.rate || '0').toFixed(2);
@@ -519,10 +518,36 @@ function populateConsumerHistoryTable(tableBodySelector, purchaseItems) {
             <td>${item.route || 'N/A'}</td> 
             <td class="text-end">₹${typeof item.total_cost === 'number' ? item.total_cost.toFixed(2) : (item.total_cost || '0.00')}</td>
         `;
+        // tableBody.appendChild(`<h1>${weekId}</h1>`);
         tableBody.appendChild(row);
     });
 }
+// Call this function with the route ID you want to display
+async function fillRouteDetails(routeId) {
+    try {
+        const response = await fetch('../knft/getRouteDetailsFromId.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ route_id: routeId })
+        });
+        const result = await response.json();
+        if (result.success && result.data) {
+            // Fill your UI elements here. Adjust selectors as needed.
+            document.querySelector('.route-figure').textContent = result.data.deliveryType + " - " +result.data.route || 'N/A';
+            document.querySelector('.route-cost-figure').textContent = `₹${Number(result.data.rate).toFixed(2)}`;
+            document.querySelector('.deliveryfeelol').textContent = `₹${Number(result.data.rate).toFixed(2)}`;
 
+
+        } else {
+            document.querySelector('.route-figure').textContent = 'N/A';
+            document.querySelector('.route-cost-figure').textContent = 'N/A';
+        }
+    } catch (error) {
+        console.error('Error fetching route details:', error);
+        document.querySelector('.route-figure').textContent = 'N/A';
+        document.querySelector('.route-cost-figure').textContent = 'N/A';
+    }
+}
 // Function to render the cart
 
 // Function to handle deleting a product from the cart
@@ -669,8 +694,11 @@ function renderFulfillmentTable(items) {
         return;
     }
     noMsg.style.display = 'none';
+    let price = 0;
+    let cRouteId = items[0].route_id || ''; // Get route ID from first item
     items.forEach(item => {
         const tr = document.createElement('tr');
+        price += item.total_cost || 0; // Sum up total cost
         tr.innerHTML = `
             <td>${item.product || ''}</td>
             <td>${item.quantity || ''}</td>
@@ -680,6 +708,12 @@ function renderFulfillmentTable(items) {
         `;
         tbody.appendChild(tr);
     });
+    console.log(cRouteId);
+    fillRouteDetails(cRouteId);
+    document.querySelector('.total-amount-figure').textContent = `₹${price.toFixed(2)}`; // Display total amount
+
+
+    
 }
 
 // Show fulfillment data message
