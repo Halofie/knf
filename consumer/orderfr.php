@@ -240,7 +240,7 @@ if ($_SESSION['role'] !== 'C') {
   <!-- Enhanced Purchase History Section -->
   <div class="container my-5" id="purchaseHistorySection"> <!-- Added ID for easy navigation -->
     <h2 class="text-center mb-4 display-5 fw-bold text-success">
-        <i class="fas fa-history me-2"></i>My Purchase History
+        <i class="fas fa-history me-2"></i>Purchase History
     </h2>
 
     <!-- Week Filter for Order History -->
@@ -261,7 +261,7 @@ if ($_SESSION['role'] !== 'C') {
               </div>
               <div class="col-md-auto">
                   <button type="submit" class="btn btn-lg btn-success shadow-sm w-100" style="border-radius: 12px;">
-                      <i class="fas fa-filter me-2"></i>Load Orders
+                      <i class="fas fa-filter me-2"></i>Show Orders
                   </button>
               </div>
             </form>
@@ -284,26 +284,14 @@ if ($_SESSION['role'] !== 'C') {
                           <tr>
                               <th scope="col">Product Name</th>
                               <th scope="col">Category</th>
-                              <th scope="col" class="text-end">Price/Unit</th>
+                              <th scope="col" class="text-end">Rate/Unit</th>
                               <th scope="col" class="text-center">Quantity</th>
                               <!-- <th scope="col">Unit</th> -->
-                              <th scope="col">Route (Delivery Type)</th>
+                              <th scope="col">Route</th>
                               <th scope="col" class="text-end">Total Cost</th>
                           </tr>
                       </thead>
                       <tbody class="purchase-history-body">
-                          <!-- Purchase items will be dynamically inserted here by JavaScript -->
-                          <!-- Example of a row (for structure reference):
-                          <tr>
-                              <td>Carrots</td>
-                              <td>Vegetable</td>
-                              <td class="text-end">₹50.00</td>
-                              <td class="text-center">2</td>
-                              <td>kg</td>
-                              <td>Route A (Home Delivery)</td>
-                              <td class="text-end">₹100.00</td>
-                          </tr>
-                          -->
                       </tbody>
                   </table>
               </div>
@@ -320,7 +308,7 @@ if ($_SESSION['role'] !== 'C') {
 
   <div class="container my-5" id="fulfillmentDisplaySection"> <!-- Added ID for easy navigation -->
     <h2 class="text-center mb-4 display-5 fw-bold text-success">
-        <i class="fas fa-clipboard-check me-2"></i>Order Processing Status
+        <i class="fas fa-clipboard-check me-2"></i>Purchase Invoice 
     </h2>
 
     <!-- Week Filter for Order History -->
@@ -331,7 +319,7 @@ if ($_SESSION['role'] !== 'C') {
             <form id="fulfillmentDataWeekForm" class="row g-3 align-items-end">
               <div class="col-md">
                   <label for="fulfillmentDataWeekDropdown" class="form-label fw-bold text-success  mb-1">
-                      <i class="fas fa-calendar-alt me-2"></i>Filter Fulfillment by Week:
+                      <i class="fas fa-calendar-alt me-2"></i>Filter Fulfillment by Delivery Week:
                   </label>
                   <select class="form-select form-select-lg shadow-sm" id="fulfillmentDataWeekDropdown" style="border: 2px solid #28a745; border-radius: 12px;">
                       <option value="" selected>Loading delivery weeks...</option>
@@ -341,7 +329,7 @@ if ($_SESSION['role'] !== 'C') {
               </div>
               <div class="col-md-auto">
                   <button type="submit" class="btn btn-lg btn-success shadow-sm w-100" style="border-radius: 12px;">
-                      <i class="fas fa-search me-2"></i>Load Fulfillments
+                      <i class="fas fa-search me-2"></i>Show Fulfillments
                   </button>
               </div>
             </form>
@@ -356,7 +344,7 @@ if ($_SESSION['role'] !== 'C') {
     <table class="table table-hover table-striped mb-0" id="fulfillmentTable">
         <thead>
             <tr>
-                <th>Product</th>
+                <th>Product Name</th>
                 <th>Quantity</th>
                 <th>Rate</th>
                 <th>Total Cost</th>
