@@ -885,11 +885,11 @@ async function buttonLockToggle(e) {
         if (status === 1) {
             btn.classList.remove('btn-success');
             btn.classList.add('btn-danger');
-            btn.textContent = 'User Lock: ON';
+            btn.textContent = 'Order Lock: ON';
         } else {
             btn.classList.remove('btn-danger');
             btn.classList.add('btn-success');
-            btn.textContent = 'User Lock: OFF';
+            btn.textContent = 'Order Lock: OFF';
         }
     } catch (error) {
         console.error('Error toggling user lock:', error);

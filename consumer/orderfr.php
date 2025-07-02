@@ -356,19 +356,16 @@ if ($_SESSION['role'] !== 'C') {
     <div>
       <div>
         <p>
-          <h3>Transportation route: <span class="route-figure"></span> </h3>
+          <h3>Delivery route: <span class="route-figure"></span> </h3>
           <h3>Delivery Fee: <span class="route-cost-figure"></span></h3>
         </p>
       </div>
-      <h1> Final Amount to be Paid:<span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span> </h1>
+      <h1> Total Amount to be Paid: <span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span> </h1>
     </div>
     <p class="text-center text-muted p-5" id="no-fulfillment-data-message" style="display: none; font-size: 1.2rem;">
         <i class="fas fa-box-open fa-2x mb-3 d-block"></i>
         No fulfillment records to display for the selected period.
     </p>
-</div>
-
-  </div>
 </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
