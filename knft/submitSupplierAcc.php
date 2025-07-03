@@ -1,5 +1,8 @@
 <?php
 require('header.php');
+header('Content-Type: application/json');
+$response = [];
+
 try {
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -13,9 +16,23 @@ try {
 
     $supplierName = $data['supplierName'];
     $plainPassword = $data['password'];
-    // $contact = $data['contact'];
     $emailID = $data['emailID'];
     $category = "F"; 
+
+    // Check if email already exists
+    $checkStmt = $conn->prepare("SELECT id FROM accounts WHERE email = ?");
+    $checkStmt->bind_param("s", $emailID);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+    if ($checkStmt->num_rows > 0) {
+        $response['success'] = false;
+        $response['message'] = "An account with this email already exists.";
+        $checkStmt->close();
+        $conn->close();
+        echo json_encode($response);
+        exit;
+    }
+    $checkStmt->close();
 
     // Hash the password
     $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
@@ -24,21 +41,23 @@ try {
     }
 
     // Prepare and bind
-    $stmt = $conn->prepare("INSERT INTO accounts (username, password, email, category) VALUES ( ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO accounts (username, password, email, category) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("ssss", $supplierName, $hashedPassword, $emailID, $category);
     // Execute the query
     if ($stmt->execute()) {
-        echo "New supplier account created successfully";
+        $response['success'] = true;
+        $response['message'] = "New supplier account created successfully";
     } else {
-        echo "Error: " . $stmt->error;
+        $response['success'] = false;
+        $response['message'] = "Error: " . $stmt->error;
     }
     // Close connections
     $stmt->close();
     $conn->close();
 } catch (Exception $e) {
+    $response['success'] = false;
     $response['error'] = $e->getMessage();
 }
 
-header('Content-Type: application/json');
 echo json_encode($response);
 ?>

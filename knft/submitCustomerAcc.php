@@ -1,9 +1,11 @@
 <?php
 require('header.php');
+header('Content-Type: application/json');
+$response = [];
+
 try {
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
-    // Check connection
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
@@ -13,9 +15,22 @@ try {
 
     $customerName = $data['customerName'];
     $plainPassword = $data['password'];
-    // $contact = $data['contact'];
     $emailID = $data['emailID'];
     $category = "C";
+
+    // Check if email already exists
+    $checkStmt = $conn->prepare("SELECT id FROM accounts WHERE email = ?");
+    $checkStmt->bind_param("s", $emailID);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+    if ($checkStmt->num_rows > 0) {
+        $response['success'] = false;
+        $response['message'] = "An account with this email already exists.";
+        $checkStmt->close();
+        echo json_encode($response);
+        exit;
+    }
+    $checkStmt->close();
 
     // Hash the password
     $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
@@ -29,15 +44,20 @@ try {
 
     // Execute the query
     if ($stmt->execute()) {
-        echo "New customer account created successfully";
+        $response['success'] = true;
+        $response['message'] = "New customer account created successfully";
     } else {
-        echo "Error: " . $stmt->error;
+        $response['success'] = false;
+        $response['message'] = "Error: " . $stmt->error;
     }
-    // Close connections
     $stmt->close();
-    $conn->close();
 } catch (Exception $e) {
+    $response['success'] = false;
     $response['error'] = $e->getMessage();
+} finally {
+    if (isset($conn) && $conn instanceof mysqli) {
+        $conn->close();
+    }
 }
+
 echo json_encode($response);
-?>
