@@ -110,7 +110,7 @@ async function fetchWeeks() {
 // Combined function for fetching and populating inventory tables
 async function fetchAndDisplayInventory(farmerId, weekId, tableSelector, addDeleteButton = false) {
     const messageDivId = tableSelector === ".inventory-body" ? '#inventory-result' : '#currentinventory-result';
-    displayMessage(messageDivId, 'Loading inventory...', true);
+    // displayMessage(messageDivId, 'Loading inventory...', true);
     try {
         const response = await fetch('../knft/getFarmerHistory.php', {
             method: 'POST',
@@ -334,35 +334,48 @@ function renderFarmerChecklist(data) {
         reportHtml += `<h5 class="card-subtitle mb-3 text-muted">Week: ${weekDisplayText}</h5>`;
     }
     reportHtml += `</div></div>`;
-    console.log(data.checklist_items);
+
+    console.log("Checklist items to render:", data.checklist_items);
+
     data.checklist_items.forEach(product_assignment => {
         const productName = product_assignment.product_name;
-        const totalQty = product_assignment.total_quantity_for_product; // Check this name
+        const totalQty = product_assignment.total_quantity_for_product; 
         const unitId = product_assignment.unit_id;
+        const customerDetailsString = product_assignment.customer_details_for_product;
+        
+        let quantityBreakdownString = '';
+        const customerEntries = customerDetailsString ? customerDetailsString.split('|||') : [];
+        if (customerEntries.length > 1) {
+            const quantities = customerEntries.map(entry => {
+                const match = entry.match(/Qty:\s*(\d+(\.\d+)?)/);
+                return match ? match[1] : '0';
+            });
+            quantityBreakdownString = ` = (${quantities.join(' + ')})`;
+        }
 
-        console.log(`DEBUG: Name=${productName}, TotalQty=${totalQty}, Unit=${unitId}`);
         reportHtml += `
             <div class="card mb-3 shadow-sm">
                 <div class="card-header bg-light">
                     <h5 class="mb-0">
-                        ${productName} 
-                        - Total to Prepare: 
+                        ${productName} - Total to Prepare: 
                         <strong>
                             ${totalQty} 
                             ${unitId} 
+                            <span class="text-muted fw-normal">${quantityBreakdownString}</span>
                         </strong>
                     </h5>
                 </div>
-        `;
+                <div class="card-body">
+                    <h6>Customer & Route Breakdown:</h6>
+                    <ul class="list-group list-group-flush">`;
+        
         const customerDetails = product_assignment.customer_breakdown_details; // Check this name
-        console.log(`DEBUG: CustomerDetailsString='${customerDetails}'`);
         if (customerDetails && typeof customerDetails === 'string' && customerDetails.trim() !== '') {
             customerDetails.split('|||').forEach((detail) => {
                 reportHtml += `<li class="list-group-item text-muted">${detail}</li>`;
             });
         } else {
-            console.log("DEBUG: customer_details_for_product condition was FALSE");
-            reportHtml += `<li class="list-group-item text-muted">No specific customer details available. (Debug: condition false)</li>`;
+            reportHtml += `<li class="list-group-item text-muted">No specific customer details available.</li>`;
         }
         reportHtml += `
                     </ul>
@@ -373,7 +386,7 @@ function renderFarmerChecklist(data) {
 }
 
 function htmlspecialchars(str) {
-    if (typeof str !== 'string') return String(str);
+    if (typeof str !== 'string' && typeof str !== 'number') return String(str);
     const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' };
     return str.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
