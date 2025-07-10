@@ -10,7 +10,21 @@ try {
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
-
+    // SQL query to delete all records from temp_inventory
+    $sql = "TRUNCATE TABLE temp_inventory";
+    
+    if ($conn->query($sql) === TRUE) {
+        echo "Table temp_inventory cleared successfully.";
+    } else {
+        echo "Error clearing table: " . $conn->error;
+    }
+    $sql = "TRUNCATE TABLE farmer_rank";
+    
+    if ($conn->query($sql) === TRUE) {
+        echo "Table temp_inventory cleared successfully.";
+    } else {
+        echo "Error clearing table: " . $conn->error;
+    }
     // Check if temp_inventory is empty
     $checkSql = "SELECT COUNT(*) as cnt FROM temp_inventory";
     $checkResult = $conn->query($checkSql);
