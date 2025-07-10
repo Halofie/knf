@@ -78,31 +78,41 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     </div>
 
     <div class="container d-flex justify-content-center">
-        <div class="col-7 text-center mt-3 mb-3">
-            <a class="btn m-3 btn-primary" href="#one">Unit of Measure Master</a>
-            <a class="btn m-3 btn-primary" href="#two">Category Master</a>
-            <a class="btn m-3 btn-primary" href="#three">Product Master</a>
-            <a class="btn m-3 btn-primary" href="#four">Route Master</a>
-            <a class="btn m-3 btn-primary" href="#five">Customer Registration</a>
-            <a class="btn m-3 btn-primary" href="#six">Supplier Registration</a>
-            <a class="btn m-3 btn-primary" href="#seven">Week Master</a>
-            <a class="btn m-3 btn-primary" href="#eight">Order Fulfillment</a>
-            <a class="btn m-3 btn-primary" href="#nine">Farmer Rank</a>
-            <a class="btn m-3 btn-primary" href="#ten">Allocate Orders to Farmers</a>
-            <a class="btn m-3 btn-primary" href="#eleven">Tray Status</a>
-            
-            <a class="btn m-3 btn-primary" href="../knft/trunc_temp.php">clear Temp_inv</a>
-            <a class="btn m-3 btn-primary" href="../knft/loadTempInventory.php">load Temp_inv</a>
-            <a class="btn m-3" id="lockButton">lock/unlock button</a>
+        <div class="col-10 mt-3 text-md-start text-center mb-3">
+            <h2 class="mt-4">Masters</h2>
+            <a class="btn m-2 btn-primary" href="#one">Unit of Measure Master</a>
+            <a class="btn m-2 btn-primary" href="#two">Category Master</a>
+            <a class="btn m-2 btn-primary" href="#three">Product Master</a>
+            <a class="btn m-2 btn-primary" href="#four">Route Master</a>
+            <a class="btn m-2 btn-primary" href="#seven">Week Master</a>
 
-            <a class="btn m-3 btn-secondary" href="../knft/transferFile.php">Download Orders</a>
-            <a class="btn m-3 btn-secondary" href="../knft/customer_order_fulfillment_report.php?download=1">Download Customer Order Fulfillment Report</a>
-            <a class="btn m-3 btn-secondary" href="../knft/delivery_routes_report.php?download=1">Download Delivery Routes Report</a>
-            <a class="btn m-3 btn-secondary" href="../knft/weekly_report.php?download=1">Download Weekly Report</a>
-            <a class="btn m-3 btn-secondary" href="../knft/weekly_invoice_report.php?download=1">Download Weekly Invoice Report</a>
+            <h2 class="mt-4">Registrations</h2>
+            <a class="btn m-2 btn-primary" href="#five">Customer Registration</a>
+            <a class="btn m-2 btn-primary" href="#six">Supplier Registration</a>
+
+            <h2 class="mt-4">Ranking and Fullfillment</h2>
+            <a class="btn m-2 btn-primary" href="#eight">Order Fulfillment</a>
+            <a class="btn m-2 btn-primary" href="#nine">Farmer Rank</a>
+            <a class="btn m-2 btn-primary" href="#eleven">Tray Status</a>
+
+            <h2 class="mt-4">Week Flow Controllers</h2>
+            <a class="btn m-2 btn-primary" href="#ten">Allocate Orders to Farmers</a>
+            <!-- <a class="btn m-3 btn-primary" href="../knft/trunc_temp.php">clear Temp_inv</a> -->
+            <a class="btn m-2 btn-primary" href="../knft/loadTempInventory.php">load Temp_inv</a>
+            <a class="btn m-2" id="lockButton">lock/unlock button</a>
+
+            <h2 class="mt-4">Reports</h2>
+            <a class="btn m-2 btn-secondary" href="../knft/transferFile.php">Download Orders</a>
+            <a class="btn m-2 btn-secondary" href="../knft/customer_order_fulfillment_report.php?download=1">Download Customer Order Fulfillment Report</a>
+            <a class="btn m-2 btn-secondary" href="../knft/delivery_routes_report.php?download=1">Download Delivery Routes Report</a>
+            <a class="btn m-2 btn-secondary" href="../knft/weekly_report.php?download=1">Download Weekly Report</a>
+            <a class="btn m-2 btn-secondary" href="../knft/weekly_invoice_report.php?download=1">Download Weekly Invoice Report</a>
+            
+            <h2 class="mt-4">User Lock message</h2>
+            <p class="mt-4  p-4 shadow rounded b-2 text-md-start text-center fw-bold">Current Lock message: <span id="lock-message"><?php echo $_SESSION['cust_msg'] ?> </span> </p>
         </div>
 
-        <p>Current Lock message: <span id="lock-message"><?php echo $_SESSION['cust_msg'] ?> </span> </p>
+        
     </div>
 
     <!-- page 1 uom-->
