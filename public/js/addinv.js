@@ -342,16 +342,16 @@ function renderFarmerChecklist(data) {
         const totalQty = product_assignment.total_quantity_for_product; 
         const unitId = product_assignment.unit_id;
         const customerDetailsString = product_assignment.customer_details_for_product;
-        
+
+        const customerDetails = product_assignment.customer_breakdown_details; // Check this name
+
         let quantityBreakdownString = '';
-        const customerEntries = customerDetailsString ? customerDetailsString.split('|||') : [];
-        if (customerEntries.length > 1) {
-            const quantities = customerEntries.map(entry => {
-                const match = entry.match(/Qty:\s*(\d+(\.\d+)?)/);
-                return match ? match[1] : '0';
-            });
-            quantityBreakdownString = ` = (${quantities.join(' + ')})`;
-        }
+        customerDetails.split('|||').forEach((detail) => {
+            const match = detail.match(/Qty:\s*(\d+(\.\d+)?)/);
+            console.log(match)
+            quantityBreakdownString += `${match ? match[1] : '0'} ${unitId} , `;
+        });
+
 
         reportHtml += `
             <div class="card mb-3 shadow-sm">
@@ -361,15 +361,16 @@ function renderFarmerChecklist(data) {
                         <strong>
                             ${totalQty} 
                             ${unitId} 
-                            <span class="text-muted fw-normal">${quantityBreakdownString}</span>
+                            
                         </strong>
                     </h5>
+                    <span class="text-muted fw-normal fs-5">Split up: ${quantityBreakdownString}</span>
                 </div>
                 <div class="card-body">
                     <h6>Customer & Route Breakdown:</h6>
                     <ul class="list-group list-group-flush">`;
         
-        const customerDetails = product_assignment.customer_breakdown_details; // Check this name
+        
         if (customerDetails && typeof customerDetails === 'string' && customerDetails.trim() !== '') {
             customerDetails.split('|||').forEach((detail) => {
                 reportHtml += `<li class="list-group-item text-muted">${detail}</li>`;
