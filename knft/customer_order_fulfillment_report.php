@@ -32,10 +32,10 @@ while ($row = $result->fetch_assoc()) {
 // Fetch fulfilled orders for each customer
 $orders = [];
 foreach ($customers as $cid => $cname) {
-    $sql = "SELECT CONCAT(p.product, ' -->', p.price, '/', p.UoM_id) AS product_full, o.quantity 
-            FROM order_fulfillment o
-            JOIN product p ON o.product_id = p.prod_id
-            WHERE o.customer_id = ? AND o.rec_status = 1";
+    $sql = "SELECT p.product AS product_full, o.quantity 
+        FROM order_fulfillment o
+        JOIN product p ON o.product_id = p.prod_id
+        WHERE o.customer_id = ? AND o.rec_status = 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $cid);
     $stmt->execute();

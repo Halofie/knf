@@ -52,7 +52,7 @@ if ($route_result->num_rows > 0) {
         }
 
         // Create route display with deliveryType
-        $route_display = $route['deliveryType'] . ' - ' . $route['route'];
+        $route_display = $route['route'] . ' - ' . $route['deliveryType'];
 
         // Set route in column A
         $sheet->setCellValue('A' . $row, $route_display);
