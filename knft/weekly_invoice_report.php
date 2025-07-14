@@ -124,14 +124,34 @@ $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\
 $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(16);
 
 $headers = [
-    'Product', 'Price', 'Qty Assigned', 'Qty in Sale', 'Qty in Hand', 'Total Amount To Be Recieved', 'Farmer'
+    'Product', 'Price', 'Qty Assigned', 'Qty in Hand', 'Qty in Sale', 'Total Amount To Be Recieved', 'Farmer'
 ];
+
+// Calculate total amount for each customer
+$customerTotals = [];
 foreach ($customers as $cid) {
-    $headers[] = $customerNames[$cid] ?? $cid;
+    $total_sql = "SELECT SUM(fo.quantity * p.price) AS total_amount
+                  FROM final_order fo
+                  JOIN product p ON fo.product_id = p.prod_id
+                  WHERE fo.customer_id = $cid AND fo.week_id = $week_id";
+    $total_res = $conn->query($total_sql);
+    $total_amount = 0;
+    if ($total_res && $total_row = $total_res->fetch_assoc()) {
+        $total_amount = $total_row['total_amount'] ? $total_row['total_amount'] : 0;
+    }
+    $customerTotals[$cid] = $total_amount;
+}
+
+// Add customer name with total amount to header
+foreach ($customers as $cid) {
+    $name = $customerNames[$cid] ?? $cid;
+    $amt = $customerTotals[$cid];
+    $headers[] = $name . " (₹" . $amt . ")";
 }
 $sheet->fromArray($headers, null, 'A2');
 $sheet->getStyle('A2:' . chr(64 + count($headers)) . '2')->getFont()->setBold(true);
 
+// Shift data rows down by 1 (start from row 4)
 $rowNum = 3;
 foreach ($displayData as $entry) {
     $product_id = $entry['product_id'];
@@ -146,18 +166,20 @@ foreach ($displayData as $entry) {
     $fpaRes = $conn->query("SELECT SUM(assigned_quantity) as qty_in_hand FROM farmer_product_assignments WHERE week_id = $week_id AND product_id = $product_id AND assigned_farmer_id = $farmer_id");
     $fpaRow = $fpaRes->fetch_assoc();
     $qty_in_hand = $fpaRow && $fpaRow['qty_in_hand'] !== null ? (int)$fpaRow['qty_in_hand'] : 0;
-
     $qty_in_sale = $qty_assigned - $qty_in_hand;
-    $total_cost = $price * $qty_in_hand;
+
+    // Total Amount To Be Received: (Qty Assigned - Qty in Hand) * Price
+    $total_amount_to_be_received = ($qty_assigned - $qty_in_sale) * $price;
+
     $farmerName = $farmerNames[$farmer_id] ?? $farmer_id;
 
     $row = [
         $prod['product'],
         $price,
         $qty_assigned,
-        $qty_in_sale,
-        -1 * $qty_in_hand,
-        $total_cost,
+        $qty_in_sale,      // "Qty in Hand" column (swapped)
+        -1*$qty_in_hand,      // "Qty in Sale" column (swapped)
+        $total_amount_to_be_received,
         $farmerName
     ];
     foreach ($customers as $cid) {
@@ -173,6 +195,10 @@ for ($col = 'A'; $col <= chr(64 + count($headers)); $col++) {
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="Weekly_Invoice_Report_' . $weekdate . '.xlsx"');
 header('Cache-Control: max-age=0');
+$writer = new Xlsx($spreadsheet);
+$writer->save('php://output');
+exit;
+?>
 $writer = new Xlsx($spreadsheet);
 $writer->save('php://output');
 exit;

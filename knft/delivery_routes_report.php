@@ -32,14 +32,29 @@ $route_result = $conn->query($route_sql);
 $row = 1;
 $max_columns = 1; // Track maximum columns used
 
+// Step 1: Build customer-to-route count map for the latest week
+$customerRouteCount = [];
+$customerRouteSql = "
+    SELECT c.customerName, COUNT(DISTINCT f.route_id) as route_count
+    FROM final_order f
+    JOIN customers c ON f.customer_id = c.customerID
+    WHERE c.rec_status = 1
+      AND f.week_id = {$latestWeekId}
+    GROUP BY c.customerName
+";
+$customerRouteResult = $conn->query($customerRouteSql);
+while ($crRow = $customerRouteResult->fetch_assoc()) {
+    $customerRouteCount[$crRow['customerName']] = $crRow['route_count'];
+}
+
 if ($route_result->num_rows > 0) {
     while ($route = $route_result->fetch_assoc()) {
-        // Fetch customers for this route who ordered in the latest week
+        // Fetch unique customers for this route/deliveryType who ordered in the latest week
         $cust_sql = "
             SELECT DISTINCT c.customerName
             FROM final_order f
             JOIN customers c ON f.customer_id = c.customerID
-            WHERE c.routeID = {$route['id']}
+            WHERE f.route_id = {$route['id']}
               AND c.rec_status = 1
               AND f.week_id = {$latestWeekId}
             ORDER BY c.customerName
@@ -48,7 +63,12 @@ if ($route_result->num_rows > 0) {
 
         $customers = [];
         while ($cust = $cust_result->fetch_assoc()) {
-            $customers[] = $cust['customerName'];
+            $name = $cust['customerName'];
+            // Step 2: Mark customer if they ordered for multiple routes
+            if (isset($customerRouteCount[$name]) && $customerRouteCount[$name] > 1) {
+                $name .= ' *';
+            }
+            $customers[] = $name;
         }
 
         // Create route display with deliveryType

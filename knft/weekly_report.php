@@ -19,14 +19,14 @@ if ($week_res && $week_res->num_rows > 0) {
     $weekID = $week_row['weekID'];
     $weekdate = $week_row['weekdate'];
 
-    // Fetch customers who placed orders in the latest week, with route info
-    $sql = "SELECT c.customerName, c.contact, r.deliveryType, r.route
-            FROM final_order f
-            JOIN customers c ON f.customer_id = c.customerID
-            LEFT JOIN routes r ON c.routeID = r.id
-            WHERE f.week_id = '$weekID'
-            GROUP BY c.customerID
-            ORDER BY c.customerName ASC";
+    // Fetch all customer-route pairs for the latest week
+    $sql = "SELECT c.customerID, c.customerName, c.contact, r.deliveryType, r.route
+            FROM final_order fo
+            JOIN customers c ON fo.customer_id = c.customerID
+            LEFT JOIN routes r ON fo.route_id = r.id
+            WHERE fo.week_id = '$weekID'
+            GROUP BY fo.customer_id, fo.route_id
+            ORDER BY c.customerName ASC, r.route ASC";
     $result = $conn->query($sql);
 
     // Create Spreadsheet

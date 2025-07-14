@@ -23,11 +23,14 @@ $fixedColumns = [
 
 $productMap = [];
 $productColumns = [];
+$productHeaders = []; // Map sanitized column => original product name
 foreach ($products as $prod) {
-    // Sanitize product names to avoid SQL issues
-    $safeName = preg_replace('/[^a-zA-Z0-9_]/', '_', $prod['product']);
+    // Allow Unicode letters (including Tamil) in column names, but MySQL only allows [a-zA-Z0-9$_]
+    // So, keep sanitization for column name, but store original name for CSV header
+    $safeName = preg_replace('/[^\p{L}\p{N}_]/u', '_', $prod['product']); // Allow Unicode letters/numbers
     $productColumns[] = "`$safeName` INT DEFAULT 0";
     $productMap[$prod['prod_id']] = $safeName;
+    $productHeaders[$safeName] = $prod['product']; // Store original name for CSV header
 }
 
 // Create finalorder Table
@@ -184,7 +187,17 @@ header('Content-Disposition: attachment; filename="finalorder.csv"');
 $output = fopen('php://output', 'w');
 
 if (!empty($rows)) {
-    fputcsv($output, $finalHeaders);
+    // Use original product names for headers
+    $csvHeaders = [];
+    foreach ($finalHeaders as $col) {
+        if (isset($productHeaders[$col])) {
+            $csvHeaders[] = $productHeaders[$col];
+        } else {
+            $csvHeaders[] = $col;
+        }
+    }
+    fputcsv($output, $csvHeaders);
+
     foreach ($rows as $row) {
         $line = [];
         foreach ($finalHeaders as $col) {
