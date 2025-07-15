@@ -510,8 +510,9 @@ function handleAddProduct(e) {
          category_id: document.querySelector("#itmCategory").value,
          product: document.querySelector("#itmProduct").value.trim(),
          UoM_id: document.querySelector("#itmUoM").value,
-         price: parseInt(document.querySelector("#itmRate").value)
+         price: parseFloat(document.querySelector("#itmRate").value)
      };
+     console.log(payload.price);
      displayMessage('#result-product', 'Adding...', true);
      fetch('../knft/submitProduct.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
         .then(response => { if (!response.ok) throw response; return response.json(); })
@@ -539,8 +540,8 @@ function handleEditProduct(e) {
      const newPrice = prompt("Edit Price:", currentPrice);
 
     if (newCatId !== null && newName !== null && newUomId !== null && newPrice !== null) {
-         if (!newCatId.trim() || !newName.trim() || !newUomId.trim() || !newPrice.trim() || isNaN(parseInt(newPrice))) { /*...*/ return; }
-        const payload = { prod_id: prodId, category_id: newCatId.trim(), product: newName.trim(), UoM_id: newUomId.trim(), price: parseInt(newPrice) };
+         if (!newCatId.trim() || !newName.trim() || !newUomId.trim() || !newPrice.trim() || isNaN(parseFloat(newPrice))) { /*...*/ return; }
+        const payload = { prod_id: prodId, category_id: newCatId.trim(), product: newName.trim(), UoM_id: newUomId.trim(), price: parseFloat(newPrice) };
         displayMessage('#result-product', 'Saving...', true);
         fetch('../knft/editProducts.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
             .then(response => { if (!response.ok) throw response; return response.json(); })
@@ -1021,7 +1022,7 @@ function editFulfillListener() {
 
             const id = btn.getAttribute('data-id');
             const qtyInput = btn.closest('tr').querySelector('.fulfill-qty');
-            const quantity = qtyInput ? parseInt(qtyInput.value, 10) : null;
+            const quantity = qtyInput ? parseFloat(qtyInput.value, 10) : null;
             const weekDropdown = document.getElementById('weekDropdown');
             const week_id = weekDropdown ? weekDropdown.value : null;
             const get_mode = document.querySelector('input[name="get_mode"]:checked')?.value || 0; // Default to 'all' if not selected

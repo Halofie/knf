@@ -16,7 +16,7 @@ try {
         $category_id = $data['category_id'];
         $product = $data['product'];
         $UoM_id = $data['UoM_id'];
-        $price = $data['price'];
+        $price = isset($data['price']) ? floatval($data['price']) : 0.0;
 
         // Prepare and bind
         $stmt = $conn->prepare("INSERT INTO product (category_id, product, UoM_id, price) VALUES (?, ?, ?, ?)");

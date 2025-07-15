@@ -82,7 +82,7 @@ try {
     $stmt_inv->execute();
     $result_inv = $stmt_inv->get_result();
     while ($row_inv = $result_inv->fetch_assoc()) {
-        $temp_farmer_stock_this_run[intval($row_inv['Farmer_id'])][intval($row_inv['product_id'])] = intval($row_inv['quantity']);
+        $temp_farmer_stock_this_run[intval($row_inv['Farmer_id'])][intval($row_inv['product_id'])] = floatval($row_inv['quantity']);
     }
     $stmt_inv->close();
     error_log("Initial farmer stock levels for this run (week $week_id_safe): " . print_r($temp_farmer_stock_this_run, true));
@@ -101,7 +101,7 @@ try {
     foreach ($final_order_items as $order_item) {
         $final_order_item_id = intval($order_item['final_order_item_id']);
         $product_id_ordered = intval($order_item['product_id']);
-        $quantity_customer_needs = intval($order_item['ordered_quantity']);
+        $quantity_customer_needs = floatval($order_item['ordered_quantity']);
         $remaining_qty_for_this_item = $quantity_customer_needs;
 
         if ($remaining_qty_for_this_item <= 0) continue;
@@ -128,7 +128,7 @@ try {
             if ($farmer_current_temp_stock > 0) {
                 $quantity_farmer_can_supply = min($remaining_qty_for_this_item, $farmer_current_temp_stock);
 
-                $stmt_assign->bind_param("iiiii",
+                $stmt_assign->bind_param("iiidi",
                     $final_order_item_id,
                     $current_farmer_id,
                     $product_id_ordered,

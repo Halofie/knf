@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 // Get POST data
 $input = json_decode(file_get_contents('php://input'), true);
 $id = isset($input['id']) ? intval($input['id']) : 0;
-$quantity = isset($input['quantity']) ? intval($input['quantity']) : 0;
+$quantity = isset($input['quantity']) ? floatval($input['quantity']) : 0;
 
 if ($id <= 0 || $quantity < 0) {
     echo json_encode(["success" => false, "message" => "Invalid id or quantity"]);

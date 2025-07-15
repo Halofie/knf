@@ -21,9 +21,21 @@ $emailID = $data['emailID'];
 $stmt = $conn->prepare("INSERT INTO customers (customerName, routeID, contact, alternativeContact, address, emailID) VALUES (?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("ssiiss", $customerName, $routeID, $contact, $alternativeContact, $address, $emailID);
 
+
+
 // Execute the query
 if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'New record created successfully']);
+    $cust_id = $stmt->insert_id;
+    // Insert into tray_management
+    $trayStmt = $conn->prepare("INSERT INTO tray_management (customerId, trayStatus) VALUES (?, ?)");
+    $tray_status = 0;
+    $trayStmt->bind_param("ii", $cust_id, $tray_status);
+    if ($trayStmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'New record created successfully and tray status initialized']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Customer created, but tray status insert failed: ' . $trayStmt->error]);
+    }
+    $trayStmt->close();
 } else {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Error: ' . $stmt->error]);

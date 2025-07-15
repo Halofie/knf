@@ -111,7 +111,7 @@ async function main_load(email) {
             routes.forEach(route => {
                 const option = document.createElement('option');
                 option.value = route.id;
-                option.text = `${route.id} - ${route.route}`;
+                option.text = `${route.id} - ${route.deliveryType} - ${route.route} - ₹${Number(route.rate).toFixed(2)}`;
                 if (route.id == cRoute) {
                     option.selected = true;
                     defaultOption.selected = false;
@@ -392,10 +392,10 @@ function attachAddToCartEventListeners() {
         button.addEventListener('click', (e) => {
             const productId = e.currentTarget.id;
             const quantityInput = document.querySelector(`#q${productId}`);
-            const quantity = parseInt(quantityInput.value, 10);
+            const quantity = parseFloat(quantityInput.value, 10);
             const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
             const availableElem = document.querySelector(`#ava${productId}`);
-            const availableQuantity = availableElem ? parseInt(availableElem.innerText, 10) : 0;
+            const availableQuantity = availableElem ? parseFloat(availableElem.innerText, 10) : 0;
 
             if (quantity > 0 && quantity <= availableQuantity) {
                 // Only update the cart, do not update availability
@@ -572,10 +572,10 @@ function attachPurchaseEventListeners() {
         button.addEventListener('click', async (e) => {
             const productId = e.currentTarget.id;
             const quantityInput = document.querySelector(`#q${productId}`);
-            const quantity = parseInt(quantityInput.value, 10);
+            const quantity = parseFloat(quantityInput.value, 10);
             const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
             const availableElem = document.querySelector(`#ava${productId}`);
-            const availableQuantity = availableElem ? parseInt(availableElem.innerText, 10) : 0;
+            const availableQuantity = availableElem ? parseFloat(availableElem.innerText, 10) : 0;
             // ...existing code...
             if (quantity > 0 && quantity <= availableQuantity) {
                 // Add product to the cart

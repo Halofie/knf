@@ -38,13 +38,16 @@ if (isset($data['oldEmailID'], $data['customerName'], $data['routeID'], $data['c
     // Update customer data
     $query = "UPDATE customers SET customerName = ?, routeID = ?, contact = ?, alternativeContact = ?, address = ?, emailID = ? WHERE emailID = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("sssssss", $customerName, $routeID, $contact, $alternativeContact, $address, $newEmailID, $oldEmailID);
+    $stmt->bind_param("siiisss", $customerName, $routeID, $contact, $alternativeContact, $address, $newEmailID, $oldEmailID);
+    $success1 = $stmt->execute();
 
+    // Update accounts data
     $query = "UPDATE accounts SET username = ?, email = ? WHERE email = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("sss", $customerName, $newEmailID, $oldEmailID);
+    $success2 = $stmt->execute();
 
-    if ($stmt->execute()) {
+    if ($success1 && $success2) {
         echo json_encode(["success" => true, "message" => "Customer updated successfully!"]);
     } else {
         echo json_encode(["success" => false, "message" => "Update failed!"]);
