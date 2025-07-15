@@ -345,7 +345,8 @@ if ($_SESSION['role'] !== 'C') {
         <thead>
             <tr>
                 <th>Product Name</th>
-                <th>Quantity</th>
+                <th>Ordered</th>
+                <th>Fullfilled Quantity</th>
                 <th>Rate</th>
                 <th>Total Cost</th>
                 <th>Route</th>
@@ -361,6 +362,7 @@ if ($_SESSION['role'] !== 'C') {
         </p>
       </div>
       <h1> Total Amount to be Paid: <span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span> </h1>
+    <p>*ordered quantity is the quantity u places the order and fullfilled quantity is what you will be receiving</p>
     </div>
     <p class="text-center text-muted p-5" id="no-fulfillment-data-message" style="display: none; font-size: 1.2rem;">
         <i class="fas fa-box-open fa-2x mb-3 d-block"></i>

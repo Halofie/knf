@@ -2,11 +2,12 @@
 header('Content-Type: application/json');
 require('header.php'); // DB credentials
 
-// --- Get Input ---
 $input = json_decode(file_get_contents('php://input'), true);
-$filter_week_id = $input['week_id'] ?? 'all';
 
-$session_customer_id = intval($input['customer_id']);
+//error_log("Raw input: " . file_get_contents('php://input'));
+//error_log("Decoded input: " . print_r($input, true));
+$filter_week_id = $input['week_id'] ?? 'all';
+$session_customer_id = isset($input['customer_id']) ? intval($input['customer_id']) : 0;
 
 if ($session_customer_id <= 0) {
     echo json_encode(["error" => "Invalid customer_id."]);
@@ -21,25 +22,28 @@ try {
 
     // --- Fetch Fulfillment Line Items ---
     $sql = "SELECT
-            ofl.id AS fulfillment_item_id,
-            p.product,
-            p.UoM_id as unit_id,
-            p.category_id,
-            ofl.quantity,
-            ofl.rate,
-            ofl.total_cost,
-            ofl.route_id,
-            r.deliveryType,
-            r.route,
-            ofl.date_time
-        FROM
-            order_fulfillment ofl
-        JOIN
-            product p ON ofl.product_id = p.prod_id
-        LEFT JOIN
-            routes r ON ofl.route_id = r.id
-        WHERE
-            ofl.customer_id = ? AND ofl.rec_status = 1";
+                ofl.id AS fulfillment_item_id,
+                p.product,
+                p.UoM_id as unit_id,
+                p.category_id,
+                fo.quantity AS ordered_quantity,
+                ofl.quantity AS fullfill_quantity,
+                ofl.rate,
+                ofl.total_cost,
+                ofl.route_id,
+                r.deliveryType,
+                r.route,
+                ofl.date_time
+            FROM
+                order_fulfillment ofl
+            JOIN
+                product p ON ofl.product_id = p.prod_id
+            LEFT JOIN
+                routes r ON ofl.route_id = r.id
+            LEFT JOIN
+                final_order fo ON ofl.id = fo.id
+            WHERE
+                ofl.customer_id = ? AND ofl.rec_status = 1";
 
     $params = [ $session_customer_id ];
     $types = "i";
@@ -62,14 +66,14 @@ try {
 
     $fulfillment_items = [];
     while ($row = $result->fetch_assoc()) {
-        // Use correct field names from SELECT
         $route_display = $row['route'] ?? 'N/A';
         if (!empty($row['deliveryType'])) {
             $route_display .= " (" . $row['deliveryType'] . ")";
         }
         $row['route_display'] = $route_display;
 
-        $row['quantity'] = intval($row['quantity']);
+        $row['ordered_quantity'] = intval($row['ordered_quantity']);
+        $row['fullfill_quantity'] = intval($row['fullfill_quantity']);
         $row['rate'] = floatval($row['rate']);
         $row['total_cost'] = floatval($row['total_cost']);
 

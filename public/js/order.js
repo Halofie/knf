@@ -701,7 +701,8 @@ function renderFulfillmentTable(items) {
         price += item.total_cost || 0; // Sum up total cost
         tr.innerHTML = `
             <td>${item.product || ''}</td>
-            <td>${item.quantity || ''}</td>
+            <td>${item.ordered_quantity || ''}</td>
+            <td>${item.fullfill_quantity || ''}</td>
             <td>₹${item.rate ? Number(item.rate).toFixed(2) : '0.00'}</td>
             <td>₹${item.total_cost ? Number(item.total_cost).toFixed(2) : '0.00'}</td>
             <td>${item.route || ''}</td>
