@@ -57,6 +57,11 @@ async function runNextProgram(email) {
     } else {
         console.log("Purchase history section/table body not found on this page, skipping initialization.");
     }
+
+    // Initialize fulfillment section if present
+    if (document.getElementById('fulfillmentDisplaySection')) {
+        await initializeFulfillmentSection();
+    }
 }
 
 async function main_load(email) {
@@ -338,7 +343,13 @@ function renderMenu() {
         const productPrice = product.price;
         const availableQuantity = product.quantity;
         const purchasedQuantity = purchasedItems[productId]?.quantity || 0;
-        
+        const uom = productObj.unit_id || ""; // Get UOM
+
+        // If UOM is "nos", restrict input to integers only
+        const inputStep = (uom.toLowerCase() === "nos") ? 'step="1"' : 'step="any"';
+        const inputPattern = (uom.toLowerCase() === "nos") ? 'pattern="\\d*"' : '';
+        const inputOnInput = (uom.toLowerCase() === "nos") ? 'oninput="this.value = this.value.replace(/[^\\d]/g, \'\');"' : '';
+
         tbody.innerHTML += `
             <tr>
                 <th scope="row">${productName}</th>
@@ -346,7 +357,9 @@ function renderMenu() {
                     <p class="price" id="p${productId}">Rs.${productPrice}/unit</p>
                     <p>Available: <b id="ava${productId}">${(availableQuantity < 0) ? 0 : availableQuantity }</b></p>
                 </td>
-                <td><input type="number" id="q${productId}" value="${purchasedQuantity}" min="0" max="${availableQuantity}"></td>
+                <td>
+                    <input type="number" id="q${productId}" value="${purchasedQuantity}" min="0" max="${availableQuantity}" ${inputStep} ${inputPattern} ${inputOnInput}>
+                </td>
                 <td>
                     <button class="btn btn-primary btn-sm addToCartButton" id="${productId}" ${(availableQuantity <= 0) ? "disabled" : ""}>Add to Cart</button>
                 </td>
@@ -392,13 +405,22 @@ function attachAddToCartEventListeners() {
         button.addEventListener('click', (e) => {
             const productId = e.currentTarget.id;
             const quantityInput = document.querySelector(`#q${productId}`);
-            const quantity = parseFloat(quantityInput.value, 10);
+            let quantity = parseFloat(quantityInput.value, 10);
             const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
             const availableElem = document.querySelector(`#ava${productId}`);
             const availableQuantity = availableElem ? parseFloat(availableElem.innerText, 10) : 0;
+            const uom = (prodMap[productId]?.unit_id || "").toLowerCase();
+
+            // If UOM is "nos", block decimals
+            if (uom === "nos") {
+                if (!Number.isInteger(quantity)) {
+                    alert('For items with unit "nos", please enter a whole number.');
+                    quantityInput.value = Math.floor(quantity) || 0;
+                    return;
+                }
+            }
 
             if (quantity > 0 && quantity <= availableQuantity) {
-                // Only update the cart, do not update availability
                 purchasedItems[productId] = { quantity, price };
                 renderCart();
             } else {
@@ -506,22 +528,25 @@ function populateConsumerHistoryTable(tableBodySelector, purchaseItems, weekId) 
         noOrdersMessage.style.display = 'block';
         return;
     }
+
     purchaseItems.forEach(item => {
         const row = document.createElement("tr");
         const formattedRate = typeof item.rate === 'number' ? item.rate.toFixed(2) : parseFloat(item.rate || '0').toFixed(2);
         const pricePerUnitDisplay = `₹${formattedRate}${item.unit_id ? ' / ' + item.unit_id : ''}`;
+        const totalCost = typeof item.total_cost === 'number' ? item.total_cost.toFixed(2) : (item.total_cost || '0.00');
+
         row.innerHTML = `
-            <td>${item.product || 'N/A'}</td>
-            <td>${item.category_id || 'N/A'}</td>
-            <td class="text-end">${pricePerUnitDisplay}</td>
-            <td class="text-center">${item.quantity || '0'}</td>
-            <td>${item.route || 'N/A'}</td> 
-            <td class="text-end">₹${typeof item.total_cost === 'number' ? item.total_cost.toFixed(2) : (item.total_cost || '0.00')}</td>
+            <td data-label="Product">${item.product || 'N/A'}</td>
+            <td data-label="Category">${item.category_id || 'N/A'}</td>
+            <td data-label="Rate/Unit">${pricePerUnitDisplay}</td>
+            <td data-label="Quantity">${item.quantity || '0'}</td>
+            <td data-label="Route">${item.route || 'N/A'}</td> 
+            <td data-label="Total Cost">₹${totalCost}</td>
         `;
-        // tableBody.appendChild(`<h1>${weekId}</h1>`);
         tableBody.appendChild(row);
     });
 }
+
 // Call this function with the route ID you want to display
 async function fillRouteDetails(routeId) {
     try {
@@ -630,9 +655,30 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
         alert('Your cart is empty. Please add items to the cart before placing an order.');
         return;
     }
+
+    // Loop through all items to validate and sanitize "nos"
+    for (const [productId, item] of Object.entries(purchasedItems)) {
+        const uom = (prodMap[productId]?.unit_id || "").toLowerCase();
+
+        if (uom === "nos") {
+            // FORCE integer quantity
+            const original = item.quantity;
+            item.quantity = Math.floor(item.quantity);
+
+            if (original !== item.quantity) {
+                alert(`Invalid quantity for "${prodMap[productId]?.product || 'this item'}". It must be a whole number.`);
+                return;
+            }
+
+            // Also update the quantity input box on UI
+            const input = document.getElementById(`q${productId}`);
+            if (input) input.value = item.quantity;
+        }
+    }
+
     console.warn("Confirm Purchase By clicking Ok");
+
     try {
-        // Prepare the data to send
         const orderData = {
             week_id: weekId,
             customer_id: cId,
@@ -645,20 +691,27 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
             }))
         };
 
-        // Send the data to submitOrder.php
         const response = await fetch('../knft/submitOrder.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         });
 
-        const result = await response.text();
-        alert(result);
+        // Parse response as JSON
+        const result = await response.json();
+        if (result.success) {
+            alert(result.success);
+        } else if (result.warning) {
+            alert(result.warning.join('\n'));
+        } else if (result.error) {
+            alert(result.error);
+        } else {
+            alert('Unknown response from server.');
+        }
 
-        // Always reload inventory and menu after placing order
         purchasedItems = {};
         renderCart();
-        await loadMenu(); // This will fetch latest temp_inventory and update the table
+        await loadMenu();
 
     } catch (error) {
         console.error('Error placing order:', error);
@@ -689,32 +742,37 @@ function renderFulfillmentTable(items) {
     const tbody = document.querySelector('.fulfillment-table-body');
     const noMsg = document.getElementById('no-fulfillment-data-message');
     tbody.innerHTML = '';
+
     if (!items || items.length === 0) {
         noMsg.style.display = 'block';
         return;
     }
+
     noMsg.style.display = 'none';
     let price = 0;
     let cRouteId = items[0].route_id || ''; // Get route ID from first item
+
     items.forEach(item => {
         const tr = document.createElement('tr');
         price += item.total_cost || 0; // Sum up total cost
+
+        const rateFormatted = item.rate ? Number(item.rate).toFixed(2) : '0.00';
+        const totalFormatted = item.total_cost ? Number(item.total_cost).toFixed(2) : '0.00';
+
         tr.innerHTML = `
-            <td>${item.product || ''}</td>
-            <td>${item.ordered_quantity || ''}</td>
-            <td>${item.fullfill_quantity || ''}</td>
-            <td>₹${item.rate ? Number(item.rate).toFixed(2) : '0.00'}</td>
-            <td>₹${item.total_cost ? Number(item.total_cost).toFixed(2) : '0.00'}</td>
-            <td>${item.route || ''}</td>
+            <td data-label="Product">${item.product || ''}</td>
+            <td data-label="Ordered Qty">${item.ordered_quantity || ''}</td>
+            <td data-label="Fulfilled Qty">${item.fullfill_quantity || ''}</td>
+            <td data-label="Rate">₹${rateFormatted}</td>
+            <td data-label="Total Cost">₹${totalFormatted}</td>
+            <td data-label="Route">${item.route || ''}</td>
         `;
         tbody.appendChild(tr);
     });
+
     console.log(cRouteId);
     fillRouteDetails(cRouteId);
-    document.querySelector('.total-amount-figure').textContent = `₹${price.toFixed(2)}`; // Display total amount
-
-
-    
+    document.querySelector('.total-amount-figure').textContent = `₹${price.toFixed(2)}`;
 }
 
 // Show fulfillment data message
@@ -813,4 +871,3 @@ async function runNextProgram(email) {
         await initializeFulfillmentSection();
     }
 }
-// ...existing code...

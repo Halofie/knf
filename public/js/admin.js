@@ -394,7 +394,7 @@ function handleEditUom(e) {
 }
 function handleDeleteUom(e) {
     const button = e.target.closest('.delete-uom-btn');
-    const id = button.id;
+    const id = button.dataset.id; // Use UoMID PK, not button.id
     const name = button.dataset.name;
     if (confirm(`Delete UoM: ${name} (${id})?\n(Action might fail if UoM is in use)`)) {
         displayMessage('#result-uom', 'Deleting...', true);
@@ -406,7 +406,7 @@ function handleDeleteUom(e) {
           .then(response => { if (!response.ok) throw response; return response.json(); })
           .then(data => {
               displayMessage('#result-uom', data.message, data.success);
-              if (data.success) getUomData();
+              if (data.success) getUomData(); // Refresh table
           })
           .catch(errorResponse => handleFetchError(errorResponse, '#result-uom'));
     }
@@ -458,7 +458,10 @@ function handleEditCategory(e) {
         displayMessage('#result-category', 'Saving...', true);
         fetch('../knft/editCategory.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
             .then(response => { if (!response.ok) throw response; return response.json(); })
-            .then(data => { displayMessage('#result-category', data.message, data.success); if(data.success) getCategoryData(); })
+            .then(data => { 
+                displayMessage('#result-category', data.message, data.success); 
+                if(data.success) getCategoryData(); // Refresh table
+            })
             .catch(errorResponse => handleFetchError(errorResponse, '#result-category'));
     }
 }
@@ -469,7 +472,10 @@ function handleDeleteCategory(e) {
         displayMessage('#result-category', 'Deleting...', true);
         fetch('../knft/deleteCategory.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ categoryType: id }) }) // New endpoint needed
             .then(response => { if (!response.ok) throw response; return response.json(); })
-            .then(data => { displayMessage('#result-category', data.message, data.success); if(data.success) getCategoryData(); })
+            .then(data => { 
+                displayMessage('#result-category', data.message, data.success); 
+                if(data.success) getCategoryData(); // Refresh table
+            })
             //.catch(errorResponse => handleFetchError(errorResponse, '#result-category'));
     }
 }
@@ -545,7 +551,10 @@ function handleEditProduct(e) {
         displayMessage('#result-product', 'Saving...', true);
         fetch('../knft/editProducts.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
             .then(response => { if (!response.ok) throw response; return response.json(); })
-            .then(data => { displayMessage('#result-product', data.message, data.success); if(data.success) getProductData(); })
+            .then(data => { 
+                displayMessage('#result-product', data.message, data.success); 
+                if(data.success) getProductData(); // Refresh table
+            })
             .catch(errorResponse => handleFetchError(errorResponse, '#result-product'));
     }
 }
@@ -556,7 +565,10 @@ function handleDeleteProduct(e) {
         displayMessage('#result-product', 'Deleting...', true);
         fetch('../knft/deleteProduct.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({prod_id: id}) }) // New endpoint needed
              .then(response => { if (!response.ok) throw response; return response.json(); })
-             .then(data => { displayMessage('#result-product', data.message, data.success); if(data.success) getProductData(); })
+             .then(data => { 
+                 displayMessage('#result-product', data.message, data.success); 
+                 if(data.success) getProductData(); // Refresh table
+             })
              .catch(errorResponse => handleFetchError(errorResponse, '#result-product'));
     }
 }
@@ -615,7 +627,10 @@ function handleEditRoute(e) {
          displayMessage('#result-route', 'Saving...', true);
          fetch('../knft/editRoutes.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
              .then(response => { if (!response.ok) throw response; return response.json(); })
-             .then(data => { displayMessage('#result-route', data.message, data.success); if(data.success) getRouteData(); })
+             .then(data => { 
+                 displayMessage('#result-route', data.message, data.success); 
+                 if(data.success) getRouteData(); // Refresh table
+             })
              .catch(errorResponse => handleFetchError(errorResponse, '#result-route'));
      }
 }
@@ -626,7 +641,10 @@ function handleDeleteRoute(e) {
          displayMessage('#result-route', 'Deleting...', true);
          fetch('../knft/deleteRoute.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id: id}) }) // New endpoint needed, send ID
               .then(response => { if (!response.ok) throw response; return response.json(); })
-              .then(data => { displayMessage('#result-route', data.message, data.success); if(data.success) { getRouteData(); populateRouteDropdownForCustomerForm(); } })
+              .then(data => { 
+                  displayMessage('#result-route', data.message, data.success); 
+                  if(data.success) { getRouteData(); populateRouteDropdownForCustomerForm(); } // Refresh table
+              })
               .catch(errorResponse => handleFetchError(errorResponse, '#result-route'));
      }
 }
@@ -707,7 +725,10 @@ function handleEditCustomer(e) {
         displayMessage('#result-customer', 'Saving...', true);
         fetch('../knft/editCustomer.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
             .then(response => { if (!response.ok) throw response; return response.json(); })
-            .then(data => { displayMessage('#result-customer', data.message, data.success); if(data.success) getCustomerData(); })
+            .then(data => { 
+                displayMessage('#result-customer', data.message, data.success); 
+                if(data.success) getCustomerData(); // Refresh table
+            })
             .catch(errorResponse => handleFetchError(errorResponse, '#result-customer'));
     }
 }
@@ -718,7 +739,10 @@ function handleDeleteCustomer(e) {
          displayMessage('#result-customer', 'Deleting...', true);
          fetch('../knft/deleteCustomer.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({emailID: email}) }) // New endpoint needed
              .then(response => { if (!response.ok) throw response; return response.json(); })
-             .then(data => { displayMessage('#result-customer', data.message, data.success); if(data.success) getCustomerData(); })
+             .then(data => { 
+                 displayMessage('#result-customer', data.message, data.success); 
+                 if(data.success) getCustomerData(); // Refresh table
+             })
              .catch(errorResponse => handleFetchError(errorResponse, '#result-customer'));
      }
 }
@@ -783,7 +807,10 @@ function handleEditSupplier(e) {
          displayMessage('#result-supplier', 'Saving...', true);
          fetch('../knft/editSupplier.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
              .then(response => { if (!response.ok) throw response; return response.json(); })
-             .then(data => { displayMessage('#result-supplier', data.message, data.success); if(data.success) getSupplierData(); })
+             .then(data => { 
+                 displayMessage('#result-supplier', data.message, data.success); 
+                 if(data.success) getSupplierData(); // Refresh table
+             })
              .catch(errorResponse => handleFetchError(errorResponse, '#result-supplier'));
      }
 }
@@ -794,7 +821,10 @@ function handleDeleteSupplier(e) {
          displayMessage('#result-supplier', 'Deleting...', true);
          fetch('../knft/deleteSupplier.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id: email}) }) // New endpoint needed
              .then(response => { if (!response.ok) throw response; return response.json(); })
-             .then(data => { displayMessage('#result-supplier', data.message, data.success); if(data.success) getSupplierData(); })
+             .then(data => { 
+                 displayMessage('#result-supplier', data.message, data.success); 
+                 if(data.success) getSupplierData(); // Refresh table
+             })
              .catch(errorResponse => handleFetchError(errorResponse, '#result-supplier'));
      }
 }
@@ -810,7 +840,10 @@ function displayWeekTable(weeks) {
     const tbody = document.querySelector(".week-body"); if(!tbody) return; tbody.innerHTML = "";
     const dropdownweek = document.querySelector("#weekDropdown");
     dropdownweek.innerHTML = ""; // Clear existing options
-    if (!weeks || weeks.length === 0) { /*...*/ return; }
+    if (!weeks || weeks.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No weeks found.</td></tr>';
+        return;
+    }
     weeks.forEach(week => {
         tbody.innerHTML += `
             <tr data-identifier="${week.weekID}">
@@ -844,7 +877,10 @@ function handleEditWeek(e) {
          displayMessage('#result-week', 'Saving...', true);
          fetch('../knft/editWeek.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
              .then(response => { if (!response.ok) throw response; return response.json(); })
-             .then(data => { displayMessage('#result-week', data.message, data.success); if(data.success) getWeekData(); })
+             .then(data => { 
+                 displayMessage('#result-week', data.message, data.success); 
+                 if(data.success) getWeekData(); // This reloads the week table
+             })
              .catch(errorResponse => handleFetchError(errorResponse, '#result-week'));
      }
 }
@@ -855,7 +891,10 @@ function handleDeleteWeek(e) {
          displayMessage('#result-week', 'Deleting...', true);
          fetch('../knft/deleteWeek.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({weekID: id}) }) // New endpoint needed
               .then(response => { if (!response.ok) throw response; return response.json(); })
-              .then(data => { displayMessage('#result-week', data.message, data.success); if(data.success) getWeekData(); })
+              .then(data => { 
+                  displayMessage('#result-week', data.message, data.success); 
+                  if(data.success) getWeekData(); // This reloads the week table
+             })
               .catch(errorResponse => handleFetchError(errorResponse, '#result-week'));
      }
 }
@@ -908,7 +947,7 @@ async function promptAndUpdateCustomMessage() {
 
     try {
         // Send to PHP
-        const response = await fetch('../knfts/editMessage.php', {
+        const response = await fetch('../knft/editMessage.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ topic: newMessage })
@@ -1183,7 +1222,7 @@ function renderTrayStatusTable(rows) {
     tbody.innerHTML = '';
 
     if (!rows || rows.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No tray status data found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No tray status data found.</td></tr>';
         return;
     }
 
@@ -1197,6 +1236,7 @@ function renderTrayStatusTable(rows) {
                         ${row.trayStatus == 1 ? 'Returned' : 'Not Returned'}
                     </span>
                 </td>
+                <td>${row.weekID || ''}</td>
                 <td>
                     <button class="btn btn-${row.trayStatus == 1 ? 'danger' : 'success'} btn-sm toggle-tray-btn" data-id="${row.id}">
                         ${row.trayStatus == 1 ? 'Mark Not Returned' : 'Mark Returned'}

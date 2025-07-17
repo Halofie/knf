@@ -316,6 +316,7 @@ async function fetchAndDisplayFarmerChecklist(selectedWeekId) {
 function renderFarmerChecklist(data) {
     const displayArea = document.getElementById('farmerChecklistDisplayArea');
     if (!displayArea) return;
+    displayArea.classList.add('checklist-scroll-area'); // Ensure scroll area styling
     displayArea.innerHTML = ''; // Clear loading/previous
 
     if (!data || data.status !== 'success' || !data.checklist_items || data.checklist_items.length === 0) {
@@ -326,11 +327,11 @@ function renderFarmerChecklist(data) {
 
     let reportHtml = `<div class="card mb-3"><div class="card-body">`;
     if (data.farmer_details) {
-        reportHtml += `<h4 class="card-title">Checklist for: ${htmlspecialchars(data.farmer_details.name || '')} (ID: ${data.farmer_details.id || 'N/A'})</h4>`;
+        reportHtml += `<h4 class="card-title">Checklist for: ${htmlspecialchars(data.farmer_details.name || '')}</h4>`;
     }
     if (data.report_week_id) {
         const weekOption = document.querySelector(`#farmerChecklistWeekDropdown option[value="${data.report_week_id}"]`);
-        const weekDisplayText = weekOption ? weekOption.textContent : `ID: ${htmlspecialchars(data.report_week_id.toString())}`;
+        const weekDisplayText = weekOption ? weekOption.textContent.replace(/\s*\(ID:.*\)/, '') : '';
         reportHtml += `<h5 class="card-subtitle mb-3 text-muted">Week: ${weekDisplayText}</h5>`;
     }
     reportHtml += `</div></div>`;
@@ -339,29 +340,29 @@ function renderFarmerChecklist(data) {
 
     data.checklist_items.forEach(product_assignment => {
         const productName = product_assignment.product_name;
-        const totalQty = product_assignment.total_quantity_for_product; 
+        // Format totalQty to show decimals if present
+        let totalQty = product_assignment.total_quantity_for_product;
+        if (typeof totalQty === 'string') totalQty = parseFloat(totalQty);
+        const totalQtyDisplay = (Math.round(totalQty * 100) % 100 === 0) ? totalQty.toFixed(0) : totalQty.toFixed(2).replace(/\.?0+$/, '');
         const unitId = product_assignment.unit_id;
         const customerDetailsString = product_assignment.customer_details_for_product;
 
-        const customerDetails = product_assignment.customer_breakdown_details; // Check this name
+        const customerDetails = product_assignment.customer_breakdown_details;
 
         let quantityBreakdownString = '';
         customerDetails.split('|||').forEach((detail) => {
-            const match = detail.match(/Qty:\s*(\d+(\.\d+)?)/);
-            console.log(match)
-            quantityBreakdownString += `${match ? match[1] : '0'} ${unitId} , `;
+            const match = detail.match(/Qty:\s*([\d.]+)/);
+            quantityBreakdownString += `${match ? match[1] : '0'} ${product_assignment.unit_id} , `;
         });
-
 
         reportHtml += `
             <div class="card mb-3 shadow-sm">
                 <div class="card-header bg-light">
                     <h5 class="mb-0">
-                        ${productName} - Total to Prepare: 
+                        ${product_assignment.product_name} - Total to Prepare: 
                         <strong>
-                            ${totalQty} 
-                            ${unitId} 
-                            
+                            ${totalQtyDisplay} 
+                            ${product_assignment.unit_id} 
                         </strong>
                     </h5>
                     <span class="text-muted fw-normal fs-5">Split up: ${quantityBreakdownString}</span>
@@ -373,7 +374,9 @@ function renderFarmerChecklist(data) {
         
         if (customerDetails && typeof customerDetails === 'string' && customerDetails.trim() !== '') {
             customerDetails.split('|||').forEach((detail) => {
-                reportHtml += `<li class="list-group-item text-muted">${detail}</li>`;
+                // Remove "Order Line ID: ..." from the detail string
+                const cleanedDetail = detail.replace(/\s*Order Line ID:\s*\d+,?/i, '').replace(/\(\s*,/, '(').replace(/\(\s*,\s*/, '(').replace(/\(\s*,\s*\)/, '()');
+                reportHtml += `<li class="list-group-item text-muted">${cleanedDetail.trim()}</li>`;
             });
         } else {
             reportHtml += `<li class="list-group-item text-muted">No specific customer details available.</li>`;
