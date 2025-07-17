@@ -790,6 +790,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                             <th scope="col">Customer</th>
                             <th scope="col">Route</th>
                             <th scope="col">Tray Status</th>
+                            <th scope="col">Week ID</th>
                             <th scope="col" style="width: 200px;">Toggle</th>
                         </tr>
                     </thead>
