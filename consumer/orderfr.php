@@ -272,21 +272,28 @@ if ($_SESSION['role'] !== 'C') {
 
     <div id="order-history-result" class="m-3 alert" style="display: none;"></div> <!-- For general messages -->
 
-    <div class="purchase-history-container container mt-4"> <!-- Added container for better layout -->
+    <div class="purchase-history-container container mt-4">
+      <!-- Mobile table header for purchase history (visible only on mobile) -->
+      <div class="mobile-table-header d-md-none mb-0">
+          <span>Product</span>
+          <span class="text-end">Rate/Unit</span>
+          <span class="text-center">Qty</span>
+          <span>Route</span>
+          <span class="text-end">Total</span>
+      </div>
       <div class="card shadow-sm">
           <div class="card-header bg-success text-white">
               <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Purchase Details</h5>
           </div>
-          <div class="card-body p-0"> <!-- p-0 to make table flush with card -->
+          <div class="card-body p-0">
               <div class="table-responsive">
-                  <table class="table table-hover table-striped mb-0"> <!-- mb-0 to remove bottom margin -->
-                      <thead class="table-light"> <!-- Using table-light for a softer header -->
+                  <table class="table table-hover table-striped mb-0">
+                      <thead class="table-light">
                           <tr>
                               <th scope="col">Product Name</th>
                               <th scope="col">Category</th>
                               <th scope="col" class="text-end">Rate/Unit</th>
                               <th scope="col" class="text-center">Quantity</th>
-                              <!-- <th scope="col">Unit</th> -->
                               <th scope="col">Route</th>
                               <th scope="col" class="text-end">Total Cost</th>
                           </tr>
@@ -354,15 +361,43 @@ if ($_SESSION['role'] !== 'C') {
         </thead>
         <tbody class="fulfillment-table-body"></tbody>
     </table>
-    <div>
-      <div>
-        <p>
-          <h3>Delivery route: <span class="route-figure"></span> </h3>
-          <h3>Delivery Fee: <span class="route-cost-figure"></span></h3>
-        </p>
+    <!-- Mobile table header for fulfillment/invoice (visible only on mobile) -->
+    <div class="mobile-table-header d-md-none mb-0">
+        <span>Product</span>
+        <span>Ordered</span>
+        <span>Fulfilled</span>
+        <span>Rate</span>
+        <span>Total</span>
+        <span>Route</span>
+    </div>
+    <!-- Enhanced Total Amount Card for Fulfillment -->
+    <div class="row justify-content-center mt-4">
+      <div class="col-lg-7">
+        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);">
+          <div class="card-body text-center py-4">
+            <div class="mb-2">
+              <i class="fas fa-coins fa-2x text-success mb-2"></i>
+              <p class="mb-1 text-muted">Total Amount to be Paid</p>
+            </div>
+            <div class="total-display p-3 rounded-3 shadow-sm mb-2" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 3px solid #28a745;">
+              <span class="fw-bold display-4 text-success" id="fulfillmentTotalAmount">
+                <span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span>
+              </span>
+            </div>
+            <div class="mb-2">
+              <span class="fw-bold text-dark">Delivery route:</span>
+              <span class="route-figure"></span>
+              &nbsp;|&nbsp;
+              <span class="fw-bold text-dark">Delivery Fee:</span>
+              <span class="route-cost-figure"></span>
+            </div>
+            <small class="text-muted d-block">
+              <i class="fas fa-info-circle me-1"></i>
+              <span>*ordered quantity is the quantity you placed, fulfilled quantity is what you will receive</span>
+            </small>
+          </div>
+        </div>
       </div>
-      <h1> Total Amount to be Paid: <span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span> </h1>
-    <p>*ordered quantity is the quantity u places the order and fullfilled quantity is what you will be receiving</p>
     </div>
     <p class="text-center text-muted p-5" id="no-fulfillment-data-message" style="display: none; font-size: 1.2rem;">
         <i class="fas fa-box-open fa-2x mb-3 d-block"></i>
