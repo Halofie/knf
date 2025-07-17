@@ -72,6 +72,7 @@ if (isset($_GET['download']) && $_GET['download'] == '1') {
         if (isset($orders[$cid])) {
             foreach ($orders[$cid] as $order) {
                 $sheet->setCellValue('A' . $currentRow, $order['product_full']);
+                // Show quantity as-is (no rounding/formatting)
                 $sheet->setCellValue('B' . $currentRow, $order['quantity']);
                 $sheet->getStyle('A' . $currentRow . ':B' . $currentRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
                 $currentRow++;
@@ -155,6 +156,7 @@ foreach ($orders as $orderList) {
                 <?php foreach ($orders[$cid] as $order): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($order['product_full']); ?></td>
+                        <!-- Show quantity as-is (no rounding/formatting) -->
                         <td><?php echo htmlspecialchars($order['quantity']); ?></td>
                     </tr>
                 <?php endforeach; ?>

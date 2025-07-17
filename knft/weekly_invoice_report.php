@@ -51,7 +51,7 @@ foreach ($productIDs as $product_id) {
         $fid = $row['farmer_id'];
         $invRes = $conn->query("SELECT SUM(quantity) as qty FROM inventory WHERE weekId = $week_id AND product_id = $product_id AND Farmer_id = $fid");
         $invRow = $invRes->fetch_assoc();
-        $available = $invRow && $invRow['qty'] !== null ? (int)$invRow['qty'] : 0;
+        $available = $invRow && $invRow['qty'] !== null ? floatval($invRow['qty']) : 0.0;
 
         $farmerRank[] = [
             'farmer_id' => $fid,
@@ -67,7 +67,7 @@ foreach ($productIDs as $product_id) {
     }
 
     foreach ($orders as $order) {
-        $qtyNeeded = $order['quantity'];
+        $qtyNeeded = floatval($order['quantity']);
         $customer_id = $order['customer_id'];
 
         foreach ($farmerRank as &$fr) {
@@ -161,29 +161,29 @@ foreach ($displayData as $entry) {
 
     $invRes = $conn->query("SELECT SUM(quantity) as qty_assigned FROM inventory WHERE weekId = $week_id AND product_id = $product_id AND Farmer_id = $farmer_id");
     $invRow = $invRes->fetch_assoc();
-    $qty_assigned = $invRow && $invRow['qty_assigned'] !== null ? (int)$invRow['qty_assigned'] : 0;
+    $qty_assigned = $invRow && $invRow['qty_assigned'] !== null ? floatval($invRow['qty_assigned']) : 0.0;
 
     $fpaRes = $conn->query("SELECT SUM(assigned_quantity) as qty_in_hand FROM farmer_product_assignments WHERE week_id = $week_id AND product_id = $product_id AND assigned_farmer_id = $farmer_id");
     $fpaRow = $fpaRes->fetch_assoc();
-    $qty_in_hand = $fpaRow && $fpaRow['qty_in_hand'] !== null ? (int)$fpaRow['qty_in_hand'] : 0;
+    $qty_in_hand = $fpaRow && $fpaRow['qty_in_hand'] !== null ? floatval($fpaRow['qty_in_hand']) : 0.0;
     $qty_in_sale = $qty_assigned - $qty_in_hand;
 
     // Total Amount To Be Received: (Qty Assigned - Qty in Hand) * Price
-    $total_amount_to_be_received = ($qty_assigned - $qty_in_sale) * $price;
+    $total_amount_to_be_received = ($qty_assigned - $qty_in_sale) * floatval($price);
 
     $farmerName = $farmerNames[$farmer_id] ?? $farmer_id;
 
     $row = [
         $prod['product'],
-        $price,
+        floatval($price),
         $qty_assigned,
         $qty_in_sale,      // "Qty in Hand" column (swapped)
-        -1*$qty_in_hand,      // "Qty in Sale" column (swapped)
+        -1 * $qty_in_hand, // "Qty in Sale" column (swapped)
         $total_amount_to_be_received,
         $farmerName
     ];
     foreach ($customers as $cid) {
-        $row[] = $entry['customer_allocated'][$cid] ?? '';
+        $row[] = isset($entry['customer_allocated'][$cid]) ? floatval($entry['customer_allocated'][$cid]) : '';
     }
     $sheet->fromArray($row, null, 'A' . $rowNum++);
 }

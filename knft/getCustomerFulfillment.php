@@ -72,8 +72,8 @@ try {
         }
         $row['route_display'] = $route_display;
 
-        $row['ordered_quantity'] = intval($row['ordered_quantity']);
-        $row['fullfill_quantity'] = intval($row['fullfill_quantity']);
+        $row['ordered_quantity'] = floatval($row['ordered_quantity']);
+        $row['fullfill_quantity'] = floatval($row['fullfill_quantity']);
         $row['rate'] = floatval($row['rate']);
         $row['total_cost'] = floatval($row['total_cost']);
 
