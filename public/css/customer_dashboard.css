@@ -22,4 +22,50 @@ body.bg-light {
 .shadow-top {
     box-shadow: 0 -0.125rem 0.25rem rgba(0,0,0,0.075) !important;
 }
-/* Add more custom styles as needed */
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .navbar-dark {
+        background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%) !important;
+    }
+    .navbar-dark .navbar-nav .nav-link {
+        font-size: 1rem;
+        padding: 8px 12px;
+    }
+    .card {
+        background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
+        margin: 0.5rem 0;
+        border-radius: 8px;
+    }
+    .card-header {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
+    .dropdown-menu {
+        font-size: 0.95rem;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-dark {
+        background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%) !important;
+    }
+    .navbar-dark .navbar-nav .nav-link {
+        font-size: 0.9rem;
+        padding: 6px 8px;
+    }
+    .card {
+        background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
+        margin: 0.25rem 0;
+        border-radius: 6px;
+    }
+    .card-header {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.5rem;
+    }
+    .dropdown-menu {
+        font-size: 0.9rem;
+        min-width: 100px;
+    }
+}

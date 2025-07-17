@@ -3,15 +3,18 @@
   .sidebar {
     width: 30%;
     height: 100%;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
   }
   
   .profile {
     width: 80px;
     height: 80px;
+    background: linear-gradient(135deg, #d9e7d9 60%, #b2dfdb 100%);
   }
 
   .table {
     padding: 0 10px;
+    background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
   }
   .table thead th, .table tbody td {
     padding: 0.75rem;
@@ -43,17 +46,25 @@
   .table thead {
     display: none; /* Hide headers on mobile */
   }
+  div.content {
+    margin-left: 0;
+    padding: 1rem 0.5rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
+  }
 }
 
 @media screen and (max-width: 400px) {
   .sidebar {
     width: 15%;
     height: 100%;
+    background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
   }
   
   .profile {
     width: 60px;
     height: 60px;
+    background: linear-gradient(135deg, #e0f7fa 60%, #d9e7d9 100%);
   }
   
   .sidebar a {
@@ -63,6 +74,7 @@
 
   .table {
     padding: 0 10px;
+    background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
   }
   .table thead th, .table tbody td {
     padding: 0.75rem;
@@ -93,6 +105,12 @@
   }
   .table thead {
     display: none; /* Hide headers on mobile */
+  }
+  div.content {
+    margin-left: 0;
+    padding: 0.5rem 0.25rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
   }
 }
 
@@ -395,5 +413,17 @@ h1, h2, h3 {
 
 ::-webkit-scrollbar-thumb:hover {
   background-color: #45a049;
+}
+
+/* Ensure all purchase history table cells are left-aligned in desktop view */
+@media screen and (min-width: 701px) {
+  .purchase-history-body td,
+  .purchase-history-body th,
+  .purchase-history-body td[class*="text-"],
+  .purchase-history-body th[class*="text-"] {
+    text-align: left !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+  }
 }
 

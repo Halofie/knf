@@ -199,7 +199,7 @@ body {
 .hero-enhanced {
     position: relative;
     min-height: 70vh;
-    background-image: linear-gradient(135deg, rgba(76, 122, 76, 0.8) 0%, rgba(58, 92, 58, 0.9) 100%), 
+    background-image: linear-gradient(135deg, rgba(76, 122, 76, 0.8) 0%, rgba(58, 92, 58, 0.9) 100%),
                       url('../Assets/farm-hero.jpg');
     background-size: cover;
     background-position: center;
@@ -542,7 +542,7 @@ body {
 
 .learn-more-content {
     padding: 30px 40px;
-    background: linear-gradient(135deg, #f8f9fa 0%, white 100%);  
+    background: linear-gradient(135deg, #f8f9fa 0%, white 100%);
     border-radius: 0 0 20px 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
@@ -718,10 +718,34 @@ body {
     .footer-content-enhanced {
         flex-direction: column;
         text-align: center;
+        padding: 0 8px;
     }
     
     .sidebar {
         width: 100%;
+        position: static;
+        height: auto;
+        box-shadow: none;
+        padding: 0;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    }
+    .profile {
+        width: 70px;
+        height: 70px;
+        margin: 10px 0;
+        background: linear-gradient(135deg, #d9e7d9 60%, #b2dfdb 100%);
+    }
+    .container {
+        padding: 0 8px;
+        background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
+    }
+    .about-content {
+        padding: 0 8px;
+        background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
+    }
+    .hero-content {
+        padding: 0 8px;
+        background: linear-gradient(135deg, #e0f7fa 0%, #d9e7d9 100%);
     }
 }
 
@@ -754,6 +778,36 @@ body {
     
     .learn-more-content {
         padding: 20px 25px;
+    }
+    .sidebar {
+        width: 100%;
+        position: static;
+        height: auto;
+        box-shadow: none;
+        padding: 0;
+        background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
+    }
+    .profile {
+        width: 50px;
+        height: 50px;
+        margin: 5px 0;
+        background: linear-gradient(135deg, #e0f7fa 60%, #d9e7d9 100%);
+    }
+    .container {
+        padding: 0 4px;
+        background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
+    }
+    .footer-content-enhanced {
+        padding: 0 4px;
+        background: linear-gradient(135deg, #333 0%, #4caf50 100%);
+    }
+    .about-content {
+        padding: 0 4px;
+        background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
+    }
+    .hero-content {
+        padding: 0 4px;
+        background: linear-gradient(135deg, #e0f7fa 0%, #d9e7d9 100%);
     }
 }
 

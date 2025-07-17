@@ -359,15 +359,18 @@ h1, h2, h3, h4, h5 {
     .sidebar {
         width: 30%;
         height: 100%;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
     }
     
     .profile {
         width: 80px;
         height: 80px;
+        background: linear-gradient(135deg, #d9e7d9 60%, #b2dfdb 100%);
     }
 
   .table {
     padding: 0 10px;
+    background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
   }
   .table thead th, .table tbody td {
     padding: 0.75rem;
@@ -399,17 +402,31 @@ h1, h2, h3, h4, h5 {
   .table thead {
     display: none; /* Hide headers on mobile */
   }
+  div.content {
+        margin-left: 0;
+        padding: 1rem 0.5rem;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
+    }
+    .container {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
+    }
 }
 
 @media screen and (max-width: 400px) {
     .sidebar {
         width: 15%;
         height: 100%;
+        background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
     }
     
     .profile {
         width: 60px;
         height: 60px;
+        background: linear-gradient(135deg, #e0f7fa 60%, #d9e7d9 100%);
     }
     
     .sidebar a {
@@ -418,6 +435,7 @@ h1, h2, h3, h4, h5 {
     }
   .table {
     padding: 0 10px;
+    background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
   }
   .table thead th, .table tbody td {
     padding: 0.75rem;
@@ -449,6 +467,18 @@ h1, h2, h3, h4, h5 {
   .table thead {
     display: none; /* Hide headers on mobile */
   }
+  div.content {
+        margin-left: 0;
+        padding: 0.5rem 0.25rem;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
+    }
+    .container {
+        margin-top: 5px;
+        padding: 5px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
+    }
 }
 
 /* Simplified scrollbar styling to match order.css */

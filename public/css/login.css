@@ -193,13 +193,21 @@ body.paleGreen {
     }
     
     .bg-white.p-4.p-md-5.rounded.shadow-sm {
-        margin: 1rem;
-        border-radius: 12px !important;
+        margin: 0.5rem;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+        background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%) !important;
     }
     
     .profile {
-        width: 100px;
-        height: 100px;
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #d9e7d9 60%, #b2dfdb 100%);
+    }
+    
+    .form-control, .btn-primary {
+        font-size: 0.95rem !important;
+        padding: 0.7rem 1.2rem !important;
     }
 }
 
@@ -210,13 +218,21 @@ body.paleGreen {
     }
     
     .profile {
-        width: 90px;
-        height: 90px;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #e0f7fa 60%, #d9e7d9 100%);
     }
     
-    .btn-primary {
-        padding: 0.75rem 1.5rem !important;
-        font-size: 0.95rem !important;
+    .bg-white.p-4.p-md-5.rounded.shadow-sm {
+        margin: 0.25rem;
+        border-radius: 6px !important;
+        padding: 0.5rem !important;
+        background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%) !important;
+    }
+    
+    .form-control, .btn-primary {
+        font-size: 0.9rem !important;
+        padding: 0.5rem 0.8rem !important;
     }
 }
 
