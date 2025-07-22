@@ -1037,7 +1037,7 @@ function loadFulfillTable(data) {
                     <td>${order.rec_date_time || ''}</td>
                     <td>${order.customerName || ''}</td>
                     <td>${order.product || ''}</td>
-                    <td>${order.quantity} @ ₹${order.rate}</td>
+                    <td>${order.quantity} @ ₹${order.rate} <span class="badge bg-info">${order.uom || ''}</span></td>
                     <td>
                         <input type="number" min="0" value="${order.quantity}" class="form-control form-control-sm fulfill-qty" data-id="${order.id}">
                     </td>
