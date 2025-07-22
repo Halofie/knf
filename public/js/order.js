@@ -547,6 +547,22 @@ function populateConsumerHistoryTable(tableBodySelector, purchaseItems, weekId) 
     });
 }
 
+function updateFinalTotal() {
+    // Get order amount
+    const orderAmountText = document.querySelector('.total-amount-figure')?.textContent?.replace(/[^\d.]/g, '');
+    const orderAmount = orderAmountText ? parseFloat(orderAmountText) || 0 : 0;
+
+    // Get delivery fee
+    const deliveryFeeText = document.querySelector('.route-cost-figure')?.textContent?.replace(/[^\d.]/g, '');
+    const deliveryFee = deliveryFeeText ? parseFloat(deliveryFeeText) || 0 : 0;
+
+    // Set final total
+    const finalTotalElem = document.querySelector('.final-total-figure');
+    if (finalTotalElem) {
+        finalTotalElem.textContent = `₹${(orderAmount + deliveryFee).toFixed(2)}`;
+    }
+}
+
 // Call this function with the route ID you want to display
 async function fillRouteDetails(routeId) {
     try {
@@ -561,16 +577,16 @@ async function fillRouteDetails(routeId) {
             document.querySelector('.route-figure').textContent = result.data.deliveryType + " - " +result.data.route || 'N/A';
             document.querySelector('.route-cost-figure').textContent = `₹${Number(result.data.rate).toFixed(2)}`;
             document.querySelector('.deliveryfeelol').textContent = `₹${Number(result.data.rate).toFixed(2)}`;
-
-
         } else {
             document.querySelector('.route-figure').textContent = 'N/A';
             document.querySelector('.route-cost-figure').textContent = 'N/A';
         }
+        updateFinalTotal();
     } catch (error) {
         console.error('Error fetching route details:', error);
         document.querySelector('.route-figure').textContent = 'N/A';
         document.querySelector('.route-cost-figure').textContent = 'N/A';
+        updateFinalTotal();
     }
 }
 // Function to render the cart
@@ -770,9 +786,8 @@ function renderFulfillmentTable(items) {
         tbody.appendChild(tr);
     });
 
-    console.log(cRouteId);
-    fillRouteDetails(cRouteId);
     document.querySelector('.total-amount-figure').textContent = `₹${price.toFixed(2)}`;
+    fillRouteDetails(cRouteId);
 }
 
 // Show fulfillment data message
