@@ -871,3 +871,35 @@ async function runNextProgram(email) {
         await initializeFulfillmentSection();
     }
 }
+document.getElementById('noteForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const note = document.getElementById('noteText').value.trim();
+    const cust_id = cId;      // Use your global or session customer ID variable
+    const weekId = weekId;    // Use your global or session week ID variable
+
+    if (!note) {
+        showNoteResult('Please enter a note.', false);
+        return;
+    }
+
+    try {
+        const response = await fetch('../knft/submitNote.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cust_id, note, weekId })
+        });
+        const result = await response.json();
+        showNoteResult(result.message, result.success);
+        if (result.success) document.getElementById('noteForm').reset();
+    } catch (error) {
+        showNoteResult('Failed to submit note. Please try again.', false);
+    }
+});
+
+function showNoteResult(message, isSuccess) {
+    const el = document.getElementById('noteResult');
+    el.textContent = message;
+    el.className = 'mt-3 alert ' + (isSuccess ? 'alert-success' : 'alert-danger');
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
