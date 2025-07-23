@@ -187,6 +187,23 @@ if ($_SESSION['role'] !== 'C') {
       <div class="row justify-content-center">
         <div class="col-lg-6">
           <div class="text-center">
+            <div class="container my-5">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0"><i class="fas fa-sticky-note me-2"></i>Leave a Note for This Week</h5>
+    </div>
+    <div class="card-body p-4">
+      <form id="noteForm">
+        <div class="mb-3">
+          <label for="noteText" class="form-label fw-bold">Your Note</label>
+          <textarea class="form-control" id="noteText" rows="3" required placeholder="Enter your note here..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Submit Note</button>
+        <div id="noteResult" class="mt-3" style="display:none;"></div>
+      </form>
+    </div>
+  </div>
+</div>
             <button class="btn btn-lg px-5 py-3 shadow-lg" id="placeOrderButton" 
                     style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
                            border: none; 

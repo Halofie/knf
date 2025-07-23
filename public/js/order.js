@@ -341,6 +341,8 @@ function renderMenu() {
         const productObj = prodMap[productId] || {};
         const productName = productObj.product || productObj.product_name || "Unknown";
         const productPrice = product.price;
+        const minQuantity = productObj.minQuantity || 0; // Get minimum quantity
+        const step = productObj.step || 0.01; // Get step value
         const availableQuantity = product.quantity;
         const purchasedQuantity = purchasedItems[productId]?.quantity || 0;
         const uom = productObj.unit_id || ""; // Get UOM
@@ -358,7 +360,7 @@ function renderMenu() {
                     <p>Available: <b id="ava${productId}">${(availableQuantity < 0) ? 0 : availableQuantity }</b></p>
                 </td>
                 <td>
-                    <input type="number" id="q${productId}" value="${purchasedQuantity}" min="0" max="${availableQuantity}" ${inputStep} ${inputPattern} ${inputOnInput}>
+                    <input type="number" id="q${productId}" step="${step}" min="${minQuantity}" value="${purchasedQuantity}" max="${availableQuantity}" ${inputStep} ${inputPattern} ${inputOnInput}>
                 </td>
                 <td>
                     <button class="btn btn-primary btn-sm addToCartButton" id="${productId}" ${(availableQuantity <= 0) ? "disabled" : ""}>Add to Cart</button>
@@ -816,4 +818,36 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
         console.error('Error placing order:', error);
         alert('An error occurred while placing your order. Please try again.');
     }
+}
+document.getElementById('noteForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const note = document.getElementById('noteText').value.trim();
+    const cust_id = cId;      // Use your global or session customer ID variable
+    const weekId = weekId;    // Use your global or session week ID variable
+
+    if (!note) {
+        showNoteResult('Please enter a note.', false);
+        return;
+    }
+
+    try {
+        const response = await fetch('../knft/submitNote.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cust_id, note, weekId })
+        });
+        const result = await response.json();
+        showNoteResult(result.message, result.success);
+        if (result.success) document.getElementById('noteForm').reset();
+    } catch (error) {
+        showNoteResult('Failed to submit note. Please try again.', false);
+    }
 });
+
+function showNoteResult(message, isSuccess) {
+    const el = document.getElementById('noteResult');
+    el.textContent = message;
+    el.className = 'mt-3 alert ' + (isSuccess ? 'alert-success' : 'alert-danger');
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
