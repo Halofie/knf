@@ -818,7 +818,8 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
         console.error('Error placing order:', error);
         alert('An error occurred while placing your order. Please try again.');
     }
-}
+});
+
 document.getElementById('noteForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const note = document.getElementById('noteText').value.trim();
