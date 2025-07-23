@@ -4,7 +4,13 @@ let custID = 0;
 let weekId = 0;
 let cRoute = "";
 let cId = 0;
-let lock = 0; // Global variable to store userLock status
+let lock = 0;
+let globalCustomerId = 0;
+
+let prodData = [];
+let prodlist = [];
+let purchasedItems = {};
+let prodMap = {};
 
 async function fetchUserLock() {
     try {
@@ -24,7 +30,6 @@ async function fetchUserLock() {
 }
 fetchUserLock();
 
-let globalCustomerId = 0;
 let customerFulfillmentData = [];
 
 async function fetchEmailAndRunProgram() {
@@ -167,11 +172,6 @@ async function initializePurchaseHistory() {
        if (noOrdersMsg) noOrdersMsg.style.display = 'none';
     }
 }
-
-let prodData = [];
-let prodlist = [];
-let purchasedItems = {};
-let prodMap = {};
 
 async function fetchRoutes() {
     try {
@@ -431,28 +431,6 @@ function attachAddToCartEventListeners() {
     });
 }
 
-function deleteRow(week_id, customer_id, product_id) {
-    fetch("../knft/deleteOrder.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `week_id=${week_id}&customer_id=${customer_id}&product_id=${product_id}`
-    })
-    .then(response => response.json())
-    .then(data => alert(data.success ? "Row deleted successfully!" : "Error: " + data.message))
-    .catch(error => console.error("Error:", error));
-}
-
-function deleteRow2(week_id, customer_id, product_id, id) {
-    fetch("../knft/deleteOrder2.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `week_id=${week_id}&customer_id=${customer_id}&product_id=${product_id}&id=${id}`
-    })
-    .then(response => response.json())
-    .then(data => alert(data.success ? "Row deleted successfully!" : "Error: " + data.message))
-    .catch(error => console.error("Error:", error));
-}
-
 
 async function sendPurchaseData(productId, quantity) {
     await fetch('../knft/removeQuantity.php', {
@@ -521,11 +499,13 @@ function populateConsumerHistoryTable(tableBodySelector, purchaseItems, weekId) 
         return;
     }
     tableBody.innerHTML = ""; // Clear existing table data
-    noOrdersMessage.style.display = 'none';
+    if (noOrdersMessage) noOrdersMessage.style.display = 'none';
 
     if (!purchaseItems || purchaseItems.length === 0) {
-        noOrdersMessage.innerHTML = `<i class="fas fa-shopping-bag fa-2x mb-3 d-block"></i>You have no past orders to display for the selected period.`;
-        noOrdersMessage.style.display = 'block';
+        if (noOrdersMessage) {
+            noOrdersMessage.innerHTML = `<i class="fas fa-shopping-bag fa-2x mb-3 d-block"></i>You have no past orders to display for the selected period.`;
+            noOrdersMessage.style.display = 'block';
+        }
         return;
     }
 
@@ -536,12 +516,12 @@ function populateConsumerHistoryTable(tableBodySelector, purchaseItems, weekId) 
         const totalCost = typeof item.total_cost === 'number' ? item.total_cost.toFixed(2) : (item.total_cost || '0.00');
 
         row.innerHTML = `
-            <td data-label="Product">${item.product || 'N/A'}</td>
+            <td data-label="Product Name">${item.product || 'N/A'}</td>
             <td data-label="Category">${item.category_id || 'N/A'}</td>
-            <td data-label="Rate/Unit">${pricePerUnitDisplay}</td>
-            <td data-label="Quantity">${item.quantity || '0'}</td>
-            <td data-label="Route">${item.route || 'N/A'}</td> 
-            <td data-label="Total Cost">₹${totalCost}</td>
+            <td data-label="Rate/Unit" class="text-end">${pricePerUnitDisplay}</td>
+            <td data-label="Quantity" class="text-center">${item.quantity || '0'}</td>
+            <!--<td data-label="Route">${item.route || 'N/A'}</td> -->
+            <td data-label="Total Cost" class="text-end">₹${totalCost}</td>
         `;
         tableBody.appendChild(row);
     });
@@ -607,32 +587,6 @@ function attachDeleteEventListeners() {
     });
 }
 
-// Attach event listeners to "Purchase" buttons in the product menu
-function attachPurchaseEventListeners() {
-    document.querySelectorAll('.purchaseButton').forEach(button => {
-        button.addEventListener('click', async (e) => {
-            const productId = e.currentTarget.id;
-            const quantityInput = document.querySelector(`#q${productId}`);
-            const quantity = parseFloat(quantityInput.value, 10);
-            const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
-            const availableElem = document.querySelector(`#ava${productId}`);
-            const availableQuantity = availableElem ? parseFloat(availableElem.innerText, 10) : 0;
-            // ...existing code...
-            if (quantity > 0 && quantity <= availableQuantity) {
-                // Add product to the cart
-                purchasedItems[productId] = { quantity, price };
-
-                // Update the cart UI
-                renderCart();
-            } else {
-                alert('Quantity cannot be less than 0 or greater than available');
-                quantityInput.value = 0; // Reset to 0 if invalid
-            }
-            // ...existing code...
-        });
-    });
-}
-
 function displayOrderHistoryMessage(message, isSuccess) {
     const element = document.getElementById('order-history-result');
     if (element) {
@@ -663,79 +617,6 @@ function setupPurchaseHistoryEventListeners() {
         });
     }
 }
-
-// Attach event listener to "Place Your Order" button
-// ...existing code...
-document.getElementById('placeOrderButton').addEventListener('click', async () => {
-    if (Object.keys(purchasedItems).length === 0) {
-        alert('Your cart is empty. Please add items to the cart before placing an order.');
-        return;
-    }
-
-    // Loop through all items to validate and sanitize "nos"
-    for (const [productId, item] of Object.entries(purchasedItems)) {
-        const uom = (prodMap[productId]?.unit_id || "").toLowerCase();
-
-        if (uom === "nos") {
-            // FORCE integer quantity
-            const original = item.quantity;
-            item.quantity = Math.floor(item.quantity);
-
-            if (original !== item.quantity) {
-                alert(`Invalid quantity for "${prodMap[productId]?.product || 'this item'}". It must be a whole number.`);
-                return;
-            }
-
-            // Also update the quantity input box on UI
-            const input = document.getElementById(`q${productId}`);
-            if (input) input.value = item.quantity;
-        }
-    }
-
-    console.warn("Confirm Purchase By clicking Ok");
-
-    try {
-        const orderData = {
-            week_id: weekId,
-            customer_id: cId,
-            routeId: cRoute,
-            items: Object.entries(purchasedItems).map(([productId, item]) => ({
-                product_id: productId,
-                quantity: item.quantity,
-                price: item.price,
-                total: item.quantity * item.price
-            }))
-        };
-
-        const response = await fetch('../knft/submitOrder.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderData)
-        });
-
-        // Parse response as JSON
-        const result = await response.json();
-        if (result.success) {
-            alert(result.success);
-        } else if (result.warning) {
-            alert(result.warning.join('\n'));
-        } else if (result.error) {
-            alert(result.error);
-        } else {
-            alert('Unknown response from server.');
-        }
-
-        purchasedItems = {};
-        renderCart();
-        await loadMenu();
-
-    } catch (error) {
-        console.error('Error placing order:', error);
-        alert('An error occurred while placing your order. Please try again.');
-    }
-});
-
-// ...existing code...
 
 // Fetch fulfillment data for a customer and week
 async function fetchCustomerFulfillment(customerId, weekIdFilter) {
@@ -781,7 +662,7 @@ function renderFulfillmentTable(items) {
             <td data-label="Fulfilled Qty">${item.fullfill_quantity || ''}</td>
             <td data-label="Rate">₹${rateFormatted}</td>
             <td data-label="Total Cost">₹${totalFormatted}</td>
-            <td data-label="Route">${item.route || ''}</td>
+            <!--<td data-label="Route">${item.route || ''}</td>-->
         `;
         tbody.appendChild(tr);
     });
@@ -868,21 +749,71 @@ async function initializeFulfillmentSection() {
     }
 }
 
-// After runNextProgram or after main_load, call initializeFulfillmentSection
-// ...existing code...
-async function runNextProgram(email) {
-    await main_load(email);
-    globalCustomerId = cId;
-    await loadMenu();
-
-    if (document.getElementById('purchaseHistorySection') && document.querySelector('.purchase-history-body')) {
-        await initializePurchaseHistory();
-    } else {
-        console.log("Purchase history section/table body not found on this page, skipping initialization.");
+document.getElementById('placeOrderButton').addEventListener('click', async () => {
+    if (Object.keys(purchasedItems).length === 0) {
+        alert('Your cart is empty. Please add items to the cart before placing an order.');
+        return;
     }
 
-    // Initialize fulfillment section if present
-    if (document.getElementById('fulfillmentDisplaySection')) {
-        await initializeFulfillmentSection();
+    // Loop through all items to validate and sanitize "nos"
+    for (const [productId, item] of Object.entries(purchasedItems)) {
+        const uom = (prodMap[productId]?.unit_id || "").toLowerCase();
+
+        if (uom === "nos") {
+            // FORCE integer quantity
+            const original = item.quantity;
+            item.quantity = Math.floor(item.quantity);
+
+            if (original !== item.quantity) {
+                alert(`Invalid quantity for "${prodMap[productId]?.product || 'this item'}". It must be a whole number.`);
+                return;
+            }
+
+            // Also update the quantity input box on UI
+            const input = document.getElementById(`q${productId}`);
+            if (input) input.value = item.quantity;
+        }
     }
-}
+
+    console.warn("Confirm Purchase By clicking Ok");
+
+    try {
+        const orderData = {
+            week_id: weekId,
+            customer_id: cId,
+            routeId: cRoute,
+            items: Object.entries(purchasedItems).map(([productId, item]) => ({
+                product_id: productId,
+                quantity: item.quantity,
+                price: item.price,
+                total: item.quantity * item.price
+            }))
+        };
+
+        const response = await fetch('../knft/submitOrder.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        // Parse response as JSON
+        const result = await response.json();
+        if (result.success) {
+            alert(result.success);
+        } else if (result.warning) {
+            alert(result.warning.join('\n'));
+        } else if (result.error) {
+            alert(result.error);
+        } else {
+            alert('Unknown response from server.');
+        }
+
+        purchasedItems = {};
+        renderCart();
+        await loadMenu();
+
+    } catch (error) {
+        console.error('Error placing order:', error);
+        alert('An error occurred while placing your order. Please try again.');
+    }
+});

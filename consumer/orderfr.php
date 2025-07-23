@@ -38,7 +38,7 @@ if ($_SESSION['role'] !== 'C') {
       <div>
         <a class="btn" href="../knft/logout.php">HOME</a>
         <a class="btn" href="orderfr.php" >ORDER PRODUCTS</a> 
-        <a class="btn" href="#two">PURCHASE HISTORY</a>
+        <a class="btn" href="#two">ORDER SUMMARY & INVOICE</a>
         <a class="btn" href="../knft/logout.php">LOGOUT</a>
       </div>
   </div>
@@ -278,7 +278,7 @@ if ($_SESSION['role'] !== 'C') {
           <span>Product</span>
           <span class="text-end">Rate/Unit</span>
           <span class="text-center">Qty</span>
-          <span>Route</span>
+          <!-- <span>Route</span> -->
           <span class="text-end">Total</span>
       </div>
       <div class="card shadow-sm">
@@ -294,7 +294,7 @@ if ($_SESSION['role'] !== 'C') {
                               <th scope="col">Category</th>
                               <th scope="col" class="text-end">Rate/Unit</th>
                               <th scope="col" class="text-center">Quantity</th>
-                              <th scope="col">Route</th>
+                              <!-- <th scope="col">Route</th> -->
                               <th scope="col" class="text-end">Total Cost</th>
                           </tr>
                       </thead>
@@ -356,7 +356,7 @@ if ($_SESSION['role'] !== 'C') {
                 <th>Fullfilled Quantity</th>
                 <th>Rate</th>
                 <th>Total Cost</th>
-                <th>Route</th>
+                <!-- <th>Route</th> -->
             </tr>
         </thead>
         <tbody class="fulfillment-table-body"></tbody>
@@ -368,7 +368,7 @@ if ($_SESSION['role'] !== 'C') {
         <span>Fulfilled</span>
         <span>Rate</span>
         <span>Total</span>
-        <span>Route</span>
+        <!-- <span>Route</span> -->
     </div>
     <!-- Enhanced Total Amount Card for Fulfillment -->
     <div class="row justify-content-center mt-4">
