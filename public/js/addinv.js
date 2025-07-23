@@ -336,24 +336,29 @@ function renderFarmerChecklist(data) {
     }
     reportHtml += `</div></div>`;
 
-    console.log("Checklist items to render:", data.checklist_items);
-
     data.checklist_items.forEach(product_assignment => {
         const productName = product_assignment.product_name;
-        // Format totalQty to show decimals if present
         let totalQty = product_assignment.total_quantity_for_product;
         if (typeof totalQty === 'string') totalQty = parseFloat(totalQty);
         const totalQtyDisplay = (Math.round(totalQty * 100) % 100 === 0) ? totalQty.toFixed(0) : totalQty.toFixed(2).replace(/\.?0+$/, '');
         const unitId = product_assignment.unit_id;
-        const customerDetailsString = product_assignment.customer_details_for_product;
-
         const customerDetails = product_assignment.customer_breakdown_details;
 
-        let quantityBreakdownString = '';
-        customerDetails.split('|||').forEach((detail) => {
-            const match = detail.match(/Qty:\s*([\d.]+)/);
-            quantityBreakdownString += `${match ? match[1] : '0'} ${product_assignment.unit_id} , `;
-        });
+        const qtyCount = {};
+        if (customerDetails && typeof customerDetails === 'string' && customerDetails.trim() !== '') {
+            customerDetails.split('|||').forEach((detail) => {
+                const match = detail.match(/Qty:\s*([\d.]+)/);
+                if (match) {
+                    const qty = match[1];
+                    qtyCount[qty] = (qtyCount[qty] || 0) + 1;
+                }
+            });
+        }
+
+        let quantityBreakdownString = Object.entries(qtyCount)
+            .map(([qty, count]) => count > 1 ? `${qty} ${unitId} x ${count}` : `${qty} ${unitId}`)
+            .join(', ');
+        if (!quantityBreakdownString) quantityBreakdownString = '-';
 
         reportHtml += `
             <div class="card mb-3 shadow-sm">
@@ -374,7 +379,6 @@ function renderFarmerChecklist(data) {
         
         if (customerDetails && typeof customerDetails === 'string' && customerDetails.trim() !== '') {
             customerDetails.split('|||').forEach((detail) => {
-                // Remove "Order Line ID: ..." from the detail string
                 const cleanedDetail = detail.replace(/\s*Order Line ID:\s*\d+,?/i, '').replace(/\(\s*,/, '(').replace(/\(\s*,\s*/, '(').replace(/\(\s*,\s*\)/, '()');
                 reportHtml += `<li class="list-group-item text-muted">${cleanedDetail.trim()}</li>`;
             });

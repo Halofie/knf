@@ -624,6 +624,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                                     <input class="form-check-input" type="radio" name="get_mode" id="modeProduct" value="2">
                                     <label class="form-check-label" for="modeProduct">Product</label>
                                 </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="get_mode" id="modeUom" value="3">
+                                    <label class="form-check-label" for="modeUom">UOM</label>
+                                </div>
                             </div>
                         </div>
                         <input type="submit" class="btn-success btn-enhanced m-3 submit-week btn" value="Load Inventory">

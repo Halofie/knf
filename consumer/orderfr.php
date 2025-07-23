@@ -397,9 +397,13 @@ if ($_SESSION['role'] !== 'C') {
               <p class="mb-1 text-muted">Total Amount to be Paid</p>
             </div>
             <div class="total-display p-3 rounded-3 shadow-sm mb-2" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 3px solid #28a745;">
-              <span class="fw-bold display-4 text-success" id="fulfillmentTotalAmount">
-                <span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span>
+              <span class="fw-bold display-4 text-success">
+                Total: <span class="final-total-figure"></span>
               </span>
+              <br>
+              <span class="fw-bold fs-4 text-primary" id="fulfillmentTotalAmount">
+                <span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span>
+              </span> 
             </div>
             <div class="mb-2">
               <span class="fw-bold text-dark">Delivery route:</span>

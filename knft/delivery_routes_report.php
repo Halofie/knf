@@ -26,7 +26,7 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 
 // Fetch routes
-$route_sql = "SELECT id, route, deliveryType FROM routes WHERE rec_status = 1 ORDER BY route";
+$route_sql = "SELECT id, route, deliveryType, rate FROM routes WHERE rec_status = 1 ORDER BY route";
 $route_result = $conn->query($route_sql);
 
 $row = 1;
@@ -77,8 +77,11 @@ if ($route_result->num_rows > 0) {
         // Set route in column A
         $sheet->setCellValue('A' . $row, $route_display);
 
-        // Set each customer in separate columns (B, C, D, etc.)
-        $col = 2; // Starting from column B (2)
+        // Set rate in column B with rupees symbol
+        $sheet->setCellValue('B' . $row, '₹ ' . $route['rate']);
+
+        // Set each customer in separate columns (C, D, E, etc.)
+        $col = 3; // Starting from column C (3)
         foreach ($customers as $customer) {
             $sheet->setCellValueByColumnAndRow($col, $row, $customer);
             $col++;
