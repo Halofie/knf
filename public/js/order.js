@@ -341,6 +341,8 @@ function renderMenu() {
         const productObj = prodMap[productId] || {};
         const productName = productObj.product || productObj.product_name || "Unknown";
         const productPrice = product.price;
+        const minQuantity = productObj.minQuantity || 0; // Get minimum quantity
+        const step = productObj.step || 0.01; // Get step value
         const availableQuantity = product.quantity;
         const purchasedQuantity = purchasedItems[productId]?.quantity || 0;
         const uom = productObj.unit_id || ""; // Get UOM
@@ -358,7 +360,7 @@ function renderMenu() {
                     <p>Available: <b id="ava${productId}">${(availableQuantity < 0) ? 0 : availableQuantity }</b></p>
                 </td>
                 <td>
-                    <input type="number" id="q${productId}" value="${purchasedQuantity}" min="0" max="${availableQuantity}" ${inputStep} ${inputPattern} ${inputOnInput}>
+                    <input type="number" id="q${productId}" step="${step}" min="${minQuantity}" value="${purchasedQuantity}" max="${availableQuantity}" ${inputStep} ${inputPattern} ${inputOnInput}>
                 </td>
                 <td>
                     <button class="btn btn-primary btn-sm addToCartButton" id="${productId}" ${(availableQuantity <= 0) ? "disabled" : ""}>Add to Cart</button>

@@ -516,7 +516,9 @@ function handleAddProduct(e) {
          category_id: document.querySelector("#itmCategory").value,
          product: document.querySelector("#itmProduct").value.trim(),
          UoM_id: document.querySelector("#itmUoM").value,
-         price: parseFloat(document.querySelector("#itmRate").value)
+         price: parseFloat(document.querySelector("#itmRate").value),
+         minQuantity: parseFloat(document.querySelector("#itmMinQuantity").value),
+         step: parseFloat(document.querySelector("#itmStep").value)
      };
      console.log(payload.price);
      displayMessage('#result-product', 'Adding...', true);

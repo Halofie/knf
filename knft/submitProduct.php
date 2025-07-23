@@ -17,10 +17,12 @@ try {
         $product = $data['product'];
         $UoM_id = $data['UoM_id'];
         $price = isset($data['price']) ? floatval($data['price']) : 0.0;
+        $minQuantity = isset($data['minQuantity']) ? floatval($data['minQuantity']) : 0;
+        $step = isset($data['step']) ? floatval($data['step']) : 0.01;
 
         // Prepare and bind
-        $stmt = $conn->prepare("INSERT INTO product (category_id, product, UoM_id, price) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssd", $category_id, $product, $UoM_id, $price);
+        $stmt = $conn->prepare("INSERT INTO product (category_id, product, UoM_id, price, minQuantity, step) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssd", $category_id, $product, $UoM_id, $price, $minQuantity, $step);
 
         // Execute the query
         if ($stmt->execute()) {
