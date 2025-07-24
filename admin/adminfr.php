@@ -652,6 +652,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                             <th scope="col">Product</th>
                             <th scope="col">Ordered Quantity and Rate</th>
                             <th scope="col">Fulfill Quantity</th>
+                            <th scope="col">Updated Quantity</th>
                             <th scope="col" style="width: 200px;">Action</th>
                         </tr>
                     </thead>

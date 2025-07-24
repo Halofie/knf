@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
 header('Content-Type: application/json');
 require('header.php'); // Adjust path if needed
 
@@ -28,13 +31,16 @@ if($get_mode == 0) {
             o.rec_date_time,
             c.customerName,
             p.product,
-            o.quantity,
+            fo.quantity AS ordered_quantity,
+            o.quantity AS fulfill_quantity,
             o.rate,
             o.total_cost,
-            o.route_id
+            o.route_id,
+            p.UoM_id as uom
         FROM order_fulfillment o
         JOIN customers c ON o.customer_id = c.customerID
         JOIN product p ON o.product_id = p.prod_id
+        JOIN final_order fo ON fo.week_id = o.week_id AND fo.customer_id = o.customer_id AND fo.product_id = o.product_id
         WHERE o.week_id = ?
         ORDER BY o.rec_date_time ASC
     ";
@@ -53,6 +59,9 @@ if($get_mode == 0) {
         "success" => true,
         "orders" => $data
     ]);
+    $stmt->close();
+    $conn->close();
+    exit();
 }else if($get_mode == 1) {
     // Query with JOINs
     $sql = "
@@ -61,15 +70,18 @@ if($get_mode == 0) {
             o.rec_date_time,
             c.customerName,
             p.product,
-            o.quantity,
+            fo.quantity AS ordered_quantity,
+            o.quantity AS fulfill_quantity,
             o.rate,
             o.total_cost,
-            o.route_id
+            o.route_id,
+            p.UoM_id as uom
         FROM order_fulfillment o
         JOIN customers c ON o.customer_id = c.customerID
         JOIN product p ON o.product_id = p.prod_id
+        JOIN final_order fo ON fo.week_id = o.week_id AND fo.customer_id = o.customer_id AND fo.product_id = o.product_id
         WHERE o.week_id = ?
-        ORDER BY o.customer_id, o.rec_date_time ASC
+        ORDER BY o.customer_id ASC, o.rec_date_time ASC
     ";
     
     $stmt = $conn->prepare($sql);
@@ -86,6 +98,9 @@ if($get_mode == 0) {
         "success" => true,
         "orders" => $data
     ]);
+    $stmt->close();
+    $conn->close();
+    exit();
 }else if($get_mode == 2) {
     // Query with JOINs
     $sql = "
@@ -94,15 +109,18 @@ if($get_mode == 0) {
             o.rec_date_time,
             c.customerName,
             p.product,
-            o.quantity,
+            fo.quantity AS ordered_quantity,
+            o.quantity AS fulfill_quantity,
             o.rate,
             o.total_cost,
-            o.route_id
+            o.route_id,
+            p.UoM_id as uom
         FROM order_fulfillment o
         JOIN customers c ON o.customer_id = c.customerID
         JOIN product p ON o.product_id = p.prod_id
+        JOIN final_order fo ON fo.week_id = o.week_id AND fo.customer_id = o.customer_id AND fo.product_id = o.product_id
         WHERE o.week_id = ?
-        ORDER BY o.product_id, o.rec_date_time ASC
+        ORDER BY o.product_id ASC, o.rec_date_time ASC
     ";
     
     $stmt = $conn->prepare($sql);
@@ -119,6 +137,9 @@ if($get_mode == 0) {
         "success" => true,
         "orders" => $data
     ]);
+    $stmt->close();
+    $conn->close();
+    exit();
 }else if($get_mode == 3) {
     $uomOrderArr = [];
     $uomResult = $conn->query("SELECT UoMID FROM uom WHERE rec_status = 1 ORDER BY id ASC");
@@ -134,7 +155,8 @@ if($get_mode == 0) {
             o.rec_date_time,
             c.customerName,
             p.product,
-            o.quantity,
+            fo.quantity AS ordered_quantity,
+            o.quantity AS fulfill_quantity,
             o.rate,
             o.total_cost,
             o.route_id,
@@ -142,6 +164,7 @@ if($get_mode == 0) {
         FROM order_fulfillment o
         JOIN customers c ON o.customer_id = c.customerID
         JOIN product p ON o.product_id = p.prod_id
+        JOIN final_order fo ON fo.week_id = o.week_id AND fo.customer_id = o.customer_id AND fo.product_id = o.product_id
         WHERE o.week_id = ?
         ORDER BY FIELD(p.UoM_id, $uomOrder), o.rec_date_time ASC
     ";
@@ -160,6 +183,7 @@ if($get_mode == 0) {
         "success" => true,
         "orders" => $data
     ]);
+    $stmt->close();
+    $conn->close();
+    exit();
 }
-$stmt->close();
-$conn->close();
