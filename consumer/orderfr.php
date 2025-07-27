@@ -390,19 +390,23 @@ if ($_SESSION['role'] !== 'C') {
     <!-- Enhanced Total Amount Card for Fulfillment -->
     <div class="row justify-content-center mt-4">
       <div class="col-lg-7">
-        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);">
-          <div class="card-body text-center py-4">
-            <div class="mb-2">
-              <i class="fas fa-coins fa-2x text-success mb-2"></i>
-              <p class="mb-1 text-muted">Total Amount to be Paid</p>
+        <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #fffbe6 0%, #ffeaa7 100%);">
+          <div class="card-body text-center py-5">
+            <div class="mb-3">
+              <i class="fas fa-coins fa-3x text-success mb-3"></i>
+              <h3 class="mb-2 fw-bold text-success" style="font-size:2.2rem;">Total Amount to be Paid</h3>
             </div>
-            <div class="total-display p-3 rounded-3 shadow-sm mb-2" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 3px solid #28a745;">
-              <span class="fw-bold display-4 text-success">
-                Total: <span class="final-total-figure"></span>
+            <div class="total-display p-4 rounded-3 shadow-sm mb-3" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 3px solid #28a745;">
+              <span class="fw-bold display-3 text-success" id="finalTotalAmount">
+                <span class="final-total-figure"></span>
               </span>
-              <br>
+            </div>
+            <div class="mb-3">
               <span class="fw-bold fs-4 text-primary" id="fulfillmentTotalAmount">
-                <span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span>
+                <span class="total-amount-figure"></span>
+                <span class="mx-2 text-dark">+</span>
+                <span class="deliveryfeelol"></span>
+                <span class="ms-2 text-muted">(Order + Delivery)</span>
               </span> 
             </div>
             <div class="mb-2">
