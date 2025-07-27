@@ -20,6 +20,7 @@ if ($_SESSION['role'] !== 'C') {
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../public/css/order.css">
+    <link rel="stylesheet" href="../public/css/common.css">
     <link rel="icon" href="../public/Assets/pic.jpeg">
 
     <title>KOVIA NATURAL FARMERS Customers</title>
@@ -45,25 +46,27 @@ if ($_SESSION['role'] !== 'C') {
 </div>
 
   <!-- the top bar-->
-  <div class=" h-auto p-2 d-flex justify-content-between row darkGreen">
-    <div class="col-1 d-flex justify-content-center ">
-        <button class="btn d-block p-0 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-            <img src="../public/Assets/three-bars.svg">
-        </button>
-    </div>
-    <div class="col-2 d-none d-lg-flex justify-content-center">
-        <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
-    </div>
-    <div class="col-6 color-paleGreen" >
-        <h1 id="name">.</h1>
-        <p class="navinfo m-0" id="phone">.</p>
-        <p class="navinfo m-0" id="address">.</p>
-        <p class="navinfo m-0" id="week">.</p>
-        <p class="navinfo m-0" id="route">.</p>
-    </div>
-    <div class="col-3 d-flex justify-content-end">
-      <div class="m-0 d-block color-paleGreen justify-content-end">
-          <div class="clock">date</div>
+  <div class="container-fluid">
+    <div class="row align-items-center p-2 darkGreen">
+      <div class="col-auto d-flex align-items-center ">
+          <button class="btn p-1 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+              <img src="../public/Assets/three-bars.svg" alt="Menu" style="width: 24px;">
+          </button>
+      </div>
+      <div class="col-2 d-none d-lg-flex justify-content-center">
+          <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
+      </div>
+      <div class="col-6 color-paleGreen" >
+          <h1 id="name">.</h1>
+          <p class="navinfo m-0" id="phone">.</p>
+          <p class="navinfo m-0" id="address">.</p>
+          <p class="navinfo m-0" id="week">.</p>
+          <p class="navinfo m-0" id="route">.</p>
+      </div>
+      <div class="col-3 d-flex justify-content-end">
+        <div class="m-0 d-block color-paleGreen justify-content-end">
+            <div class="clock" id="date">date</div>
+        </div>
       </div>
     </div>
   </div>

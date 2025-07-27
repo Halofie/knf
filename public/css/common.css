@@ -1,0 +1,89 @@
+/* --- Shared Card, Table, Form, Button, and Summary Styles --- */
+
+.card,
+.summary-card,
+.total-display {
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(76,175,80,0.12);
+  background: linear-gradient(135deg, #fffbe6 0%, #ffeaa7 100%);
+  margin-bottom: 2rem;
+  transition: transform 0.2s;
+}
+.card:hover,
+.summary-card:hover {
+  transform: translateY(-2px);
+}
+
+.total-display,
+.final-total-figure,
+.display-3,
+.display-4 {
+  font-size: 2.6rem !important;
+  font-weight: 800;
+  color: #28a745 !important;
+  letter-spacing: 1px;
+}
+
+.section-title,
+h2.display-5,
+h3.fw-bold {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #388e3c;
+  margin-bottom: 1.5rem;
+}
+
+.table thead th,
+.table tbody td {
+  font-size: 1.08rem;
+  vertical-align: middle;
+  text-align: left;
+  padding: 1rem;
+}
+
+.form-select,
+.form-control {
+  border-radius: 12px;
+  border: 2px solid #28a745;
+  padding: 0.85rem 1.1rem;
+  font-size: 1.08rem;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-select:focus,
+.form-control:focus {
+  border-color: #388e3c;
+  box-shadow: 0 0 0 0.2rem rgba(76,175,80,0.18);
+}
+
+.btn-success,
+.btn-primary,
+.btn-gradient {
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  padding: 0.85rem 2.2rem;
+  box-shadow: 0 2px 10px rgba(76,175,80,0.12);
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-success:hover,
+.btn-primary:hover,
+.btn-gradient:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 24px rgba(76,175,80,0.18);
+}
+
+@media screen and (max-width: 700px) {
+  .card,
+  .summary-card,
+  .total-display {
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: 2rem !important;
+  }
+  .final-total-figure,
+  .display-3,
+  .display-4 {
+    font-size: 2rem !important;
+  }
+}
