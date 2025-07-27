@@ -124,8 +124,8 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
                 }
                 // $sql = "SELECT value FROM update_variables WHERE topic = 'userLock'";
                 // $_SESSION['userLock'] = $con->query($sql);
-                // header("Location: ../consumer/customer_dashboard.php");
-                header("Location: consumer.php");
+                header("Location: ../consumer/customer_dashboard.php");
+                // header("Location: consumer.php");
                 exit();
             } else {
                 error_log("Unknown category '$category' for user '$sanitized_email'");

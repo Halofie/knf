@@ -38,6 +38,7 @@ if ($_SESSION['role'] !== 'C') {
       </div>
       <div>
         <a class="btn" href="../knft/logout.php">HOME</a>
+        <a class="btn" href="customer_dashboard.php">DASHBOARD</a>
         <a class="btn" href="orderfr.php" >ORDER PRODUCTS</a> 
         <a class="btn" href="#two">ORDER SUMMARY & INVOICE</a>
         <a class="btn" href="../knft/logout.php">LOGOUT</a>
