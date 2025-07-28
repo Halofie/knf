@@ -20,6 +20,7 @@ if ($_SESSION['role'] !== 'C') {
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../public/css/order.css">
+    <link rel="stylesheet" href="../public/css/common.css">
     <link rel="icon" href="../public/Assets/pic.jpeg">
 
     <title>KOVIA NATURAL FARMERS Customers</title>
@@ -37,33 +38,36 @@ if ($_SESSION['role'] !== 'C') {
       </div>
       <div>
         <a class="btn" href="../knft/logout.php">HOME</a>
+        <a class="btn" href="customer_dashboard.php">DASHBOARD</a>
         <a class="btn" href="orderfr.php" >ORDER PRODUCTS</a> 
-        <a class="btn" href="#two">PURCHASE HISTORY</a>
+        <a class="btn" href="#two">ORDER SUMMARY & INVOICE</a>
         <a class="btn" href="../knft/logout.php">LOGOUT</a>
       </div>
   </div>
 </div>
 
   <!-- the top bar-->
-  <div class=" h-auto p-2 d-flex justify-content-between row darkGreen">
-    <div class="col-1 d-flex justify-content-center ">
-        <button class="btn d-block p-0 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-            <img src="../public/Assets/three-bars.svg">
-        </button>
-    </div>
-    <div class="col-2 d-none d-lg-flex justify-content-center">
-        <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
-    </div>
-    <div class="col-6 color-paleGreen" >
-        <h1 id="name">.</h1>
-        <p class="navinfo m-0" id="phone">.</p>
-        <p class="navinfo m-0" id="address">.</p>
-        <p class="navinfo m-0" id="week">.</p>
-        <p class="navinfo m-0" id="route">.</p>
-    </div>
-    <div class="col-3 d-flex justify-content-end">
-      <div class="m-0 d-block color-paleGreen justify-content-end">
-          <div class="clock">date</div>
+  <div class="container-fluid">
+    <div class="row align-items-center p-2 darkGreen">
+      <div class="col-auto d-flex align-items-center ">
+          <button class="btn p-1 " type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+              <img src="../public/Assets/three-bars.svg" alt="Menu" style="width: 24px;">
+          </button>
+      </div>
+      <div class="col-2 d-none d-lg-flex justify-content-center">
+          <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
+      </div>
+      <div class="col-6 color-paleGreen" >
+          <h1 id="name">.</h1>
+          <p class="navinfo m-0" id="phone">.</p>
+          <p class="navinfo m-0" id="address">.</p>
+          <p class="navinfo m-0" id="week">.</p>
+          <p class="navinfo m-0" id="route">.</p>
+      </div>
+      <div class="col-3 d-flex justify-content-end">
+        <div class="m-0 d-block color-paleGreen justify-content-end">
+            <div class="clock" id="date">date</div>
+        </div>
       </div>
     </div>
   </div>
@@ -295,7 +299,7 @@ if ($_SESSION['role'] !== 'C') {
           <span>Product</span>
           <span class="text-end">Rate/Unit</span>
           <span class="text-center">Qty</span>
-          <span>Route</span>
+          <!-- <span>Route</span> -->
           <span class="text-end">Total</span>
       </div>
       <div class="card shadow-sm">
@@ -311,7 +315,7 @@ if ($_SESSION['role'] !== 'C') {
                               <th scope="col">Category</th>
                               <th scope="col" class="text-end">Rate/Unit</th>
                               <th scope="col" class="text-center">Quantity</th>
-                              <th scope="col">Route</th>
+                              <!-- <th scope="col">Route</th> -->
                               <th scope="col" class="text-end">Total Cost</th>
                           </tr>
                       </thead>
@@ -373,7 +377,7 @@ if ($_SESSION['role'] !== 'C') {
                 <th>Fullfilled Quantity</th>
                 <th>Rate</th>
                 <th>Total Cost</th>
-                <th>Route</th>
+                <!-- <th>Route</th> -->
             </tr>
         </thead>
         <tbody class="fulfillment-table-body"></tbody>
@@ -385,24 +389,28 @@ if ($_SESSION['role'] !== 'C') {
         <span>Fulfilled</span>
         <span>Rate</span>
         <span>Total</span>
-        <span>Route</span>
+        <!-- <span>Route</span> -->
     </div>
     <!-- Enhanced Total Amount Card for Fulfillment -->
     <div class="row justify-content-center mt-4">
       <div class="col-lg-7">
-        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);">
-          <div class="card-body text-center py-4">
-            <div class="mb-2">
-              <i class="fas fa-coins fa-2x text-success mb-2"></i>
-              <p class="mb-1 text-muted">Total Amount to be Paid</p>
+        <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #fffbe6 0%, #ffeaa7 100%);">
+          <div class="card-body text-center py-5">
+            <div class="mb-3">
+              <i class="fas fa-coins fa-3x text-success mb-3"></i>
+              <h3 class="mb-2 fw-bold text-success" style="font-size:2.2rem;">Total Amount to be Paid</h3>
             </div>
-            <div class="total-display p-3 rounded-3 shadow-sm mb-2" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 3px solid #28a745;">
-              <span class="fw-bold display-4 text-success">
-                Total: <span class="final-total-figure"></span>
+            <div class="total-display p-4 rounded-3 shadow-sm mb-3" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 3px solid #28a745;">
+              <span class="fw-bold display-3 text-success" id="finalTotalAmount">
+                <span class="final-total-figure"></span>
               </span>
-              <br>
+            </div>
+            <div class="mb-3">
               <span class="fw-bold fs-4 text-primary" id="fulfillmentTotalAmount">
-                <span class="total-amount-figure"></span> + <span class="deliveryfeelol"></span>
+                <span class="total-amount-figure"></span>
+                <span class="mx-2 text-dark">+</span>
+                <span class="deliveryfeelol"></span>
+                <span class="ms-2 text-muted">(Order + Delivery)</span>
               </span> 
             </div>
             <div class="mb-2">

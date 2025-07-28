@@ -1041,9 +1041,12 @@ function loadFulfillTable(data) {
                     <td>${order.rec_date_time || ''}</td>
                     <td>${order.customerName || ''}</td>
                     <td>${order.product || ''}</td>
-                    <td>${order.quantity} @ ₹${order.rate} <span class="badge bg-info">${order.uom || ''}</span></td>
+                    <td>${order.ordered_quantity} ${order.uom || ''} @ ₹${order.rate}
                     <td>
-                        <input type="number" min="0" value="${order.quantity}" class="form-control form-control-sm fulfill-qty" data-id="${order.id}">
+                        <input type="number" min="0" value="${order.fulfill_quantity}" class="form-control form-control-sm fulfill-qty" style="max-width: 80px; display:inline-block;" data-id="${order.id}">
+                    </td>
+                    <td>
+                        ${order.fulfill_quantity !== undefined ? order.fulfill_quantity : '-'}
                     </td>
                     <td>
                         <button class="btn btn-primary btn-sm update-fulfill" data-id="${order.id}">Update</button>
@@ -1052,7 +1055,7 @@ function loadFulfillTable(data) {
             `;
         });
     } else {
-        fulfillBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No orders found for this week.</td></tr>';
+        fulfillBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">No orders found for this week.</td></tr>';
     }
 }
 function editFulfillListener() {
