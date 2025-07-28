@@ -295,6 +295,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                         <th scope="col">Category ID</th>
                         <th scope="col">Product</th>
                         <th scope="col">UoM ID</th>
+                        <th scope="col">Minimum Quantity</th>
+                        <th scope="col">Step size</th>
                         <th scope="col">Rate/UoM</th>
                         <th scope="col" style="width: 200px;">Action</th>
                       </tr>

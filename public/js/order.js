@@ -892,8 +892,8 @@ document.getElementById('noteForm').addEventListener('submit', async function(e)
     e.preventDefault();
     const note = document.getElementById('noteText').value.trim();
     const cust_id = cId;      // Use your global or session customer ID variable
-    const weekId = weekId;    // Use your global or session week ID variable
-
+    
+// const weekId = weekId;    // Use your global or session week ID variable
     if (!note) {
         showNoteResult('Please enter a note.', false);
         return;

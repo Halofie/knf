@@ -500,6 +500,8 @@ function displayProductTable(products) {
                 <td>${prod.category_id || ''}</td>
                 <td>${prod.product || ''}</td>
                 <td>${prod.UoM_id || ''}</td>
+                <td>${prod.minQuantity || ''}</td>
+                <td>${prod.step || ''}</td>
                 <td>${price}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-product-btn" id="${prod.prod_id}" data-id="${prod.prod_id}" data-name="${prod.product||''}" data-categoryid="${prod.category_id||''}" data-uomid="${prod.UoM_id||''}" data-price="${prod.price||''}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
