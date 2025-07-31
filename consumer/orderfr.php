@@ -202,7 +202,7 @@ if ($_SESSION['role'] !== 'C') {
           <label for="noteText" class="form-label fw-bold">Your Note</label>
           <textarea class="form-control" id="noteText" rows="3" required placeholder="Enter your note here..."></textarea>
         </div>
-        <button type="submit" class="btn btn-success">Submit Note</button>
+        <!-- <button type="submit" class="btn btn-success">Submit Note</button> -->
         <div id="noteResult" class="mt-3" style="display:none;"></div>
       </form>
     </div>

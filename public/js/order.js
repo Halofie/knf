@@ -455,6 +455,7 @@ async function insertData(productId, quantity, price) {
             // date_time: currentDateTime,
             price,
             total: price * quantity,
+            note: note || ''
         })
     });
 }
@@ -735,7 +736,13 @@ function setupFulfillmentWeekForm(customerId) {
     const form = document.getElementById('fulfillmentDataWeekForm');
     if (!form) return;
     form.addEventListener('submit', function(event) {
+
         event.preventDefault();
+        document.querySelector('.final-total-figure').innerText = "N/A";
+        document.querySelector('.total-amount-figure').innerText = "N/A";
+        document.querySelector('.deliveryfeelol').innerText = "N/A";
+        document.querySelector('.route-figure').innerText = "N/A";
+        document.querySelector('.route-cost-figure').innerText = "N/A";
         const weekId = document.getElementById('fulfillmentDataWeekDropdown').value;
         loadFulfillmentData(customerId, weekId);
     });
@@ -778,7 +785,7 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
     }
 
     console.warn("Confirm Purchase By clicking Ok");
-
+    note=document.querySelector("#noteText").value || ''; // Get note from the note input field
     try {
         const orderData = {
             week_id: weekId,
@@ -789,7 +796,8 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
                 quantity: item.quantity,
                 price: item.price,
                 total: item.quantity * item.price
-            }))
+            })),
+            note: note
         };
 
         const response = await fetch('../knft/submitOrder.php', {

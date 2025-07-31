@@ -12,8 +12,45 @@ $data = json_decode($json, true);
 $week_id = $data['week_id'];
 $customer_id = $data['customer_id'];
 $routeId = $data['routeId'];
+$note = $data['note'] ?? ''; // Get note from JSON data, NULL if not provided
 
 $error_messages = [];
+    // Step 3: Get route rate from routes table
+$routeRateSQL = "SELECT rate FROM routes WHERE id = ?";
+$stmt = $conn->prepare($routeRateSQL);
+$stmt->bind_param("i", $routeId);
+$stmt->execute();
+$stmt->bind_result($route_rate);
+$stmt->fetch();
+$stmt->close();
+// First insert into orders table to get order ID (only once)
+$sql_orders = "INSERT INTO orders (cust_id, weekId, routeid, routerate) VALUES (?, ?, ?, ?)";
+$stmt = $conn->prepare($sql_orders);
+$stmt->bind_param("iiid", $customer_id, $week_id, $routeId, $route_rate);
+if (!$stmt->execute()) {
+    echo json_encode(["error" => "Error creating order: " . $stmt->error]);
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+$order_id = $conn->insert_id;
+$stmt->close();
+
+// Insert note into notes table
+if (!empty($note)) {
+    $sql_note = "INSERT INTO notes (cust_id, weekId, orderId, note) VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql_note);
+    $stmt->bind_param("iiis", $customer_id, $week_id, $order_id, $note);
+    if (!$stmt->execute()) {
+        echo json_encode(["error" => "Error adding note: " . $stmt->error]);
+        $stmt->close();
+        $conn->close();
+        exit;
+    }
+    $stmt->close();
+}
+
+$total_order_cost = 0; // Initialize total order cost
 
 foreach ($data["items"] as $product) {
     $product_id = $product['product_id'];
@@ -37,30 +74,24 @@ foreach ($data["items"] as $product) {
         exit;
     }
 
-    // Step 3: Get route rate from routes table
-    $routeRateSQL = "SELECT rate FROM routes WHERE id = ?";
-    $stmt = $conn->prepare($routeRateSQL);
-    $stmt->bind_param("i", $routeId);
-    $stmt->execute();
-    $stmt->bind_result($route_rate);
-    $stmt->fetch();
-    $stmt->close();
-
-    // Step 4: Proceed with inserts
-    $sql_final_order = "INSERT INTO final_order (week_id, customer_id, product_id, quantity, route_id, route_rate, date_time, rate, total_cost)
-                        VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
-    $stmt = $conn->prepare($sql_final_order);
-    $stmt->bind_param("iiiidddd", $week_id, $customer_id, $product_id, $quantity, $routeId, $route_rate, $rate, $tc);
-    if ($stmt->execute()) {
-        $stmt->close();
-        $sql_order_fulfillment = "INSERT INTO order_fulfillment (week_id, customer_id, product_id, quantity, route_id,route_rate, date_time, rate, total_cost)
-                                  VALUES (?, ?, ?, ?, ?,?, NOW(), ?, ?)";
+    // Step 4: Insert into final_order with order_id
+        $sql_final_order = "INSERT INTO final_order (orderId, week_id, customer_id, product_id, quantity, route_id, route_rate, date_time, rate, total_cost)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
+        $stmt = $conn->prepare($sql_final_order);
+        $stmt->bind_param("iiiiidddd", $order_id, $week_id, $customer_id, $product_id, $quantity, $routeId, $route_rate, $rate, $tc);
+        if ($stmt->execute()) {
+            $stmt->close();
+            
+    // Step 6: Insert into order_fulfillment with order_id
+        $sql_order_fulfillment = "INSERT INTO order_fulfillment (orderId, week_id, customer_id, product_id, quantity, route_id, route_rate, date_time, rate, total_cost)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
         $stmt2 = $conn->prepare($sql_order_fulfillment);
-        $stmt2->bind_param("iiiidddd", $week_id, $customer_id, $product_id, $quantity, $routeId,$route_rate, $rate, $tc);
+        $stmt2->bind_param("iiiiidddd", $order_id, $week_id, $customer_id, $product_id, $quantity, $routeId, $route_rate, $rate, $tc);
         if ($stmt2->execute()) {
             $stmt2->close();
             $updateSql = "UPDATE temp_inventory SET quantity = quantity - ?
-                          WHERE weekID = ? AND product_id = ? AND quantity >= ?";
+                          WHERE weekID = ? AND product_id = ? "; 
+                          //AND quantity >= ? if u want restrict stock/ -ve inventory
             $stmt3 = $conn->prepare($updateSql);
             $stmt3->bind_param("iiii", $quantity, $week_id, $product_id, $quantity);
             if ($stmt3->execute()) {
@@ -74,6 +105,7 @@ foreach ($data["items"] as $product) {
                 exit;
             }
             $stmt3->close();
+            $total_order_cost += $tc; // Add this product's total to order total
         } else {
             echo json_encode("Error: " . $stmt2->error);
             $stmt2->close();
@@ -88,6 +120,17 @@ foreach ($data["items"] as $product) {
     }
 }
 
+// Update orders table with total cost
+$update_order_sql = "UPDATE orders SET total_cost = ? WHERE orderid = ?";
+$stmt = $conn->prepare($update_order_sql);
+$stmt->bind_param("di", $total_order_cost, $order_id);
+if (!$stmt->execute()) {
+    echo json_encode(["error" => "Error updating order total: " . $stmt->error]);
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+$stmt->close();
 
 $conn->close();
 header('Content-Type: application/json');
