@@ -735,7 +735,13 @@ function setupFulfillmentWeekForm(customerId) {
     const form = document.getElementById('fulfillmentDataWeekForm');
     if (!form) return;
     form.addEventListener('submit', function(event) {
+
         event.preventDefault();
+        document.querySelector('.final-total-figure').innerText = "N/A";
+        document.querySelector('.total-amount-figure').innerText = "N/A";
+        document.querySelector('.deliveryfeelol').innerText = "N/A";
+        document.querySelector('.route-figure').innerText = "N/A";
+        document.querySelector('.route-cost-figure').innerText = "N/A";
         const weekId = document.getElementById('fulfillmentDataWeekDropdown').value;
         loadFulfillmentData(customerId, weekId);
     });
