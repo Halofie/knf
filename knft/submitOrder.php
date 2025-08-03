@@ -89,11 +89,10 @@ foreach ($data["items"] as $product) {
         $stmt2->bind_param("iiiiidddd", $order_id, $week_id, $customer_id, $product_id, $quantity, $routeId, $route_rate, $rate, $tc);
         if ($stmt2->execute()) {
             $stmt2->close();
-            $updateSql = "UPDATE temp_inventory SET quantity = quantity - ?
-                          WHERE weekID = ? AND product_id = ? "; 
+            $updateSql = "UPDATE temp_inventory SET quantity = quantity - ? WHERE weekID = ? AND product_id = ? "; 
                           //AND quantity >= ? if u want restrict stock/ -ve inventory
             $stmt3 = $conn->prepare($updateSql);
-            $stmt3->bind_param("iiii", $quantity, $week_id, $product_id, $quantity);
+            $stmt3->bind_param("dii", $quantity, $week_id, $product_id);
             if ($stmt3->execute()) {
                 if ($stmt3->affected_rows == 0) {
                     $error_messages[] = "Stock update failed or insufficient stock for product ID '$product_id'.";
@@ -121,7 +120,7 @@ foreach ($data["items"] as $product) {
 }
 
 // Update orders table with total cost
-$update_order_sql = "UPDATE orders SET total_cost = ? WHERE orderid = ?";
+$update_order_sql = "UPDATE orders SET item_total = ? WHERE orderId = ?";
 $stmt = $conn->prepare($update_order_sql);
 $stmt->bind_param("di", $total_order_cost, $order_id);
 if (!$stmt->execute()) {
