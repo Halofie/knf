@@ -21,6 +21,7 @@ if ($_SESSION['role'] !== 'C') {
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../public/css/order.css">
     <link rel="stylesheet" href="../public/css/common.css">
+    <link rel="stylesheet" href="../public/css/mobile-responsive.css">
     <link rel="icon" href="../public/Assets/pic.jpeg">
 
     <title>KOVIA NATURAL FARMERS Customers</title>
@@ -129,7 +130,18 @@ if ($_SESSION['role'] !== 'C') {
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody class="cart-body"></tbody>
+                <tbody class="cart-body">
+                    <!-- Items will be added here dynamically with data-label attributes -->
+                    <!-- Example structure:
+                    <tr>
+                        <td data-label="Product Name">Product</td>
+                        <td data-label="Category">Category</td>
+                        <td data-label="Price">₹00.00</td>
+                        <td data-label="Quantity">0</td>
+                        <td data-label="Action"><button>Remove</button></td>
+                    </tr>
+                    -->
+                </tbody>
             </table>
         </div>
     </div>

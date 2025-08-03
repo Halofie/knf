@@ -1,0 +1,163 @@
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    /* General table responsiveness */
+    .table-responsive {
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    /* Table styles for mobile */
+    .table {
+        display: block;
+        width: 100%;
+    }
+
+    .table thead {
+        display: none; /* Hide table headers on mobile */
+    }
+
+    .table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        border: none;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    /* Add labels for mobile view */
+    .table tbody td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        margin-right: 1rem;
+    }
+
+    /* Cart specific styles */
+    .cartHolder {
+        padding: 0.5rem !important;
+    }
+
+    .cartHolder .table td {
+        white-space: normal;
+    }
+
+    /* Form controls for mobile */
+    .form-control, .form-select {
+        font-size: 16px !important; /* Prevent zoom on iOS */
+    }
+
+    /* Container padding adjustment */
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Card adjustments for mobile */
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    /* Button adjustments */
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Top bar adjustments */
+    .navinfo {
+        font-size: 0.9rem;
+    }
+
+    /* Purchase history and fulfillment tables */
+    .purchase-history-container .table td,
+    #fulfillmentTable td {
+        padding: 0.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .purchase-history-container .table td:before,
+    #fulfillmentTable td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        margin-right: 1rem;
+    }
+
+    /* Total amount display */
+    .total-display {
+        padding: 1rem !important;
+    }
+
+    .total-display .display-4 {
+        font-size: 2rem;
+    }
+
+    /* Improve form spacing */
+    .form-enhanced {
+        padding: 1rem !important;
+    }
+
+    .form-label {
+        margin-bottom: 0.25rem;
+    }
+
+    /* Order summary section */
+    #totalCost {
+        font-size: 2rem;
+    }
+
+    /* Note section */
+    #noteText {
+        min-height: 100px;
+    }
+}
+
+/* General improvements for all screen sizes */
+.table-success {
+    background-color: rgba(40, 167, 69, 0.05);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(40, 167, 69, 0.075);
+    transition: background-color 0.2s ease;
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Smooth transitions */
+.btn, .form-control, .form-select {
+    transition: all 0.3s ease;
+}
+
+/* Better focus states */
+.form-control:focus, .form-select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
