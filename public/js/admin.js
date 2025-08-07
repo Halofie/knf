@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initialiseLockButton();
     getTrayStatusData();
     editTrayStatusListener();
+    editTrayNumberListener();
     const allocationWeekDropdown = document.getElementById('allocationWeekId');
     if (allocationWeekDropdown) {
         console.log("Found #allocationWeekId dropdown. Attempting to populate...");
@@ -1206,11 +1207,22 @@ function editFarmerRankListener() {
 }
 // Fetch and display tray status table
 async function getTrayStatusData() {
+    const weekDropdown = document.getElementById('trayWeekDropdown');
+    const weekId = weekDropdown ? weekDropdown.value : null;
+
+    if (!weekId) {
+        console.warn('No week selected');
+        renderTrayStatusTable([]);
+        return;
+    }
+
     try {
         const response = await fetch('../knft/getTrayStatus.php', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ weekId: weekId })
         });
+        
         const data = await response.json();
         if (data.success && Array.isArray(data.data)) {
             renderTrayStatusTable(data.data);
@@ -1223,6 +1235,10 @@ async function getTrayStatusData() {
     }
 }
 
+// Add event listener for week dropdown change
+document.getElementById('trayWeekDropdown')?.addEventListener('change', getTrayStatusData);
+
+
 function renderTrayStatusTable(rows) {
     const tbody = document.querySelector('.tray-status-body');
     if (!tbody) return;
@@ -1232,27 +1248,73 @@ function renderTrayStatusTable(rows) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No tray status data found.</td></tr>';
         return;
     }
-
+    console.log(rows);
     rows.forEach(row => {
         tbody.innerHTML += `
             <tr>
                 <td>${row.customerName }</td>
                 <td>${row.route }</td>
+                <td>${row.tray_number || 'Not fixed'}</td>
                 <td>
                     <span class="badge ${row.trayStatus == 1 ? 'bg-success' : 'bg-danger'}">
                         ${row.trayStatus == 1 ? 'Returned' : 'Not Returned'}
                     </span>
                 </td>
-                <td>${row.weekID || ''}</td>
+                <td>
+                    <button class="btn btn-info btn-sm set-tray-btn" data-id="${row.id}">Set Tray Number</button>
+                </td>
                 <td>
                     <button class="btn btn-${row.trayStatus == 1 ? 'danger' : 'success'} btn-sm toggle-tray-btn" data-id="${row.id}">
                         ${row.trayStatus == 1 ? 'Mark Not Returned' : 'Mark Returned'}
                     </button>
+                    
                 </td>
             </tr>
         `;
     });
 }
+
+function editTrayNumberListener() {
+    const tbody = document.querySelector('.tray-status-body');
+    if (!tbody) return;
+
+    tbody.addEventListener('click', async function(e) {
+        // Existing toggle tray button handler...
+
+        // Add new handler for set-tray-btn
+        const setTrayBtn = e.target.closest('.set-tray-btn');
+        if (setTrayBtn) {
+            const id = setTrayBtn.getAttribute('data-id');
+            if (!id) return;
+
+            const trayNumber = prompt('Enter tray number:');
+            if (trayNumber === null) return; // User clicked Cancel
+
+            try {
+                const response = await fetch('../knft/updateTrayNumber.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        id: id,
+                        trayNumber: trayNumber 
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Tray number updated successfully!');
+                    getTrayStatusData(); // Refresh the table
+                } else {
+                    alert(data.message || 'Failed to update tray number');
+                }
+            } catch (error) {
+                console.error('Error updating tray number:', error);
+                alert('Error updating tray number');
+            }
+        }
+    });
+}
+
 // Attach event delegation for toggle-tray-btn
 function editTrayStatusListener() {
     const tbody = document.querySelector('.tray-status-body');
@@ -1292,3 +1354,41 @@ function editTrayStatusListener() {
         }
     });
 }
+
+// Add this function to populate the tray week dropdown
+async function populateTrayWeekDropdown() {
+    const dropdown = document.getElementById('trayWeekDropdown');
+    if (!dropdown) return;
+
+    try {
+        const response = await fetch('../knft/getWeek.php');
+        if (!response.ok) throw new Error('Failed to fetch weeks');
+        
+        const weeks = await response.json();
+        dropdown.innerHTML = '<option value="">Select a Week</option>';
+        
+        if (weeks && Array.isArray(weeks)) {
+            weeks.forEach(week => {
+                if (week.rec_status === '1') {
+                    dropdown.add(new Option(`${week.weekdate} (ID: ${week.weekID})`, week.weekID));
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error loading weeks:', error);
+        dropdown.innerHTML = '<option value="">Error loading weeks</option>';
+    }
+}
+
+// Update your document ready function to include this call
+document.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+    populateTrayWeekDropdown();
+    // ...existing code...
+});
+
+// Add form submit handler
+document.getElementById('trayWeekForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    getTrayStatusData();
+});
