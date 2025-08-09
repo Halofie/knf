@@ -18,7 +18,7 @@ try {
         $UoM_id = $data['UoM_id'];
         $price = isset($data['price']) ? floatval($data['price']) : 0.0;
         $minQuantity = isset($data['minQuantity']) ? floatval($data['minQuantity']) : 0;
-        $step = isset($data['step']) ? floatval($data['step']) : 0.01;
+        $step = isset($data['step']) ? floatval($data['step']) : 0.1;
         $durability = isset($data['durability']) ? intval($data['durability']) : 3;
 
         // Prepare and bind
