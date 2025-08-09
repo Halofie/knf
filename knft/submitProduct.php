@@ -19,10 +19,11 @@ try {
         $price = isset($data['price']) ? floatval($data['price']) : 0.0;
         $minQuantity = isset($data['minQuantity']) ? floatval($data['minQuantity']) : 0;
         $step = isset($data['step']) ? floatval($data['step']) : 0.01;
+        $durability = isset($data['durability']) ? intval($data['durability']) : 3;
 
         // Prepare and bind
-        $stmt = $conn->prepare("INSERT INTO product (category_id, product, UoM_id, price, minQuantity, step) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssddd", $category_id, $product, $UoM_id, $price, $minQuantity, $step);
+        $stmt = $conn->prepare("INSERT INTO product (category_id, product, UoM_id, price, minQuantity, step, durability) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssddds", $category_id, $product, $UoM_id, $price, $minQuantity, $step, $durability);
 
         // Execute the query
         if ($stmt->execute()) {

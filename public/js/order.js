@@ -341,33 +341,102 @@ function renderMenu() {
         const productObj = prodMap[productId] || {};
         const productName = productObj.product || productObj.product_name || "Unknown";
         const productPrice = product.price;
-        const minQuantity = productObj.minQuantity || 0; // Get minimum quantity
-        const step = productObj.step || 0.01; // Get step value
+        const minQuantity = productObj.minQuantity || 0;
+        const step = productObj.step || 0.01;
         const availableQuantity = product.quantity;
         const purchasedQuantity = purchasedItems[productId]?.quantity || 0;
-        const uom = productObj.unit_id || ""; // Get UOM
-
-        // If UOM is "nos", restrict input to integers only
-        const inputStep = (uom.toLowerCase() === "nos") ? 'step="1"' : 'step="any"';
-        const inputPattern = (uom.toLowerCase() === "nos") ? 'pattern="\\d*"' : '';
-        const inputOnInput = (uom.toLowerCase() === "nos") ? 'oninput="this.value = this.value.replace(/[^\\d]/g, \'\');"' : '';
+        const uom = productObj.unit_id || "";
 
         tbody.innerHTML += `
             <tr>
                 <th scope="row">${productName}</th>
                 <td>
                     <p class="price" id="p${productId}">Rs.${productPrice}/unit</p>
-                    <p>Available: <b id="ava${productId}">${(availableQuantity < 0) ? 0 : availableQuantity }</b></p>
+                    <p>Available: <b id="ava${productId}">${(availableQuantity < 0) ? 0 : availableQuantity}</b></p>
                 </td>
                 <td>
-                    <input type="number" id="q${productId}" step="${step}" min="${minQuantity}" value="${purchasedQuantity}" max="${availableQuantity}" ${inputStep} ${inputPattern} ${inputOnInput}>
+                    <div class="input-group quantity-control">
+                        <button class="btn btn-outline-secondary decrease-qty" 
+                                type="button" 
+                                data-id="${productId}" 
+                                data-step="${step? step : 0.1}" 
+                                data-uom="${uom}">−</button>
+                        <input type="number" 
+                               id="q${productId}" 
+                               class="form-control text-center p-0" 
+                               value="${purchasedQuantity}"
+                               min="${minQuantity}" 
+                               max="${availableQuantity}" 
+                               step="${step? step : 0.1}"
+                               readonly>
+                        <button class="btn btn-outline-secondary increase-qty" 
+                                type="button" 
+                                data-id="${productId}" 
+                                data-step="${step}"
+                                data-uom="${step? step : 0.1}">+</button>
+                    </div>
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-sm addToCartButton" id="${productId}" ${(availableQuantity <= 0) ? "disabled" : ""}>Add to Cart</button>
+                    <button class="btn btn-primary btn-sm addToCartButton" 
+                            id="${productId}" 
+                            ${(availableQuantity <= 0) ? "disabled" : ""}>
+                        Add to Cart
+                    </button>
                 </td>
             </tr>`;
     });
+
+    // Add this CSS to style the quantity controls
+    const style = document.createElement('style');
+    style.textContent = `
+        .quantity-control {
+            width: 150px;
+        }
+        .quantity-control input {
+            text-align: center;
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+        .quantity-control button {
+            width: 40px;
+            padding: 0.375rem;
+        }
+    `;
+    document.head.appendChild(style);
+
+    attachQuantityControlListeners();
     attachAddToCartEventListeners();
+}
+
+function attachQuantityControlListeners() {
+    document.querySelectorAll('.decrease-qty, .increase-qty').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const productId = e.currentTarget.getAttribute('data-id');
+            const step = parseFloat(e.currentTarget.getAttribute('data-step'));
+            const uom = e.currentTarget.getAttribute('data-uom').toLowerCase();
+            const input = document.querySelector(`#q${productId}`);
+            const availableQuantity = parseFloat(document.querySelector(`#ava${productId}`).innerText);
+            
+            let currentValue = parseFloat(input.value) || 0;
+            let delta = e.currentTarget.classList.contains('increase-qty') ? step : -step;
+
+            let newValue = currentValue + delta;
+
+            // Validate bounds
+            newValue = Math.max(parseFloat(input.min), Math.min(newValue, availableQuantity));
+            
+            // For 'nos' UoM, round to nearest integer
+            if (uom === 'nos') {
+                newValue = Math.floor(newValue);
+            } else {
+                // Round to avoid floating point precision issues
+                newValue = Math.round(newValue * 100) / 100;
+            }
+
+            input.value = newValue;
+        });
+    });
 }
 
 function renderCart() {

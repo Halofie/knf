@@ -503,6 +503,7 @@ function displayProductTable(products) {
                 <td>${prod.UoM_id || ''}</td>
                 <td>${prod.minQuantity || ''}</td>
                 <td>${prod.step || ''}</td>
+                <td>${prod.durability || ''}</td>
                 <td>${price}</td>
                 <td>
                     <button class="btn btn-sm btn-warning edit-product-btn" id="${prod.prod_id}" data-id="${prod.prod_id}" data-name="${prod.product||''}" data-categoryid="${prod.category_id||''}" data-uomid="${prod.UoM_id||''}" data-price="${prod.price||''}"><img src="../public/Assets/edit.png" class="icon-sm"></button>
@@ -521,7 +522,8 @@ function handleAddProduct(e) {
          UoM_id: document.querySelector("#itmUoM").value,
          price: parseFloat(document.querySelector("#itmRate").value),
          minQuantity: parseFloat(document.querySelector("#itmMinQuantity").value),
-         step: parseFloat(document.querySelector("#itmStep").value)
+         step: parseFloat(document.querySelector("#itmStep").value),
+         durability: parseFloat(document.querySelector("#itmDurability").value)
      };
      console.log(payload.price);
      displayMessage('#result-product', 'Adding...', true);
@@ -549,10 +551,13 @@ function handleEditProduct(e) {
      const newName = prompt("Edit Product Name:", currentName);
      const newUomId = prompt("Edit UoM ID:", currentUomId);
      const newPrice = prompt("Edit Price:", currentPrice);
+     const newMinQuantity = prompt("Edit Minimum Quantity:", "0");
+     const newStep = prompt("Edit Step Size:", "0.1");
+     const newDurability = prompt("Edit Durability:", "3");
 
     if (newCatId !== null && newName !== null && newUomId !== null && newPrice !== null) {
          if (!newCatId.trim() || !newName.trim() || !newUomId.trim() || !newPrice.trim() || isNaN(parseFloat(newPrice))) { /*...*/ return; }
-        const payload = { prod_id: prodId, category_id: newCatId.trim(), product: newName.trim(), UoM_id: newUomId.trim(), price: parseFloat(newPrice) };
+        const payload = { prod_id: prodId, category_id: newCatId.trim(), product: newName.trim(), UoM_id: newUomId.trim(), price: parseFloat(newPrice), minQuantity: parseFloat(newMinQuantity), step: parseFloat(newStep), durability: parseInt(newDurability) };
         displayMessage('#result-product', 'Saving...', true);
         fetch('../knft/editProducts.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
             .then(response => { if (!response.ok) throw response; return response.json(); })

@@ -278,6 +278,9 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                         <label for="itmStep" class="form-label">Step:</label>
                         <input type="number" step="0.01" class="form-control itmStep" name="itmStep" id="itmStep">
 
+                        <label for="itmDurability" class="form-label">Durability :</label>
+                        <input type="number" class="form-control itmDurability" name="itmDurability" id="itmDurability" >
+
                     <div class="text-center mt-3">
                         <button type="button" class="ADDPRODUCT btn btn-success">Add Product</button>
                     </div>
@@ -297,6 +300,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                         <th scope="col">UoM ID</th>
                         <th scope="col">Minimum Quantity</th>
                         <th scope="col">Step size</th>
+                        <th scope="col">Durability</th>
                         <th scope="col">Rate/UoM</th>
                         <th scope="col" style="width: 200px;">Action</th>
                       </tr>
