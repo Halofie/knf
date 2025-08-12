@@ -1441,3 +1441,58 @@ document.getElementById('adminNotesOffcanvas')?.addEventListener('show.bs.offcan
     }
     if (loadingMsg) loadingMsg.style.display = 'none';
 });
+
+// Load dashboard statistics
+async function loadDashboardStats() {
+    try {
+        const response = await fetch('../knft/getDashboardStats.php');
+        const stats = await response.json();
+        
+        if (stats.error) {
+            console.error('Error loading stats:', stats.error);
+            return;
+        }
+
+        // Update dashboard cards with real data
+        document.getElementById('total-customers').textContent = stats.customers || '0';
+        document.getElementById('total-farmers').textContent = stats.farmers || '0';
+        document.getElementById('total-products').textContent = stats.products || '0';
+        document.getElementById('total-orders').textContent = stats.orders || '0';
+
+        // Add animation effect
+        animateCounters();
+        
+    } catch (error) {
+        console.error('Failed to load dashboard stats:', error);
+    }
+}
+
+// Animate the counters
+function animateCounters() {
+    const counters = ['total-customers', 'total-farmers', 'total-products', 'total-orders'];
+    
+    counters.forEach(id => {
+        const element = document.getElementById(id);
+        const target = parseInt(element.textContent);
+        let current = 0;
+        const increment = target / 20; // Animate over 20 steps
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                element.textContent = target;
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.ceil(current);
+            }
+        }, 50);
+    });
+}
+
+// Load stats when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardStats();
+    
+    // Refresh stats every 30 seconds
+    setInterval(loadDashboardStats, 30000);
+});
