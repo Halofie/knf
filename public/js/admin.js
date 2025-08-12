@@ -1397,3 +1397,47 @@ document.getElementById('trayWeekForm')?.addEventListener('submit', function(e) 
     e.preventDefault();
     getTrayStatusData();
 });
+
+document.getElementById('adminNotesOffcanvas')?.addEventListener('show.bs.offcanvas', async function () {
+    const notesList = document.getElementById('admin-notes-list');
+    const loadingMsg = document.getElementById('notes-loading-msg');
+    notesList.innerHTML = '';
+    if (loadingMsg) loadingMsg.style.display = 'block';
+
+    try {
+        // Fetch latest weekId
+        const weekRes = await fetch('../knft/getLastWeek.php', { method: 'POST' });
+        const weekData = await weekRes.json();
+        const weekId = weekData?.[0]?.weekID || null;
+
+        // Fetch notes for that week
+        const notesRes = await fetch('../knft/getNotes.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ weekId })
+        });
+        const notes = await notesRes.json();
+
+        notesList.innerHTML = '';
+        if (notes && Array.isArray(notes) && notes.length > 0) {
+            notes.forEach(note => {
+                notesList.innerHTML += `
+                    <div class="list-group-item py-3">
+                        <div class="fw-bold text-success mb-1"><i class="fas fa-user me-1"></i>${note.customerName || 'Unknown'}</div>
+                        <div class="small text-muted mb-1">
+                            <i class="fas fa-map-marker-alt me-1"></i>${note.route || 'N/A'}
+                            <span class="ms-2"><i class="fas fa-calendar-alt me-1"></i>${note.weekdate || ''}</span>
+                            <span class="ms-2"><i class="fas fa-hashtag me-1"></i>Order ID: ${note.orderId || ''}</span>
+                        </div>
+                        <div class="mt-2">${note.note ? note.note.replace(/\n/g, '<br>') : '<em>No note</em>'}</div>
+                    </div>
+                `;
+            });
+        } else {
+            notesList.innerHTML = `<div class="text-center p-4 text-muted"><i class="fas fa-inbox fa-2x mb-2"></i><br>No notes for this week.</div>`;
+        }
+    } catch (err) {
+        notesList.innerHTML = `<div class="text-center p-4 text-danger">Failed to load notes.</div>`;
+    }
+    if (loadingMsg) loadingMsg.style.display = 'none';
+});

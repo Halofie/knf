@@ -111,8 +111,6 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
             <h2 class="mt-4">User Lock message</h2>
             <p class="mt-4  p-4 shadow rounded b-2 text-md-start text-center fw-bold">Current Lock message: <span id="lock-message"><?php echo $_SESSION['cust_msg'] ?> </span> </p>
         </div>
-
-        
     </div>
 
     <!-- page 1 uom-->
@@ -800,28 +798,28 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
             <a class="btn btn-dark" href="#">Back</a>
         </div>
         <div class="row justify-content-center mb-4">
-    <div class="col-lg-7 col-md-9">
-        <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #e9f7ef 0%, #d4edda 100%);">
-            <div class="card-body p-4">
-                <form id="trayWeekForm" class="row g-3 align-items-end">
-                    <div class="col-md">
-                        <label for="trayWeekDropdown" class="form-label fw-bold text-success mb-1">
-                            <i class="fas fa-calendar-alt me-2"></i>Select Week:
-                        </label>
-                        <select class="form-select form-select-lg shadow-sm" id="trayWeekDropdown" style="border: 2px solid #28a745; border-radius: 12px;">
-                            <option value="" selected>Loading weeks...</option>
-                        </select>
+            <div class="col-lg-7 col-md-9">
+                <div class="card shadow-sm border-0" style="background: linear-gradient(135deg, #e9f7ef 0%, #d4edda 100%);">
+                    <div class="card-body p-4">
+                        <form id="trayWeekForm" class="row g-3 align-items-end">
+                            <div class="col-md">
+                                <label for="trayWeekDropdown" class="form-label fw-bold text-success mb-1">
+                                    <i class="fas fa-calendar-alt me-2"></i>Select Week:
+                                </label>
+                                <select class="form-select form-select-lg shadow-sm" id="trayWeekDropdown" style="border: 2px solid #28a745; border-radius: 12px;">
+                                    <option value="" selected>Loading weeks...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-auto">
+                                <button type="submit" class="btn btn-lg btn-success shadow-sm w-100" style="border-radius: 12px;">
+                                    <i class="fas fa-search me-2"></i>Show Tray Status
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="col-md-auto">
-                        <button type="submit" class="btn btn-lg btn-success shadow-sm w-100" style="border-radius: 12px;">
-                            <i class="fas fa-search me-2"></i>Show Tray Status
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
         <div class="trayStatusHolder m-3 p-2 White w-auto h-auto">
             <h5 class="text-center mb-3">Tray Status</h5>
             <div class="table-responsive">
@@ -838,6 +836,26 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     </thead>
                     <tbody class="tray-status-body"></tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <!-- Floating Notes Button -->
+    <button class="btn btn-success shadow-lg notes-float-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminNotesOffcanvas" aria-controls="adminNotesOffcanvas" title="View Customer Notes">
+        <i class="fas fa-sticky-note fa-lg"></i>
+        <span class="d-none d-md-inline ms-2">Notes</span>
+    </button>
+
+    <!-- Offcanvas for Customer Notes -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="adminNotesOffcanvas" aria-labelledby="adminNotesOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="adminNotesOffcanvasLabel"><i class="fas fa-sticky-note me-2"></i>Customer Notes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div id="admin-notes-list" class="list-group list-group-flush">
+                <div class="text-center p-4 text-muted" id="notes-loading-msg">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i><br>Loading notes...
+                </div>
             </div>
         </div>
     </div>
