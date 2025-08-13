@@ -200,6 +200,7 @@ let globalProductMasterData = null;
 let tempInv = {};
 const itemsContainer = document.querySelector('.items');
 let canShowFarmerChecklist = false;
+let currentActiveSection = 'dashboard';
 
 async function fetchFarmerNotifyStatus() {
     try {
@@ -407,7 +408,6 @@ async function initialize() {
         window.location.href = '../login/login.html';
         return;
     }
-    console.log("User's session email:", email);
     
     const supplierData = await fetchSupplierDetails(email);
     if (!supplierData || !supplierData.details || (supplierData.status && supplierData.status !== 'success')) {
@@ -423,6 +423,11 @@ async function initialize() {
     document.querySelector("#name").innerText = fName || "Farmer Name";
     document.querySelector("#phone").innerText = fPhone || "Contact";
     document.querySelector("#address").innerText = fAddress || "Location";
+
+    const sidebarName = document.getElementById('farmer-name-sidebar');
+    if (sidebarName) {
+        sidebarName.textContent = fName || "Farmer Dashboard";
+    }
     
     const lastWeekData = await fetchLastWeek();
     globalCurrentWeekId = lastWeekData;
@@ -438,12 +443,14 @@ async function initialize() {
     globalProductMasterData  = await fetchProducts();
     if (globalProductMasterData && globalProductMasterData.data) {
         const productSelect  = document.querySelector(".itmProduct");
-        productSelect .innerHTML = '<option value="">Select Product</option>';
-        globalProductMasterData.data.forEach(p => {
-            if(p.rec_status==1){
-                productSelect.innerHTML += `<option value="${p.prod_id}">${p.product}</option>`;
-            }
-        });
+        if (productSelect) {
+            productSelect.innerHTML = '<option value="">Select Product</option>';
+            globalProductMasterData.data.forEach(p => {
+                if(p.rec_status == 1){
+                    productSelect.innerHTML += `<option value="${p.prod_id}">${p.product}</option>`;
+                }
+            });
+        }
     } else {
         document.querySelector(".itmProduct").innerHTML = '<option value="">Error loading products</option>';
     }
@@ -452,6 +459,11 @@ async function initialize() {
     if (canShowFarmerChecklist && document.getElementById('farmerFulfillmentReportSection')) {
         await loadFarmerChecklistWeekDropdown(); // Populate its week dropdown
     }
+    // Initialize section navigation
+    initializeSectionNavigation();
+    
+    // Load initial dashboard stats
+    updateDashboardStats();
     
     setupEventListeners(globalFarmerId, globalCurrentWeekId, globalProductMasterData);
     console.log("Initialization complete.");
@@ -736,6 +748,247 @@ function initializeClock() {
     updateClock();  
     setInterval(updateClock, 1000);
 }
+
+function initializeSectionNavigation() {
+    // Handle sidebar navigation
+    const sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+    const sections = document.querySelectorAll('.content-section');
+    
+    // Show dashboard by default
+    showSection('dashboard');
+    
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetSection = this.getAttribute('href').substring(1);
+            showSection(targetSection);
+            
+            // Update active state
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Close offcanvas on mobile
+            const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasExample'));
+            if (offcanvas) {
+                offcanvas.hide();
+            }
+        });
+    });
+    
+    // Handle quick action buttons
+    const quickActionButtons = document.querySelectorAll('.quick-action-btn');
+    quickActionButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetSection = this.getAttribute('href').substring(1);
+            showSection(targetSection);
+            
+            // Update sidebar active state
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            const correspondingLink = document.querySelector(`.sidebar a[href="#${targetSection}"]`);
+            if (correspondingLink) {
+                correspondingLink.classList.add('active');
+            }
+        });
+    });
+}
+
+function showSection(sectionId) {
+    // For the unified dashboard, we don't actually hide sections
+    // We just update the active navigation state
+    
+    // Update sidebar active state
+    const sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+    sidebarLinks.forEach(l => l.classList.remove('active'));
+    
+    const activeLink = document.querySelector(`.sidebar a[href="#${sectionId}"]`);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+    
+    // Always show dashboard (since everything is integrated there)
+    const dashboard = document.getElementById('dashboard');
+    if (dashboard) {
+        dashboard.style.display = 'block';
+    }
+    
+    // Hide other placeholder sections
+    const otherSections = ['add-inventory', 'current-inventory', 'inventory-history', 'fulfillment-checklist'];
+    otherSections.forEach(id => {
+        const section = document.getElementById(id);
+        if (section && id !== 'dashboard') {
+            section.style.display = 'none';
+        }
+    });
+    
+    currentActiveSection = sectionId;
+}
+
+async function updateDashboardStats() {
+    if (!globalFarmerId || !globalCurrentWeekId) {
+        console.warn('Cannot load dashboard stats: Missing farmer ID or week ID');
+        return;
+    }
+
+    try {
+        // Get current inventory count and value
+        const inventoryStats = await getCurrentInventoryStats();
+        
+        // Update dashboard cards
+        document.getElementById('total-products-count').textContent = inventoryStats.productCount || '0';
+        document.getElementById('inventory-value').textContent = `₹${inventoryStats.totalValue || '0.00'}`;
+        
+        // Get pending orders (you can create this API or set to 0 for now)
+        const pendingOrders = await getPendingOrdersCount();
+        document.getElementById('pending-orders-count').textContent = pendingOrders || '0';
+        
+        // Add animation effect
+        animateCounters();
+        
+    } catch (error) {
+        console.error('Error loading dashboard stats:', error);
+        // Set default values on error
+        document.getElementById('total-products-count').textContent = '0';
+        document.getElementById('inventory-value').textContent = '₹0.00';
+        document.getElementById('pending-orders-count').textContent = '0';
+    }
+}
+
+// Update your getCurrentInventoryStats function in addinv.js
+async function getCurrentInventoryStats() {
+    try {
+        const response = await fetch('../knft/getFarmerStats.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                farmer_id: globalFarmerId, 
+                week_id: globalCurrentWeekId 
+            })
+        });
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        // Get the raw text first to debug
+        const rawText = await response.text();
+        console.log('Raw API Response:', rawText);
+        
+        // Try to parse as JSON
+        const jsonData = JSON.parse(rawText);
+        return jsonData;
+        
+    } catch (error) {
+        console.error('Error fetching inventory stats:', error);
+        return { productCount: 0, totalValue: '0.00' };
+    }
+}
+
+// Update your getPendingOrdersCount function similarly
+async function getPendingOrdersCount() {
+    try {
+        const response = await fetch('../knft/getFarmerPendingOrders.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                farmer_id: globalFarmerId, 
+                week_id: globalCurrentWeekId 
+            })
+        });
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        // Get the raw text first to debug
+        const rawText = await response.text();
+        console.log('Raw Pending Orders Response:', rawText);
+        
+        // Try to parse as JSON
+        const jsonData = JSON.parse(rawText);
+        return jsonData.pendingCount || 0;
+        
+    } catch (error) {
+        console.error('Error fetching pending orders:', error);
+        return 0;
+    }
+}
+
+// Animate the counters
+function animateCounters() {
+    const counters = ['total-products-count', 'pending-orders-count'];
+    
+    counters.forEach(id => {
+        const element = document.getElementById(id);
+        if (!element) return;
+        
+        const target = parseInt(element.textContent) || 0;
+        let current = 0;
+        const increment = Math.max(1, target / 20);
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                element.textContent = target;
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.ceil(current);
+            }
+        }, 50);
+    });
+}
+
+function updateTempItemsDisplay() {
+    const container = document.getElementById('temp-items-container');
+    const card = document.getElementById('temp-items-card');
+    const count = document.getElementById('temp-items-count');
+    
+    // Fallback to your existing .items container if new structure doesn't exist
+    const fallbackContainer = document.querySelector('.items');
+    
+    if (!container && !fallbackContainer) return;
+    
+    const activeContainer = container || fallbackContainer;
+    const itemCount = Object.keys(tempInv || {}).length;
+    
+    if (card && itemCount === 0) {
+        card.style.display = 'none';
+        return;
+    }
+    
+    if (card) {
+        card.style.display = 'block';
+        if (count) count.textContent = itemCount;
+    }
+    
+    activeContainer.innerHTML = '';
+    
+    Object.values(tempInv).forEach(item => {
+        const total = (parseFloat(item.price) * parseFloat(item.quantity)).toFixed(2);
+        
+        const itemHtml = `
+            <div class="temp-item border py-2 px-3 m-2 bg-light rounded shadow-sm" id="temp-${item.p_id}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">${item.p_name} <small class="text-muted">(#${item.p_id})</small></h6>
+                        <div class="item-details small">
+                            <span class="me-3"><i class="fas fa-weight me-1"></i>Qty: <strong class="temp-qty">${item.quantity}</strong> ${item.uom_id}</span>
+                            <span class="me-3"><i class="fas fa-rupee-sign me-1"></i>Rate: ₹${item.price}/unit</span>
+                            <span><i class="fas fa-calculator me-1"></i>Total: ₹<strong class="temp-total">${total}</strong></span>
+                        </div>
+                    </div>
+                    <div class="item-actions d-flex gap-1">
+                        <button type="button" class="btn btn-sm btn-outline-primary edit-temp-item" data-id="${item.p_id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger delete-temp-item" data-id="${item.p_id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        activeContainer.insertAdjacentHTML('beforeend', itemHtml);
+    });
+}
+
 
 // Call the clock initialization function when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
