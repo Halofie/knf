@@ -73,7 +73,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     </div>
       
     <!-- the top bar -->
-    <div class="container-fluid">
+    <div class="container-fluid top-navbar p-0">
         <div class="row align-items-center darkGreen">
             <div class="col-auto">
                 <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -356,7 +356,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- page 1 uom-->
     <div class="page" id="one">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -424,7 +424,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- page 2 category page-->
     <div class="page" id="two">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -492,7 +492,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- page 3 product-->
     <div class="page" id="three">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -588,7 +588,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- page 4 route-->
     <div class="page" id="four">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -669,7 +669,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- page 5 customer form-->
     <div class="page" id="five">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -758,7 +758,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- page 6 supplier form-->
     <div class="page" id="six">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -845,7 +845,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- PAGE 7 WEEK MASTER -->
     <div class="page" id="seven">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -910,7 +910,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- PAGE 8 Order fullfill -->
     <div class="page" id="eight">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -1001,7 +1001,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- PAGE 9 farmer rank -->
     <div class="page" id="nine">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -1055,7 +1055,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- PAGE TEN: FARMER ORDER ALLOCATION & NOTIFICATION -->
     <div class="page" id="ten">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
@@ -1116,7 +1116,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
 
     <!-- Page 11: tray management -->
     <div class="page" id="eleven">
-        <div class="container-fluid top-navbar">
+        <div class="container-fluid top-navbar p-0">
             <div class="row align-items-center darkGreen">
                 <div class="col-auto">
                     <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
