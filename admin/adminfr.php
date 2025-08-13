@@ -73,7 +73,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     </div>
       
     <!-- the top bar -->
-    <div class="container-fluid top-navbar">
+    <div class="container-fluid">
         <div class="row align-items-center darkGreen">
             <div class="col-auto">
                 <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">

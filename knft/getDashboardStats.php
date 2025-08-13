@@ -23,8 +23,8 @@ try {
     $result = $conn->query("SELECT COUNT(*) as total FROM product");
     $stats['products'] = $result->fetch_assoc()['total'];
 
-    // Get total orders (from custorder table)
-    $result = $conn->query("SELECT COUNT(*) as total FROM custorder");
+    // Get total orders (from orders table)
+    $result = $conn->query("SELECT COUNT(*) as total FROM orders");
     $stats['orders'] = $result->fetch_assoc()['total'];
 
     // Get current week info
@@ -33,7 +33,7 @@ try {
     $stats['current_week'] = $row ? $row['weekdate'] : 'N/A';
 
     // Get recent orders count (last 7 days)
-    $result = $conn->query("SELECT COUNT(*) as total FROM custorder WHERE weekId = (SELECT weekID FROM week ORDER BY weekID DESC LIMIT 1)");
+    $result = $conn->query("SELECT COUNT(*) as total FROM orders WHERE weekId = (SELECT weekID FROM week ORDER BY weekID DESC LIMIT 1)");
     $stats['recent_orders'] = $result ? $result->fetch_assoc()['total'] : 0;
 
     echo json_encode($stats);
