@@ -1,21 +1,66 @@
 /* Use Nunito font everywhere */
-body, .navbar, .card, .footer, .section-title, .btn, .form-control, .form-select {
-    font-family: 'Nunito', Arial, sans-serif;
-}
-
-/* Background and section padding */
-body.paleGreen {
+body {
+    font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #d9e7d9;
     min-height: 100vh;
-    padding-bottom: 0;
-    margin: 0 !important;
-    padding: 0 !important;
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
-.container, .container-fluid {
-    /* padding-top: 2rem; */
-    padding-bottom: 2rem;
+.sidebar {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    box-shadow: 2px 0 15px rgba(46,125,50,0.1);
+    border-right: 2px solid rgba(76,175,80,0.1);
+    will-change: transform;
 }
+
+.profile {
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    margin: 1rem auto;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    will-change: transform;
+}
+
+.profile:hover {
+    transform: scale(1.05);
+}
+
+.sidebar a {
+    display: block;
+    color: #333;
+    padding: 16px 20px;
+    text-decoration: none;
+    position: relative;
+    font-weight: 600;
+    border-radius: 8px;
+    margin: 4px 8px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    will-change: transform;
+}
+
+.sidebar a.active {
+    background-color: #4caf50;
+    color: white;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.sidebar a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+    transform: translateX(5px);
+}
+
 
 /* Navbar styling to match consumer theme */
 .navbar {

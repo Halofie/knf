@@ -12,6 +12,114 @@ let prodlist = [];
 let purchasedItems = {};
 let prodMap = {};
 
+function debugElements() {
+    console.log('=== DEBUG: Checking for required elements ===');
+    console.log('Purchase history body:', document.querySelector('.purchase-history-body'));
+    console.log('No orders message:', document.getElementById('no-orders-message'));
+    console.log('Order history result:', document.getElementById('order-history-result'));
+    console.log('Order history dropdown:', document.getElementById('orderHistoryWeekDropdown'));
+    console.log('Fulfillment table body:', document.querySelector('.fulfillment-table-body'));
+    console.log('=== END DEBUG ===');
+}
+
+// =====================================
+// SECTION NAVIGATION - NEW ADDITION
+// =====================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSectionNavigation();
+    const hash = window.location.hash;
+    if (hash && hash.length > 1) {
+        const sectionId = hash.substring(1);
+        console.log('URL hash detected:', sectionId);
+        setTimeout(() => {
+            showSection(sectionId);
+        }, 1000); // Wait for main data to load
+    } else {
+        // Show order page by default
+        showSection('order-page');
+    }
+});
+
+function initializeSectionNavigation() {
+    const sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+    
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetSection = this.getAttribute('href').substring(1);
+            
+            console.log('Sidebar link clicked:', targetSection);
+            
+            // Show target section
+            showSection(targetSection);
+            
+            // Update active state
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Close offcanvas on mobile
+            const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasExample'));
+            if (offcanvas) {
+                offcanvas.hide();
+            }
+        });
+    });
+    const orderPageLink = document.querySelector('.sidebar a[href="#order-page"]');
+    if (orderPageLink) {
+        orderPageLink.classList.add('active');
+    }
+}
+
+function showSection(sectionId) {
+    // Hide all sections
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(section => {
+        section.style.display = 'none';
+        section.classList.remove('active');
+    });
+    
+    // Show target section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+        targetSection.classList.add('active');
+        
+        // Load section-specific data
+        loadSectionData(sectionId);
+    }
+    console.log(`Switched to section: ${sectionId}`);
+}
+
+function loadSectionData(sectionId) {
+    switch(sectionId) {
+        case 'order-page':
+            console.log('Loading order page...');
+            break;
+        case 'order-history':
+            console.log('Loading order history section...');
+            debugElements(); // Add this line
+            if (globalCustomerId && globalCustomerId !== 0) {
+                loadOrderHistoryWeekDropdown();
+                setTimeout(() => {
+                    fetchAndDisplayConsumerOrders(globalCustomerId, 'all');
+                }, 500);
+            } else {
+                console.warn('Customer ID not available for order history');
+            }
+            break;
+        case 'invoice':
+            console.log('Loading invoice section...');
+            debugElements(); // Add this line
+            if (globalCustomerId && globalCustomerId !== 0) {
+                initializeFulfillmentSection();
+            } else {
+                console.warn('Customer ID not available for invoice');
+            }
+            break;
+    }
+}
+
 async function fetchUserLock() {
     try {
         const response = await fetch('../knft/getUserLock.php', {
@@ -93,10 +201,24 @@ async function main_load(email) {
             cRoute = details.routeID;
 
             // Populate FIRST header (original)
-            document.querySelector("#name").innerText = details.customerName || "N/A";
-            document.querySelector("#phone").innerText = details.contact || "N/A";
-            document.querySelector("#address").innerText = details.address || "N/A";
-            document.querySelector("#route").innerText = (details.routeID && details.routeName) ? `${details.routeID} - ${details.routeName}` : "N/A";
+            const nameEl = document.querySelector("#name");
+            const phoneEl = document.querySelector("#phone");
+            const addressEl = document.querySelector("#address");
+            const routeEl = document.querySelector("#route");
+            
+            if (nameEl) nameEl.innerText = details.customerName || "N/A";
+            if (phoneEl) phoneEl.innerText = `Phone: ${details.contact || "N/A"}`;
+            if (addressEl) addressEl.innerText = `Address: ${details.address || "N/A"}`;
+            if (routeEl) routeEl.innerText = (details.routeID && details.routeName) ? `Route: ${details.routeID} - ${details.routeName}` : "Route: N/A";
+
+            // Update sidebar name
+            const sidebarNameEl = document.getElementById('customer-name-sidebar');
+            if (sidebarNameEl) sidebarNameEl.innerText = details.customerName || "Customer Portal";
+
+            // document.querySelector("#name").innerText = details.customerName || "N/A";
+            // document.querySelector("#phone").innerText = details.contact || "N/A";
+            // document.querySelector("#address").innerText = details.address || "N/A";
+            // document.querySelector("#route").innerText = (details.routeID && details.routeName) ? `${details.routeID} - ${details.routeName}` : "N/A";
 
             // Populate SECOND header (for history page)
             const historyNameEl = document.querySelector("#history_name");
@@ -111,38 +233,44 @@ async function main_load(email) {
 
             // Populate dropdown
             const routeDropdown = document.getElementById('deliveryRoute');
-            routeDropdown.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.text = 'Choose route...';
-            defaultOption.disabled = true;
-            defaultOption.selected = true;
-            routeDropdown.appendChild(defaultOption);
+            if (routeDropdown) {
+                routeDropdown.innerHTML = '';
+                const defaultOption = document.createElement('option');
+                defaultOption.text = 'Choose route...';
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                routeDropdown.appendChild(defaultOption);
 
-            routes.forEach(route => {
-                const option = document.createElement('option');
-                option.value = route.id;
-                option.text = `${route.id} - ${route.deliveryType} - ${route.route} - ₹${Number(route.rate).toFixed(2)}`;
-                if (route.id == cRoute) {
-                    option.selected = true;
-                    defaultOption.selected = false;
-                }
-                routeDropdown.appendChild(option);
-            });
+                routes.forEach(route => {
+                    const option = document.createElement('option');
+                    option.value = route.id;
+                    option.text = `${route.id} - ${route.deliveryType} - ${route.route} - ₹${Number(route.rate).toFixed(2)}`;
+                    if (route.id == cRoute) {
+                        option.selected = true;
+                        defaultOption.selected = false;
+                    }
+                    routeDropdown.appendChild(option);
+                });
 
-            routeDropdown.addEventListener('change', (e) => {
-                cRoute = e.target.value;
-            });
+                routeDropdown.addEventListener('change', (e) => {
+                    cRoute = e.target.value;
+                });
+            }
         }
         if (weekData && weekData[0] && weekData[0].weekID) {
             weekId = weekData[0].weekID;
-            document.querySelector("#week").innerText = weekData[0].weekdate || "N/A";
+            // document.querySelector("#week").innerText = weekData[0].weekdate || "N/A";
+            const weekEl = document.querySelector("#week");
+            if (weekEl) weekEl.innerText = `Week: ${weekData[0].weekdate || "N/A"}`;
             const historyWeekEl = document.querySelector("#history_week");
             if (historyWeekEl) historyWeekEl.innerText = weekData[0].weekdate || "N/A";
         } else {
             console.error("Current week data not found.");
-            document.querySelector("#week").innerText = "Week N/A";
+            // document.querySelector("#week").innerText = "Week N/A";
+            const weekEl = document.querySelector("#week");
+            if (weekEl) weekEl.innerText = "Week: N/A";
             const historyWeekEl = document.querySelector("#history_week");
-            if(historyWeekEl) historyWeekEl.innerText = "Week N/A";
+            if(historyWeekEl) historyWeekEl.innerText = "Week: N/A";
         }
         console.log('Fetched routes:', routes);
     } catch (error) {
@@ -239,7 +367,7 @@ async function fetchAndDisplayConsumerOrders(customerId, weekIdFilter) {
         return;
     }
 
-    tableBody.innerHTML = '<tr><td colspan="7" class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i> Loading history...</td></tr>'; // Colspan matches number of <th>
+    tableBody.innerHTML = '<tr><td colspan="5" class="text-center p-5"><i class="fas fa-spinner fa-spin fa-2x"></i> Loading history...</td></tr>'; // Colspan matches number of <th>
     noOrdersMessage.style.display = 'none';
     // displayOrderHistoryMessage('Loading your order history...', true); // Optional, can be repetitive
 
@@ -254,7 +382,7 @@ async function fetchAndDisplayConsumerOrders(customerId, weekIdFilter) {
     try {
         const payload = {
             customer_id: customerId,
-            week_id: weekIdFilter
+            week_id: weekIdFilter === 'all' ? 'all' : weekIdFilter
         };
 
         const response = await fetch('../knft/getConsumerpurchaseHistory.php', {
@@ -278,23 +406,30 @@ async function fetchAndDisplayConsumerOrders(customerId, weekIdFilter) {
         let items = [];
         if (Array.isArray(purchaseData)) {
             items = purchaseData;
-        } else if (purchaseData.items && Array.isArray(purchaseData.items)) { // If PHP wraps it
+        } else if (purchaseData.items && Array.isArray(purchaseData.items)) {
             items = purchaseData.items;
+        } else if (purchaseData.data && Array.isArray(purchaseData.data)) {
+            items = purchaseData.data;
         }
 
 
         if (items.length > 0) {
             populateConsumerHistoryTable('.purchase-history-body', items, payload.week_id);
-            if (purchaseData.message) { // Display message if PHP sent one (e.g. "No items for criteria but query ok")
-                 displayOrderHistoryMessage(purchaseData.message, true);
-            } else {
-                 displayOrderHistoryMessage('Purchase history loaded.', true);
-            }
+            displayOrderHistoryMessage(`Found ${items.length} order(s) for the selected period.`, true);
+            
+            // Update count badge
+            const countBadge = document.getElementById('history-order-count');
+            if (countBadge) countBadge.textContent = items.length;
+            
         } else {
             noOrdersMessage.innerHTML = `<i class="fas fa-shopping-bag fa-2x mb-3 d-block"></i>You have no past orders for the selected period.`;
             noOrdersMessage.style.display = 'block';
-            tableBody.innerHTML = ''; // Clear table body
+            tableBody.innerHTML = '';
             displayOrderHistoryMessage(purchaseData.message || 'No orders found for this period.', true);
+            
+            // Update count badge
+            const countBadge = document.getElementById('history-order-count');
+            if (countBadge) countBadge.textContent = '0';
         }
 
     } catch (error) {
@@ -321,19 +456,28 @@ async function fetchOrders(week_id, customer_id) {
         const data = JSON.parse(text); // Convert response to JSON
 
         if (data.error) {
-            document.getElementById('order-result').innerHTML = `<p class="text-danger">${data.error}</p>`;
+            // document.getElementById('order-result').innerHTML = `<p class="text-danger">${data.error}</p>`;
+            const orderResultEl = document.getElementById('order-result');
+            if (orderResultEl) orderResultEl.innerHTML = `<p class="text-danger">${data.error}</p>`;
             return;
         }
         console.log("Fetched existing orders (for prefill maybe?):", data);
         // renderOrders(data);
     } catch (error) {
         console.error('Error fetching orders:', error);
-        document.getElementById('order-result').innerHTML = `<p class="text-danger">Failed to fetch orders</p>`;
+        // document.getElementById('order-result').innerHTML = `<p class="text-danger">Failed to fetch orders</p>`;
+        const orderResultEl = document.getElementById('order-result');
+        if (orderResultEl) orderResultEl.innerHTML = `<p class="text-danger">Failed to fetch orders</p>`;
     }
 }
 
 function renderMenu() {
-    const tbody = document.querySelector('tbody');
+    const tbody = document.querySelector('#productsTable tbody');
+    if (!tbody) {
+        console.error('Products table body not found');
+        return;
+    }
+    
     tbody.innerHTML = '';
     
     prodData.forEach(product => {
@@ -349,61 +493,77 @@ function renderMenu() {
 
         tbody.innerHTML += `
             <tr>
-                <th scope="row">${productName}</th>
                 <td>
-                    <p class="price" id="p${productId}">Rs.${productPrice}/unit</p>
-                    <p>Available: <b id="ava${productId}">${(availableQuantity < 0) ? 0 : availableQuantity}</b></p>
-                </td>
-                <td>
-                    <div class="input-group quantity-control">
-                        <button class="btn btn-outline-secondary decrease-qty" 
-                                type="button" 
-                                data-id="${productId}" 
-                                data-step="${step? step : 0.1}" 
-                                data-uom="${uom}">−</button>
-                        <input type="number" 
-                               id="q${productId}" 
-                               class="form-control text-center p-0" 
-                               value="${purchasedQuantity}"
-                               min="${minQuantity}" 
-                               max="${availableQuantity}" 
-                               step="${step? step : 0.1}"
-                               readonly>
-                        <button class="btn btn-outline-secondary increase-qty" 
-                                type="button" 
-                                data-id="${productId}" 
-                                data-step="${step}"
-                                data-uom="${step? step : 0.1}">+</button>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-leaf text-success me-2"></i>
+                        <div>
+                            <strong>${productName}</strong>
+                            <small class="d-block text-muted">${productObj.category_id || ''}</small>
+                        </div>
                     </div>
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-sm addToCartButton" 
+                    <div>
+                        <span class="fw-bold text-success" id="p${productId}">₹${productPrice}/unit</span>
+                        <small class="d-block text-muted">Available: <b id="ava${productId}">${(availableQuantity < 0) ? 0 : availableQuantity}</b> ${uom}</small>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group quantity-control" style="width: 150px;">
+                        <button class="btn btn-outline-secondary decrease-qty" 
+                                type="button" 
+                                data-id="${productId}" 
+                                data-step="${step || 0.1}" 
+                                data-uom="${uom}">−</button>
+                        <input type="number" 
+                               id="q${productId}" 
+                               class="form-control text-center quantity-input" 
+                               value="${purchasedQuantity}"
+                               min="${minQuantity}" 
+                               max="${availableQuantity}" 
+                               step="${step || 0.1}"
+                               placeholder="0">
+                        <button class="btn btn-outline-secondary increase-qty" 
+                                type="button" 
+                                data-id="${productId}" 
+                                data-step="${step || 0.1}"
+                                data-uom="${uom}">+</button>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-success addToCartButton" 
                             id="${productId}" 
                             ${(availableQuantity <= 0) ? "disabled" : ""}>
-                        Add to Cart
+                        <i class="fas fa-cart-plus me-1"></i>Add to Cart
                     </button>
                 </td>
             </tr>`;
     });
 
     // Add this CSS to style the quantity controls
-    const style = document.createElement('style');
-    style.textContent = `
-        .quantity-control {
-            width: 150px;
-        }
-        .quantity-control input {
-            text-align: center;
-            border-radius: 0;
-            border-left: 0;
-            border-right: 0;
-        }
-        .quantity-control button {
-            width: 40px;
-            padding: 0.375rem;
-        }
-    `;
-    document.head.appendChild(style);
+    if (!document.getElementById('quantity-control-styles')) {
+        const style = document.createElement('style');
+        style.id = 'quantity-control-styles';
+        style.textContent = `
+            .quantity-control {
+                width: 150px;
+            }
+            .quantity-control input {
+                text-align: center;
+                border-radius: 0;
+                border-left: 0;
+                border-right: 0;
+            }
+            .quantity-control button {
+                width: 40px;
+                padding: 0.375rem;
+            }
+            .quantity-input {
+                max-width: 100px;
+            }
+        `;
+        document.head.appendChild(style);
+    }
 
     attachQuantityControlListeners();
     attachAddToCartEventListeners();
@@ -440,7 +600,73 @@ function attachQuantityControlListeners() {
 }
 
 function renderCart() {
-    const cartBody = document.querySelector('.cart-body');
+    const cartBody = document.querySelector('#cartTableBody');
+    const emptyMessage = document.getElementById('empty-cart-message');
+    const cartCount = document.getElementById('cart-item-count');
+    if (!cartBody) {
+        const fallbackBody = document.querySelector('.cart-body');
+        if (fallbackBody) {
+            renderCartFallback(fallbackBody);
+            return;
+        }
+    }
+    
+    if (!cartBody) return;
+
+    const itemCount = Object.keys(purchasedItems).length;
+    if (cartCount) cartCount.textContent = itemCount;
+    if (document.getElementById('itemCount')) document.getElementById('itemCount').innerText = itemCount;
+
+    if (itemCount === 0) {
+        if (emptyMessage) emptyMessage.style.display = 'block';
+        cartBody.innerHTML = '';
+        if (document.getElementById('totalCost')) document.getElementById('totalCost').innerText = "₹0.00";
+        return;
+    }
+
+    if (emptyMessage) emptyMessage.style.display = 'none';
+    cartBody.innerHTML = '';
+
+    let total = 0;
+
+    Object.entries(purchasedItems).forEach(([productId, item]) => {
+        const product = prodMap[productId] || { product: "Unknown", category: "Unknown" };
+        const itemTotal = (item.price * item.quantity).toFixed(2);
+        total += item.price * item.quantity;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${product.product || product.product_name || "Unknown"}</strong></td>
+            <td>${product.category_id || "N/A"}</td>
+            <td>₹${item.price.toFixed(2)}/${product.unit_id || ''}</td>
+            <td>
+                <div class="input-group" style="width: 120px;">
+                    <input type="number" 
+                           class="form-control form-control-sm" 
+                           value="${item.quantity}"
+                           min="1"
+                           step="0.1"
+                           onchange="updateCartQuantity(${productId}, this.value)">
+                    <span class="input-group-text">${product.unit_id || ''}</span>
+                </div>
+            </td>
+            <td><strong>₹${itemTotal}</strong></td>
+            <td>
+                <button class="btn btn-danger btn-sm deleteButton" data-id="${productId}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        cartBody.appendChild(row);
+    });
+
+    if (document.getElementById('totalCost')) {
+        document.getElementById('totalCost').innerText = `₹${total.toFixed(2)}`;
+    }
+    attachDeleteEventListeners();
+}
+
+function renderCartFallback(cartBody) {
     cartBody.innerHTML = '';
     document.getElementById('itemCount').innerText = Object.keys(purchasedItems).length;
     if (Object.keys(purchasedItems).length === 0) {
@@ -457,7 +683,7 @@ function renderCart() {
         row.innerHTML = `
             <td>${product.product || product.product_name || "Unknown"}</td>
             <td>${product.category_id || ""}</td>
-            <td>Rs.${item.price.toFixed(2)}</td>
+            <td>₹${item.price.toFixed(2)}</td>
             <td>${item.quantity}</td>
             <td>
                 <button class="btn btn-danger btn-sm deleteButton" data-id="${productId}">Delete</button>
@@ -471,37 +697,89 @@ function renderCart() {
     attachDeleteEventListeners();
 }
 
+function updateCartQuantity(productId, newQuantity) {
+    const quantity = parseFloat(newQuantity);
+    
+    if (quantity <= 0) {
+        deleteFromCart(productId);
+        return;
+    }
+    
+    const availableQuantity = parseFloat(document.querySelector(`#ava${productId}`)?.innerText || 0);
+    if (quantity > availableQuantity) {
+        showOrderMessage(`Only ${availableQuantity} units available`, 'warning');
+        renderCart(); // Reset to previous value
+        return;
+    }
+    
+    purchasedItems[productId].quantity = quantity;
+    renderCart();
+}
+
 function attachAddToCartEventListeners() {
     document.querySelectorAll('.addToCartButton').forEach(button => {
         button.addEventListener('click', (e) => {
             const productId = e.currentTarget.id;
             const quantityInput = document.querySelector(`#q${productId}`);
             let quantity = parseFloat(quantityInput.value, 10);
-            const price = parseFloat(document.querySelector(`#p${productId}`).textContent.replace('Rs.', '').split('/')[0]);
+            const priceText = document.querySelector(`#p${productId}`).textContent;
+            const price = parseFloat(priceText.replace('₹', '').replace('Rs.', '').split('/')[0]);
             const availableElem = document.querySelector(`#ava${productId}`);
             const availableQuantity = availableElem ? parseFloat(availableElem.innerText, 10) : 0;
             const uom = (prodMap[productId]?.unit_id || "").toLowerCase();
 
+            if (!quantity || quantity <= 0) {
+                showOrderMessage('Please enter a valid quantity', 'warning');
+                quantityInput.value = 0;
+                return;
+            }
+
             // If UOM is "nos", block decimals
             if (uom === "nos") {
                 if (!Number.isInteger(quantity)) {
-                    alert('For items with unit "nos", please enter a whole number.');
+                    showOrderMessage('For items with unit "nos", please enter a whole number.', 'warning');
                     quantityInput.value = Math.floor(quantity) || 0;
                     return;
                 }
             }
 
-            if (quantity > 0 && quantity <= availableQuantity) {
-                purchasedItems[productId] = { quantity, price };
-                renderCart();
-            } else {
-                alert('Quantity must be greater than 0 and less than or equal to available.');
+            if (quantity > availableQuantity) {
+                showOrderMessage(`Only ${availableQuantity} units available`, 'warning');
                 quantityInput.value = 0;
+                return;
             }
+
+            // Add to cart
+            if (purchasedItems[productId]) {
+                purchasedItems[productId].quantity += quantity;
+            } else {
+                purchasedItems[productId] = { quantity, price };
+            }
+            
+            // Clear input and update displays
+            quantityInput.value = '';
+            renderCart();
+            
+            const productName = prodMap[productId]?.product || 'Product';
+            showOrderMessage(`${productName} added to cart successfully!`, 'success');
         });
     });
 }
 
+// NEW: Show order message function
+function showOrderMessage(message, type) {
+    const orderResult = document.getElementById('order-result');
+    if (orderResult) {
+        orderResult.className = `alert alert-${type}`;
+        orderResult.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>${message}`;
+        orderResult.style.display = 'block';
+        
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            orderResult.style.display = 'none';
+        }, 3000);
+    }
+}
 
 async function sendPurchaseData(productId, quantity) {
     await fetch('../knft/removeQuantity.php', {
@@ -592,7 +870,6 @@ function populateConsumerHistoryTable(tableBodySelector, purchaseItems, weekId) 
             <td data-label="Category">${item.category_id || 'N/A'}</td>
             <td data-label="Rate/Unit" class="text-end">${pricePerUnitDisplay}</td>
             <td data-label="Quantity" class="text-center">${item.quantity || '0'}</td>
-            <!--<td data-label="Route">${item.route || 'N/A'}</td> -->
             <td data-label="Total Cost" class="text-end">₹${totalCost}</td>
         `;
         tableBody.appendChild(row);
@@ -626,22 +903,37 @@ async function fillRouteDetails(routeId) {
         const result = await response.json();
         if (result.success && result.data) {
             // Fill your UI elements here. Adjust selectors as needed.
-            document.querySelector('.route-figure').textContent = result.data.deliveryType + " - " +result.data.route || 'N/A';
-            document.querySelector('.route-cost-figure').textContent = `₹${Number(result.data.rate).toFixed(2)}`;
-            document.querySelector('.deliveryfeelol').textContent = `₹${Number(result.data.rate).toFixed(2)}`;
+            const routeFigure = document.querySelector('.route-figure');
+            const routeCostFigure = document.querySelector('.route-cost-figure');
+            const deliveryFee = document.querySelector('.deliveryfeelol');
+            
+            if (routeFigure) routeFigure.textContent = result.data.deliveryType + " - " + result.data.route || 'N/A';
+            if (routeCostFigure) routeCostFigure.textContent = `₹${Number(result.data.rate).toFixed(2)}`;
+            if (deliveryFee) deliveryFee.textContent = `₹${Number(result.data.rate).toFixed(2)}`;
+            // document.querySelector('.route-figure').textContent = result.data.deliveryType + " - " +result.data.route || 'N/A';
+            // document.querySelector('.route-cost-figure').textContent = `₹${Number(result.data.rate).toFixed(2)}`;
+            // document.querySelector('.deliveryfeelol').textContent = `₹${Number(result.data.rate).toFixed(2)}`;
         } else {
-            document.querySelector('.route-figure').textContent = 'N/A';
-            document.querySelector('.route-cost-figure').textContent = 'N/A';
+            const routeFigure = document.querySelector('.route-figure');
+            const routeCostFigure = document.querySelector('.route-cost-figure');
+            if (routeFigure) routeFigure.textContent = 'N/A';
+            if (routeCostFigure) routeCostFigure.textContent = 'N/A';
+            // document.querySelector('.route-figure').textContent = 'N/A';
+            // document.querySelector('.route-cost-figure').textContent = 'N/A';
         }
         updateFinalTotal();
     } catch (error) {
         console.error('Error fetching route details:', error);
-        document.querySelector('.route-figure').textContent = 'N/A';
-        document.querySelector('.route-cost-figure').textContent = 'N/A';
+        const routeFigure = document.querySelector('.route-figure');
+        const routeCostFigure = document.querySelector('.route-cost-figure');
+        if (routeFigure) routeFigure.textContent = 'N/A';
+        if (routeCostFigure) routeCostFigure.textContent = 'N/A';
+        // document.querySelector('.route-figure').textContent = 'N/A';
+        // document.querySelector('.route-cost-figure').textContent = 'N/A';
         updateFinalTotal();
     }
 }
-// Function to render the cart
+
 
 // Function to handle deleting a product from the cart
 function deleteFromCart(productId) {
@@ -710,14 +1002,16 @@ async function fetchCustomerFulfillment(customerId, weekIdFilter) {
 function renderFulfillmentTable(items) {
     const tbody = document.querySelector('.fulfillment-table-body');
     const noMsg = document.getElementById('no-fulfillment-data-message');
+    if (!tbody) return;
+     
     tbody.innerHTML = '';
 
     if (!items || items.length === 0) {
-        noMsg.style.display = 'block';
+        if (noMsg) noMsg.style.display = 'block';
         return;
     }
 
-    noMsg.style.display = 'none';
+    if (noMsg) noMsg.style.display = 'none';
     let price = 0;
     let cRouteId = items[0].route_id || ''; // Get route ID from first item
 
@@ -734,12 +1028,13 @@ function renderFulfillmentTable(items) {
             <td data-label="Fulfilled Qty">${item.fullfill_quantity || ''}</td>
             <td data-label="Rate">₹${rateFormatted}</td>
             <td data-label="Total Cost">₹${totalFormatted}</td>
-            <!--<td data-label="Route">${item.route || ''}</td>-->
         `;
         tbody.appendChild(tr);
     });
 
-    document.querySelector('.total-amount-figure').textContent = `₹${price.toFixed(2)}`;
+    const totalAmountFigure = document.querySelector('.total-amount-figure');
+    if (totalAmountFigure) totalAmountFigure.textContent = `₹${price.toFixed(2)}`;
+    // document.querySelector('.total-amount-figure').textContent = `₹${price.toFixed(2)}`;
     fillRouteDetails(cRouteId);
 }
 
@@ -805,13 +1100,23 @@ function setupFulfillmentWeekForm(customerId) {
     const form = document.getElementById('fulfillmentDataWeekForm');
     if (!form) return;
     form.addEventListener('submit', function(event) {
-
         event.preventDefault();
-        document.querySelector('.final-total-figure').innerText = "N/A";
-        document.querySelector('.total-amount-figure').innerText = "N/A";
-        document.querySelector('.deliveryfeelol').innerText = "N/A";
-        document.querySelector('.route-figure').innerText = "N/A";
-        document.querySelector('.route-cost-figure').innerText = "N/A";
+        const finalTotal = document.querySelector('.final-total-figure');
+        const totalAmount = document.querySelector('.total-amount-figure');
+        const deliveryFee = document.querySelector('.deliveryfeelol');
+        const routeFigure = document.querySelector('.route-figure');
+        const routeCost = document.querySelector('.route-cost-figure');
+        
+        if (finalTotal) finalTotal.innerText = "N/A";
+        if (totalAmount) totalAmount.innerText = "N/A";
+        if (deliveryFee) deliveryFee.innerText = "N/A";
+        if (routeFigure) routeFigure.innerText = "N/A";
+        if (routeCost) routeCost.innerText = "N/A";
+        // document.querySelector('.final-total-figure').innerText = "N/A";
+        // document.querySelector('.total-amount-figure').innerText = "N/A";
+        // document.querySelector('.deliveryfeelol').innerText = "N/A";
+        // document.querySelector('.route-figure').innerText = "N/A";
+        // document.querySelector('.route-cost-figure').innerText = "N/A";
         const weekId = document.getElementById('fulfillmentDataWeekDropdown').value;
         loadFulfillmentData(customerId, weekId);
     });
@@ -853,8 +1158,17 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
         }
     }
 
+    if (!cRoute) {
+        showOrderMessage('Please select a delivery route before placing your order.', 'warning');
+        return;
+    }
+
     console.warn("Confirm Purchase By clicking Ok");
     note=document.querySelector("#noteText").value || ''; // Get note from the note input field
+    const orderButton = document.getElementById('placeOrderButton');
+    const originalText = orderButton.innerHTML;
+    orderButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+    orderButton.disabled = true;
     try {
         const orderData = {
             week_id: weekId,
@@ -878,28 +1192,35 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
         // Parse response as JSON
         const result = await response.json();
         if (result.success) {
-            alert(result.success);
+            showOrderMessage(result.success, 'success');
+
+            purchasedItems = {};
+            renderCart();
+            if (document.getElementById('noteText')) {
+                document.getElementById('noteText').value = '';
+            }
+                
+            await loadMenu();
         } else if (result.warning) {
-            alert(result.warning.join('\n'));
+            showOrderMessage(result.warning.join('\n'), 'warning');
         } else if (result.error) {
-            alert(result.error);
+            showOrderMessage(result.error, 'danger');
         } else {
-            alert('Unknown response from server.');
+            showOrderMessage('Unknown response from server.', 'danger');
         }
-
-        purchasedItems = {};
-        renderCart();
-        await loadMenu();
-
     } catch (error) {
         console.error('Error placing order:', error);
-        alert('An error occurred while placing your order. Please try again.');
+        showOrderMessage('An error occurred while placing your order. Please try again.', 'danger');
+    } finally {
+        orderButton.innerHTML = originalText;
+        orderButton.disabled = false;
     }
 });
 
 document.getElementById('noteForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-    const note = document.getElementById('noteText').value.trim();
+    const noteTextEl = document.getElementById('noteText');
+    const note = noteTextEl?.value.trim();
     const cust_id = cId;      // Use your global or session customer ID variable
     
 // const weekId = weekId;    // Use your global or session week ID variable
@@ -924,8 +1245,16 @@ document.getElementById('noteForm').addEventListener('submit', async function(e)
 
 function showNoteResult(message, isSuccess) {
     const el = document.getElementById('noteResult');
-    el.textContent = message;
-    el.className = 'mt-3 alert ' + (isSuccess ? 'alert-success' : 'alert-danger');
-    el.style.display = 'block';
-    setTimeout(() => { el.style.display = 'none'; }, 4000);
+    if (el) {
+        el.textContent = message;
+        el.className = 'mt-3 alert ' + (isSuccess ? 'alert-success' : 'alert-danger');
+        el.style.display = 'block';
+        setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
 }
+
+window.orderManager = {
+    showSection,
+    updateCartQuantity,
+    deleteFromCart
+};

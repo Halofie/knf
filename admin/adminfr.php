@@ -89,9 +89,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                 <p class="mb-0">Kovai Natural Farmers Management</p>
             </div>
             <div class="col-auto">
-            <div class="clock text-end">
-                <div class="fas fa-clock me-1">
-                    <div class="clock">date</div>
+                <div class="clock text-end">
+                    <div class="fas fa-clock me-1">
+                        <div class="clock">date</div>
+                    </div>
                 </div>
             </div>
         </div>

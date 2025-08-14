@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['role']) || $_SESSION['role'] !== 'C') {
-    header("Location: ../login.html?error=notloggedin_dashboard"); // Or your main login page
+    header("Location: ../login.html?error=notloggedin_dashboard");
     exit;
 }
 
@@ -18,146 +18,284 @@ $customer_address = $_SESSION['customer_address'] ?? 'N/A';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Welcome, <?php echo htmlspecialchars($customer_name); ?>!</title>
-    <link href="../public/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../public/css/order.css">
-    <link rel="stylesheet" href="../public/css/common.css">
-    <link rel="stylesheet" href="../public/css/customer_dashboard.css"> <!-- Create this CSS file -->
-    <link rel="icon" href="../public/Assets/pic.jpeg">
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"> -->
+    
+    <!-- CSS -->
+    <link href="../public/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="../public/css/order.css"> -->
+    <link rel="stylesheet" href="../public/css/common.css">
+    <link rel="stylesheet" href="../public/css/customer_dashboard.css">
+    <link rel="icon" href="../public/Assets/pic.jpeg">
 </head>
 <body class="paleGreen">
+    <!-- Unified Sidebar -->
+    <div class="offcanvas offcanvas-start sidebar" tabindex="-1" id="offcanvasExample">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">
+                <i class="fas fa-shopping-basket me-2"></i>KNF Customer
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="text-center mb-4">
+                <img src="../public/Assets/pic.jpeg" class="profile" alt="Customer Profile">
+                <h6 class="mt-2 text-success"><?php echo htmlspecialchars($customer_name); ?></h6>
+            </div>
+            <nav>
+                <a href="#dashboard" class="active">
+                    <i class="fas fa-home me-2"></i>Dashboard
+                </a>
+                <a href="#profile">
+                    <i class="fas fa-user me-2"></i>My Profile
+                </a>
+                <a href="orderfr.php" class="btn btn-success btn-lg">
+                    <i class="fas fa-shopping-cart me-2"></i>Place New Order
+                </a>
+                <a href="orderfr.php#order-history" class="btn btn-primary btn-lg">
+                    <i class="fas fa-history me-2"></i>View Order History
+                </a>
+                <a href="../home.html">
+                    <i class="fas fa-home me-2"></i>Home
+                </a>
+                <a href="../knft/logout.php">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </nav>
+        </div>
+    </div>
 
-<!-- Top Bar (same as orderfr.php) -->
-<div class="container-fluid">
-    <div class="row align-items-center p-2 darkGreen">
-        <div class="col-auto d-flex align-items-center">
-            <button class="btn p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample">
-                <img src="../public/Assets/three-bars.svg" alt="Menu" style="width: 24px;">
-            </button>
-        </div>
-        <div class="col-2 d-none d-lg-flex justify-content-center">
-            <img src="../public/Assets/pic.jpeg" class="profile rounded-circle border p-0 border-dark" alt="logo">
-        </div>
-        <div class="col-6 color-paleGreen">
-            <h1 id="name"><?php echo htmlspecialchars($customer_name); ?></h1>
-            <p class="navinfo m-0" id="phone"><?php echo htmlspecialchars($customer_phone); ?></p>
-            <p class="navinfo m-0" id="address"><?php echo htmlspecialchars($customer_address); ?></p>
-        </div>
-        <div class="col-3 d-flex justify-content-end align-items-center">
-            <div class="d-flex align-items-center gap-2">
-                <a class="btn" href="customer_dashboard.php">
-                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-                </a>
-                <a class="btn" href="orderfr.php">
-                    <i class="fas fa-shopping-basket me-1"></i>Order Products
-                </a>
-                <a class="btn" href="orderfr.php#two">
-                    <i class="fas fa-history me-1"></i>My Orders
-                </a>
-                <div class="dropdown">
-                    <a class="btn dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown">
-                        <i class="fas fa-user-circle me-1"></i><?php echo htmlspecialchars($customer_name); ?>
+    <!-- Top Bar -->
+    <div class="container-fluid top-navbar p-0">
+        <div class="row align-items-center darkGreen">
+            <div class="col-auto">
+                <button class="btn btn-link text-white p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample">
+                    <img src="../public/Assets/three-bars.svg" alt="Menu" style="width: 24px;">
+                </button>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+                <img src="../public/Assets/pic.jpeg" class="profile rounded-circle border p-0 border-dark" alt="KNF logo">
+            </div>
+            <div class="col color-paleGreen">
+                <h1 class="mb-0"><?php echo htmlspecialchars($customer_name); ?></h1>
+                <p class="mb-0">Phone: <?php echo htmlspecialchars($customer_phone); ?></p>
+                <p class="mb-0">Email: <?php echo htmlspecialchars($customer_email); ?></p>
+                <p class="mb-0">Address: <?php echo htmlspecialchars($customer_address); ?></p>
+            </div>
+            <div class="col-3 d-flex justify-content-end align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <a class="btn" href="customer_dashboard.php">
+                        <i class="fas fa-tachometer-alt me-1"></i>Dashboard
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="edit_profile.php"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
-                        <li><a class="dropdown-item" href="change_password.php"><i class="fas fa-key me-2"></i>Change Password</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="../knft/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Offcanvas Sidebar -->
-<div class="offcanvas offcanvas-start sidebar" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">MENU</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="col d-flex justify-content-center">
-            <img src="../public/Assets/pic.jpeg" class="profile rounded-circle border p-0 border-dark" alt="logo">
-        </div>
-        <div>
-            <a class="btn" href="customer_dashboard.php">Dashboard</a>
-            <a class="btn" href="orderfr.php">Order Products</a>
-            <a class="btn" href="orderfr.php#two">My Orders</a>
-            <a class="btn" href="../knft/logout.php">Logout</a>
-        </div>
-    </div>
-</div>
-
-<div class="container mt-4">
-    <div class="row">
-        <!-- Sidebar / Profile Info Column -->
-        <div class="col-md-4 col-lg-3 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <i class="fas fa-id-card me-2"></i>My Profile
-                </div>
-                <div class="card-body">
-                    <div class="text-center mb-3">
-                        <!-- You can add a profile picture here if you have one -->
-                        <i class="fas fa-user-circle fa-5x text-success"></i>
+                    <a class="btn" href="orderfr.php">
+                        <i class="fas fa-shopping-basket me-1"></i>Order Products
+                    </a>
+                    <a class="btn" href="orderfr.php#two">
+                        <i class="fas fa-history me-1"></i>My Orders
+                    </a>
+                    <div class="dropdown">
+                        <a class="btn dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i><?php echo htmlspecialchars($customer_name); ?>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="edit_profile.php"><i class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
+                            <li><a class="dropdown-item" href="change_password.php"><i class="fas fa-key me-2"></i>Change Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="../knft/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
                     </div>
-                    <h5 class="card-title text-center text-success"><?php echo htmlspecialchars($customer_name); ?></h5>
-                    <p class="card-text"><i class="fas fa-envelope me-2 text-muted"></i><?php echo htmlspecialchars($customer_email); ?></p>
-                    <p class="card-text"><i class="fas fa-phone me-2 text-muted"></i><?php echo htmlspecialchars($customer_phone); ?></p>
-                    <p class="card-text"><i class="fas fa-map-marker-alt me-2 text-muted"></i><?php echo nl2br(htmlspecialchars($customer_address)); ?></p>
-                    <a href="edit_profile.php" class="btn btn-outline-primary btn-sm w-100 mt-2"><i class="fas fa-edit me-1"></i>Edit Profile</a>
-                </div>
-            </div>
-            <!-- Quick Links Card -->
-            <div class="card shadow-sm mt-3">
-                <div class="card-header section-title bg-info text-white">
-                    <i class="fas fa-link me-2"></i>Quick Actions
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><a href="orderfr.php" class="text-decoration-none text-success"><i class="fas fa-plus-circle me-2"></i>Place New Order</a></li>
-                    <li class="list-group-item"><a href="orderfr.php#two" class="text-decoration-none text-info"><i class="fas fa-receipt me-2"></i>View Order History</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Main Content Area -->
-        <div class="col-md-8 col-lg-9">
-            <div class="alert alert-success" role="alert">
-                <h4 class="alert-heading">Welcome back, <?php echo htmlspecialchars($customer_name); ?>!</h4>
-                <p>This is your personal dashboard. From here you can place new orders, view your past purchases, and manage your account details.</p>
-                <hr>
-                <p class="mb-0">Happy shopping with Kovai Natural Farms!</p>
-            </div>
-
-            <!-- Notifications Card -->
-            <div class="card shadow-sm mt-4">
-                <div class="card-header section-title bg-success text-white">
-                    <i class="fas fa-bell me-2"></i>Notifications / Recent Activity
-                </div>
-                <div class="card-body">
-                    <p>No new notifications at this time.</p>
-                </div>
-            </div>
-            <!-- Featured Products Card -->
-            <div class="card shadow-sm mt-4">
-                <div class="card-header section-title bg-success text-white">
-                    <i class="fas fa-star me-2"></i>Featured Products
-                </div>
-                <div class="card-body">
-                    <p>Check out our latest seasonal produce!</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Footer (optional) -->
-<footer class="text-center p-3 mt-5 bg-white shadow-top">
-    Kovai Natural Farms © <?php echo date("Y"); ?>
-</footer>
+    <main class="container-fluid" style="margin-top: 2rem;">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section">
+            <h2 class="section-title">Customer Dashboard</h2>
+            <!-- Welcome Alert -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="alert alert-success animate-slide-up">
+                        <h4 class="alert-heading">
+                            <i class="fas fa-hand-paper me-2"></i>Welcome back, <?php echo htmlspecialchars($customer_name); ?>!
+                        </h4>
+                        <p class="mb-0">This is your personal dashboard. From here you can place new orders, view your past purchases, and manage your account details.</p>
+                        <hr>
+                        <p class="mb-0">
+                            <i class="fas fa-leaf me-1"></i>Happy shopping with Kovai Natural Farms!
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-<script src="../public/js/bootstrap.min.js"></script> 
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="card animate-slide-up">
+                        <div class="card-header">
+                            <i class="fas fa-plus-circle me-2"></i>Quick Actions
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="orderfr.php" class="btn btn-success btn-lg">
+                                    <i class="fas fa-shopping-cart me-2"></i>Place New Order
+                                </a>
+                                <a href="orderfr.php#two" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-history me-2"></i>View Order History
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card animate-slide-up" style="animation-delay: 0.1s;">
+                        <div class="card-header">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </div>
+                        <div class="card-body">
+                            <div id="notifications-container">
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>No new notifications at this time.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card animate-slide-up">
+                        <div class="card-header">
+                            <i class="fas fa-user me-2"></i>Profile Summary
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong><i class="fas fa-user me-2"></i>Name:</strong></td>
+                                            <td><?php echo htmlspecialchars($customer_name); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><i class="fas fa-envelope me-2"></i>Email:</strong></td>
+                                            <td><?php echo htmlspecialchars($customer_email); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><i class="fas fa-phone me-2"></i>Phone:</strong></td>
+                                            <td><?php echo htmlspecialchars($customer_phone); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><i class="fas fa-map-marker-alt me-2"></i>Address:</strong></td>
+                                            <td><?php echo nl2br(htmlspecialchars($customer_address)); ?></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <i class="fas fa-user-circle fa-5x text-success mb-3"></i>
+                                    <div class="d-grid">
+                                        <a href="#profile" class="btn btn-outline-primary">
+                                            <i class="fas fa-edit me-1"></i>Edit Profile
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile" class="content-section" style="display: none;">
+            <h2 class="section-title">My Profile</h2>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card animate-slide-up">
+                        <div class="card-header">
+                            <i class="fas fa-user-edit me-2"></i>Edit Profile Information
+                        </div>
+                        <div class="card-body">
+                            <form id="profileForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="customerName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="customerName" value="<?php echo htmlspecialchars($customer_name); ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="customerEmail" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="customerEmail" value="<?php echo htmlspecialchars($customer_email); ?>" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="customerPhone" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="customerPhone" value="<?php echo htmlspecialchars($customer_phone); ?>">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="customerAddress" class="form-label">Address</label>
+                                        <textarea class="form-control" id="customerAddress" rows="3"><?php echo htmlspecialchars($customer_address); ?></textarea>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-secondary me-md-2" onclick="showSection('dashboard')">Cancel</button>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-save me-1"></i>Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <!-- Change Password Card -->
+                    <div class="card mt-4 animate-slide-up">
+                        <div class="card-header">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </div>
+                        <div class="card-body">
+                            <form id="passwordForm">
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" id="currentPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-warning">
+                                        <i class="fas fa-key me-1"></i>Change Password
+                                    </button>
+                                </div>  
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+            
+    <!-- Footer -->
+    <footer class="text-center py-4 mt-5" style="background: linear-gradient(90deg, #f8f9fa 0%, #ffffff 100%); border-top: 2px solid rgba(76,175,80,0.1);">
+        <div class="container">
+            <p class="mb-0 text-muted">
+                <i class="fas fa-leaf me-2 text-success"></i>
+                © 2025 Kovai Natural Farmers - Customer Portal. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../public/js/bootstrap.min.js"></script>
+    <script src="../public/js/clock.js"></script>
+    <script src="../public/js/customer_dashboard.js"></script> 
 </body>
 </html>

@@ -1,57 +1,64 @@
 /* Responsive design */
-@media screen and (max-width: 700px) {
-  .sidebar {
-    width: 30%;
-    height: 100%;
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-  }
-  
-  .profile {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #d9e7d9 60%, #b2dfdb 100%);
-  }
+@media screen and (max-width: 768px) {
+    .sidebar {
+          width: 280px;
+          transform: translateX(-100%);
+    }
 
-  .table {
-    padding: 0 10px;
-    background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
-  }
-  .table thead th, .table tbody td {
-    padding: 0.75rem;
-  }
-  .table tbody tr {
-    display: block;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .table tbody tr:hover {
-    background-color: rgba(76,175,80,0.1);
-  }
-  .table tbody td {
-    display: block;
-    text-align: left;
-    padding: 0.75rem;
-    border-bottom: 1px solid rgba(76,175,80,0.2);
-  }
-  .table tbody td:last-child {
-    border-bottom: none;
-  }
-  .table tbody td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    display: block;
-    margin-bottom: 0.5rem;
-  }
-  .table thead {
-    display: none; /* Hide headers on mobile */
-  }
-  div.content {
-    margin-left: 0;
-    padding: 1rem 0.5rem;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
-  }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    
+    .profile {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #d9e7d9 60%, #b2dfdb 100%);
+    }
+
+    .table {
+      padding: 0 10px;
+      background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
+    }
+    .table thead th, .table tbody td {
+      padding: 0.75rem;
+    }
+    .table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        padding: 1rem;
+        background: white;
+        box-shadow: 0 2px 8px rgba(46,125,50,0.1);
+    }
+    .table tbody tr:hover {
+      background-color: rgba(76,175,80,0.1);
+    }
+    .table tbody td {
+        display: block;
+        text-align: left;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(76,175,80,0.1);
+    }
+    .table tbody td:last-child {
+      border-bottom: none;
+    }
+    .table tbody td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #2e7d32;
+        display: block;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+    }
+    .table thead {
+      display: none;
+    }
+    div.content {
+        margin-left: 0;
+        padding: 1rem 0.5rem;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
+    }
 }
 
 @media screen and (max-width: 400px) {
@@ -137,71 +144,80 @@
 }
 
 /* Smooth scrolling for the entire page */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 /* Optimized body styling */
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #d9e7d9;
   min-height: 100vh;
+  line-height: 1.6;
   overflow-x: hidden;
 }
 
 /* Optimized sidebar */
 .sidebar {
-  margin: 0;
-  padding: 0;
-  width: 200px;
-  background-color: #f1f1f1;
-  position: fixed;
-  height: 100%;
-  overflow: auto;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  will-change: transform;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    box-shadow: 2px 0 15px rgba(46,125,50,0.1);
+    border-right: 2px solid rgba(76,175,80,0.1);
+    will-change: transform;
 }
 
 /* Optimized profile image */
 .profile {
-  border-radius: 50%;
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  margin: 3% 0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease;
-  will-change: transform;
+    border-radius: 50%;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    margin: 1rem auto;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    will-change: transform;
 }
 
 .profile:hover {
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
 
 /* Optimized sidebar links */
 .sidebar a {
-  display: block;
-  color: #333;
-  padding: 16px 20px;
-  text-decoration: none;
-  position: relative;
-  font-weight: 500;
-  border-radius: 8px;
-  margin: 4px 8px;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  will-change: transform;
+    display: block;
+    color: #333;
+    padding: 16px 20px;
+    text-decoration: none;
+    position: relative;
+    font-weight: 600;
+    border-radius: 8px;
+    margin: 4px 8px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    will-change: transform;
 }
 
-/* Active/current link */
 .sidebar a.active {
-  background-color: #4caf50;
-  color: white;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    background-color: #4caf50;
+    color: white;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
 
-/* Optimized hover effects */
 .sidebar a:hover:not(.active) {
-  background-color: #555;
-  color: white;
-  transform: translateX(4px);
+    background-color: #555;
+    color: white;
+    transform: translateX(5px);
 }
 
 /* Enhanced content styling */
@@ -213,119 +229,188 @@ div.content {
 
 /* Simplified color classes */
 .lightGreen {
-  background-color: #4c7a4c;
+    background-color: #4c7a4c;
 }
 
 .darkGreen {
-  background-color: #3a5c3a;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #3a5c3a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .paleGreen {
-  background-color: #d9e7d9;
+    background-color: #d9e7d9;
 }
 
 .Green {
-  background-color: #4caf50;
+    background-color: #4caf50;
 }
 
 .White {
-  background-color: #f2f2f2;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(46,125,50,0.08);
+    border: 1px solid rgba(76,175,80,0.1);
 }
 
 .color-paleGreen {
-  color: #d9e7d9;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    color: #f1f8e9; 
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* === CARD SYSTEM === */
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(46,125,50,0.08);
+    border: 1px solid rgba(76,175,80,0.1);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(46,125,50,0.15);
+}
+
+.card-header {
+    background: linear-gradient(90deg, #4caf50 0%, #66bb6a 100%);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-bottom: 2px solid #388e3c;
+}
+
+.card-body {
+    padding: 1.5rem;
 }
 
 /* Optimized table styling - No alternating colors */
 .table {
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(46,125,50,0.08);
+    border: 1px solid rgba(76,175,80,0.1);
+    margin-bottom: 2rem;
+    background: white;
 }
 
 .table thead th {
-  background-color: #4caf50;
-  color: white;
-  font-weight: 600;
-  padding: 1rem;
-  border: none;
+    background-color: #4caf50;
+    color: white;
+    font-weight: 700;
+    padding: 1.25rem 1rem;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
 }
 
 .table tbody tr {
-  transition: background-color 0.2s ease;
-  background-color: white; /* Ensure uniform background */
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid rgba(76,175,80,0.1);
 }
 
 .table tbody tr:hover {
-  background-color: rgba(76, 175, 80, 0.1);
+    background: rgba(76, 175, 80, 0.1);
 }
 
 .table tbody td {
-  padding: 1rem;
-  vertical-align: middle;
-  border-color: rgba(76, 175, 80, 0.2);
-  background-color: white; /* Ensure uniform background for all cells */
+    padding: 1.25rem 1rem;
+    vertical-align: middle;
+    border: none;
+    color: #2e7d32;
+    font-weight: 500;
+    border-color: rgba(76, 175, 80, 0.2);
 }
 
 /* Override any Bootstrap striped table styling */
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: white !important;
+    background-color: white !important;
 }
 
 .table-striped tbody tr:nth-of-type(even) {
-  background-color: white !important;
+    background-color: white !important;
 }
 
-/* Override any alternating column colors */
 .table tbody td:nth-child(odd) {
-  background-color: white !important;
+    background-color: white !important;
 }
 
 .table tbody td:nth-child(even) {
-  background-color: white !important;
+    background-color: white !important;
 }
 
 /* Optimized buttons */
 .btn {
-  border-radius: 8px;
-  font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  will-change: transform;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.85rem 1.8rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .btn-primary {
-  background-color: #007bff;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    background-color: #007bff;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
 }
 
 .btn-primary:hover {
-  background-color: #0056b3;
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    background-color: #0056b3;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-success:hover {
+    background-color: #1e7e34;
+    color: white;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
 }
 
 /* Optimized form elements */
-.form-select, .form-control {
-  border-radius: 8px;
-  border: 2px solid rgba(76, 175, 80, 0.2);
-  padding: 0.75rem 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  background-color: rgba(255, 255, 255, 0.9);
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 2px solid rgba(76,175,80,0.3);
+    padding: 0.85rem 1.1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
-.form-select:focus, .form-control:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+.form-control:focus, .form-select:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+    background: #ffffff;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #2c4a2c;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Simplified cart holder */
@@ -335,21 +420,49 @@ div.content {
 }
 
 /* Simplified headings */
-h1, h2, h3 {
-  font-weight: 700;
+h1, h2, h3, h4, h5 {
+    font-weight: 700;
+    /* color: #2c4a2c; */
+    margin-bottom: 1rem;
 }
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
 
 /* Simplified alerts */
 .alert {
-  border-radius: 8px;
-  border: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    border: none;
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-info {
+    background: linear-gradient(90deg, #e3f2fd 0%, #f3e5f5 100%);
+    color: #0d47a1;
+    border-left: 4px solid #2196f3;
 }
 
 /* Enhanced clock */
 .clock {
-  font-weight: 600;
-  font-size: 1.1rem;
+    color: #f1f8e9;
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
 /* Enhanced total cost display */
@@ -357,62 +470,6 @@ h1, h2, h3 {
   color: #4caf50;
   font-weight: 700;
   font-size: 1.2em;
-}
-
-/* Simplified page styling - removed heavy animations */
-.body {
-  margin: 0em;
-}
-
-.page {
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: -100vw;
-  overflow-y: auto;
-  z-index: 0;
-  background-color: #d9e7d9;
-  transition: left 0.3s ease;
-}
-
-.page:target {
-  left: 0vw;
-  z-index: 1;
-}
-
-/* Simplified offcanvas */
-.offcanvas {
-  background-color: rgba(248, 249, 250, 0.95);
-}
-
-.offcanvas-header {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.offcanvas-title {
-  font-weight: 700;
-  color: #333;
-}
-
-/* Simplified scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #4caf50;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #45a049;
 }
 
 /* Ensure all purchase history table cells are left-aligned in desktop view */
@@ -427,3 +484,48 @@ h1, h2, h3 {
   }
 }
 
+.content-section {
+    display: none !important;
+}
+
+.content-section.active {
+    display: block !important;
+}
+
+#order-page {
+    display: block !important;
+}
+
+/* Cart Badge Styling */
+#cart-item-count {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+/* Table Responsive Improvements */
+.table-responsive {
+    border-radius: 0.375rem;
+}
+
+/* Purchase History Mobile Responsive */
+@media (max-width: 768px) {
+    .purchase-history-body td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .purchase-history-body td[data-label]:before {
+        content: attr(data-label) ": ";
+        font-weight: bold;
+        color: #28a745;
+    }
+}
+
+/* Invoice Summary Cards */
+.card .row {
+    align-items: center;
+}
+
+.final-total-figure {
+    font-size: 1.2rem;
+}
