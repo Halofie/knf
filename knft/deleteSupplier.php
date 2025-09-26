@@ -1,6 +1,7 @@
 
 <?php
 require('header.php');
+require_once 'auth_check.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -46,7 +47,8 @@ if (isset($data['id'])) {
             echo json_encode([
                 "success" => true,
                 "categoryID" => $categoryID,
-                "newStatus" => $newStatus
+                "newStatus" => $newStatus,
+                "message" => "Supplier status updated."
             ]);
         } else {
             echo json_encode([

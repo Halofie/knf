@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // --- CSRF helper: attach X-CSRF-Token automatically for non-GET fetches ---
+    // Uses window.CSRF_TOKEN injected by adminfr.php. If missing, fetches will proceed without header.
+    const originalFetch = window.fetch;
+    window.fetch = function(resource, init = {}) {
+        try {
+            const method = (init.method || 'GET').toUpperCase();
+            if (method !== 'GET' && method !== 'OPTIONS') {
+                // Normalize headers to a Headers instance for consistent manipulation
+                // This handles plain objects, arrays, or existing Headers instances
+                init.headers = new Headers(init.headers || {});
+                init.headers.set('X-CSRF-Token', window.CSRF_TOKEN || '');
+
+                // If sending JSON, ensure Accept is set so server can consistently return JSON
+                const contentType = init.headers.get('Content-Type') || '';
+                if (contentType.includes('application/json') && !init.headers.get('Accept')) {
+                    init.headers.set('Accept', 'application/json');
+                }
+            }
+        } catch (e) {
+            console.warn('CSRF helper failed to attach token or normalize headers:', e);
+        }
+        return originalFetch(resource, init);
+    };
     // --- Initial Data Loading ---
     loadAllAdminData(); // Load data for all admin sections
     initialiseLockButton();
@@ -387,7 +410,9 @@ function handleEditUom(e) {
           })
           .then(response => { if (!response.ok) throw response; return response.json(); })
           .then(data => {
-              displayMessage('#result-uom', data.message, data.success);
+              // Some endpoints (toggle-style) return success without a friendly message.
+              // Show a default message when data.message is missing to avoid silent UI.
+              displayMessage('#result-uom', data.message || (data.success ? 'UoM status updated.' : 'Operation failed.'), data.success);
               if (data.success) { getUomData(); } // Refresh table
           })
           .catch(errorResponse => handleFetchError(errorResponse, '#result-uom'));
@@ -477,7 +502,7 @@ function handleDeleteCategory(e) {
                 displayMessage('#result-category', data.message, data.success); 
                 if(data.success) getCategoryData(); // Refresh table
             })
-            //.catch(errorResponse => handleFetchError(errorResponse, '#result-category'));
+            .catch(errorResponse => handleFetchError(errorResponse, '#result-category'));
     }
 }
 

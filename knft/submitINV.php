@@ -4,6 +4,7 @@ ini_set('display_errors', 0); // Prevent errors from being sent to the browser.
 ini_set('log_errors', 1);
 header('Content-Type: application/json');
 require('header.php');
+require_once 'auth_check.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

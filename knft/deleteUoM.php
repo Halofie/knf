@@ -1,5 +1,6 @@
 <?php
 require('header.php');
+require_once 'auth_check.php';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -39,7 +40,8 @@ if (isset($data['id'])) {
             echo json_encode([
                 "success" => true,
                 "productsID" => $productsID,
-                "newStatus" => $newStatus
+                "newStatus" => $newStatus,
+                "message" => "UoM status updated."
             ]);
         } else {
             echo json_encode([

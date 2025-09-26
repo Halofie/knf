@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 require('header.php'); // Adjust path if needed
+require_once 'auth_check.php';
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -38,7 +39,7 @@ $update = $conn->prepare("UPDATE tray_management SET trayStatus = ? WHERE id = ?
 $update->bind_param("ii", $newStatus, $id);
 
 if ($update->execute()) {
-    echo json_encode(["success" => true, "newStatus" => $newStatus]);
+    echo json_encode(["success" => true, "newStatus" => $newStatus, "message" => "Tray status updated."]);
 } else {
     echo json_encode(["success" => false, "message" => "Update failed"]);
 }

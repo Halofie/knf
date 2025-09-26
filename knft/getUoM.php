@@ -1,5 +1,6 @@
 <?php
 require('header.php');
+require_once 'auth_check.php';
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection

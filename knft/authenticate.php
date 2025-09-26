@@ -1,17 +1,25 @@
 <?php
+session_start();
+
+// Verify CSRF token
+if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    // Token is invalid, reject the request
+    exit('Invalid CSRF token. Please try logging in again.');
+}
+
 require('header.php');
 
 // Connect to MySQL database
 $con = mysqli_connect($servername, $username, $password, $dbname);
 if (mysqli_connect_errno()) {
     error_log('Failed to connect to MySQL: ' . mysqli_connect_error());
-    header("Location: ../login/login.html?error=server");
+    header("Location: ../login/login.php?error=server");
     exit();
 }
 
 // Check if login form data was submitted
 if (!isset($_POST['username'], $_POST['password'])) {
-    header("Location: ../login/login.html?error=missing");
+    header("Location: ../login/login.php?error=missing");
     exit();
 }
 
@@ -20,7 +28,7 @@ $submitted_password = $_POST['password'];
 
 // Validate email address
 if (!filter_var($submitted_username, FILTER_VALIDATE_EMAIL)) {
-    header("Location: ../login/login.html?error=email");
+    header("Location: ../login/login.php?error=email");
     exit();
 }
 
@@ -42,6 +50,8 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
         if (password_verify($submitted_password, $hashed_password) && $rec_status == '1') {
             // Successful login - create session variables
             session_regenerate_id(true);
+            // Rotate or set a fresh per-session CSRF token after login
+            if (empty($_SESSION['csrf_token'])) { $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); } else { $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); }
             $_SESSION['loggedin'] = TRUE;
             $_SESSION['email'] = $sanitized_email;
             $_SESSION['role'] = $category;
@@ -94,7 +104,7 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
                     } else {
                         error_log("Login Error: Farmer '$sanitized_email' (Account PK ID: $acc_id) has no entry in suppliers table.");
                         session_destroy();
-                        header("Location: ../login/login.html?error=farmerdata_missing");
+                        header("Location: ../login/login.php?error=farmerdata_missing");
                         exit();
                     }
                     $stmt_supplier->close();
@@ -117,7 +127,7 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
                     } else {
                         error_log("Login Error: Customer '$sanitized_email' (Account ID: $acc_id) has no entry in customers table.");
                         session_destroy();
-                        header("Location: ../login/login.html?error=customerdata_missing");
+                        header("Location: ../login/login.php?error=customerdata_missing");
                         exit();
                     }
                     $stmt_customer->close();
@@ -129,23 +139,23 @@ if ($stmt = $con->prepare('SELECT id, password, category, rec_status FROM accoun
                 exit();
             } else {
                 error_log("Unknown category '$category' for user '$sanitized_email'");
-                header("Location: ../login/login.html?error=unknowncategory");
+                header("Location: ../login/login.php?error=unknowncategory");
                 exit();
             }
         } else {
             // Invalid login credentials (generic message)
-            header("Location: ../login/login.html?error=1");
+            header("Location: ../login/login.php?error=1");
             exit();
         }
     } else {
         // Invalid login credentials (generic message)
-        header("Location: ../login/login.html?error=1");
+        header("Location: ../login/login.php?error=1");
         exit();
     }
     // $stmt->close(); // Already closed above
 } else {
     error_log('Failed to prepare statement: ' . $con->error);
-    header("Location: ../login/login.html?error=server");
+    header("Location: ../login/login.php?error=server");
     exit();
 }
 $con->close();

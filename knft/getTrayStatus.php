@@ -59,6 +59,7 @@ $conn->close();
 
 //header('Content-Type: application/json');
 //require('../knft/header.php'); // Adjust path as needed
+require_once 'auth_check.php'; // Include auth guard
 //
 //// Connect to DB
 //$conn = new mysqli($servername, $username, $password, $dbname);

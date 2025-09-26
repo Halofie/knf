@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 require('../knft/header.php'); // Adjust the path as needed
+require_once 'auth_check.php';
 
 // Connect to DB
 $conn = new mysqli($servername, $username, $password, $dbname);

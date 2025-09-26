@@ -3,6 +3,7 @@
 
 header('Content-Type: application/json');
 require('header.php'); // Adjust path if needed
+    require_once 'auth_check.php';
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {

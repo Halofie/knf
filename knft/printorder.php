@@ -1,5 +1,6 @@
 <?php
 require 'vendor/autoload.php';
+require_once 'auth_check.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;

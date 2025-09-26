@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 require('header.php');
+require_once 'auth_check.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 $id = isset($data['id']) ? intval($data['id']) : 0;

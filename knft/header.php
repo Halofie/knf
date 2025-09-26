@@ -1,7 +1,8 @@
 <?php
 error_reporting(E_ALL);
+// For local/dev environments we show errors; in production you may want to log instead.
 ini_set('display_errors', 1);
-// CORS headers
+// CORS headers (original behavior) — wildcard allowed in development.
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -20,5 +21,8 @@ $host = $servername;
 $user = $username;
 $pass = $password;
 
-session_start();
+// Start session using the default params (keeps behavior consistent with original repo)
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 ?>

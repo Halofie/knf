@@ -1,10 +1,15 @@
 <?php
 session_start();
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
-    header("Location: ../login/login.html");
+    header("Location: ../login/login.php");
     exit();
 }
 ?>
+
+<script>
+    // Expose the per-session CSRF token to admin JavaScript safely
+    window.CSRF_TOKEN = '<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES); ?>';
+</script>
 
 <!doctype html>
 <html lang="en">
@@ -89,10 +94,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                 <p class="mb-0">Kovai Natural Farmers Management</p>
             </div>
             <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
-                    </div>
+                <div id="clock" class="clock text-end">
+                    <!-- The rest of the elements will be updated by the script -->
                 </div>
             </div>
         </div>
@@ -351,7 +354,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
     <div class="container d-flex justify-content-center">
         <div class="col-10 mt-3 text-md-start text-center mb-3">            
             <h2 class="mt-4">User Lock message</h2>
-            <p class="mt-4  p-4 shadow rounded b-2 text-md-start text-center fw-bold">Current Lock message: <span id="lock-message"><?php echo $_SESSION['cust_msg'] ?> </span> </p>
+            <p class="mt-4  p-4 shadow rounded b-2 text-md-start text-center fw-bold">Current Lock message: <span id="lock-message"><?php echo htmlspecialchars($_SESSION['cust_msg'] ?? '', ENT_QUOTES, 'UTF-8'); ?> </span> </p>
         </div>
     </div>
 
@@ -372,9 +375,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Unit of Measure Management</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
             </div>
@@ -440,12 +442,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Category Management</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
-            </div>
         </div>
         <main class="container-fluid" style="margin-top: 2rem;">
             <!-- Breadcrumb Navigation -->
@@ -508,12 +508,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Product Management</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
-            </div>
         </div>
         <main class="container-fluid" style="margin-top: 2rem;">
             <!-- Breadcrumb Navigation -->
@@ -604,10 +602,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Manage Delivery Routes</p>
                 </div>
                 <div class="col-auto">
-                    <div class="clock text-end">
-                        <div class="fas fa-clock me-1">
-                            <div class="clock">date</div>
-                        </div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
             </div>
@@ -685,12 +681,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Manage Customer Information</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
-            </div>
         </div>
         <main class="container-fluid" style="margin-top: 2rem;">
             <!-- Breadcrumb Navigation -->
@@ -774,12 +768,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Manage Supplier Information</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
-            </div>
         </div>
         <main class="container-fluid" style="margin-top: 2rem;">
             <!-- Breadcrumb Navigation -->
@@ -861,12 +853,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Week Management</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
-            </div>
         </div>
         <main class="container-fluid" style="margin-top: 2rem;">
             <!-- Breadcrumb Navigation -->
@@ -926,12 +916,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Order Management</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
-            </div>
         </div>
         <main class="container-fluid" style="margin-top: 2rem;">
             <!-- Breadcrumb Navigation -->
@@ -1017,12 +1005,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Farmer Rank Management</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
-            </div>
         </div>
         <main class="container-fluid" style="margin-top: 2rem;">
             <!-- Breadcrumb Navigation -->
@@ -1071,12 +1057,10 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
                     <p class="mb-0">Order Allocation Management</p>
                 </div>
                 <div class="col-auto">
-                <div class="clock text-end">
-                    <div class="fas fa-clock me-1">
-                        <div class="clock">date</div>
+                    <div id="clock" class="clock text-end">
+                        <!-- The rest of the elements will be updated by the script -->
                     </div>
                 </div>
-            </div>
         </div>
         <main class="container-fluid" style="margin-top: 2rem;">
             <!-- Breadcrumb Navigation -->

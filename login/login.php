@@ -1,0 +1,104 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+?>
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../public/css/login.css">
+
+</head>
+<body class="paleGreen">
+    <div class=" h-auto d-flex justify-content-center row darkGreen d-fixed">
+        <div class="d-flex mt-1 p-0 justify-content-center">
+            <img src="../public/Assets/pic.jpeg" class=" profile rounded-circle border p-0 border-dark" alt="logo">
+        </div>
+        <div class=" color-paleGreen d-flex justify-content-center align-center" >
+            <h1 class="title m-2 text-center">WELCOME TO KOVAI NATURAL FARMERS</h1>
+        </div>
+    </div>
+
+    <div class="paleGreen py-3 py-md-5">
+        <div class="container">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+              <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                <form action="../knft/authenticate.php" method="post">
+                  <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                  <div class="row gy-3 gy-md-4 overflow-hidden">
+                    <div class="col-12">
+                      <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
+                          </svg>
+                        </span>
+                        <input type="text" class="form-control" name="username" id="username" required>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                      <div class="input-group">
+                        <span class="input-group-text">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
+                            <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z" />
+                            <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                          </svg>
+                        </span>
+                        <input type="password" class="form-control" name="password" id="password" value="" required>
+                        <button type="button" class="btn btn-outline-secondary" id="togglePassword" tabindex="-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                            <g id="eyeIcon">
+                              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.12 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.133 13.133 0 0 1 1.172 8z"/>
+                              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zm0 1a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+                            </g>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    <div id="loginError" class="text-danger mt-2" style="display:none;">
+                      Invalid username or password.
+                    </div>
+                    <div class="col-12 mt-3">
+                      <div class="d-grid">
+                        <button class="btn btn-primary btn-lg" type="submit">Log In</button>
+                      </div>
+                    </div>
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <small class="text-muted">
+                            Secure login powered by Kovai Natural Farmers<br>
+                            <span class="text-success">🌱</span> Growing naturally, farming sustainably
+                        </small>
+                        <a href="../home.html">go back !</a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../public/js/jquery.js"></script>
+    <script src="../public/js/bootstrap.min.js"></script>
+    <script src="../public/js/login.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 <?php
 require('header.php');
+require_once 'auth_check.php';
 require 'vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;

@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
 require('header.php'); // Contains DB credentials $servername, etc.
+require_once 'auth_check.php';
 
 $response = [
     'status' => 'error',

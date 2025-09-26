@@ -1,6 +1,7 @@
 <?php
-header('Content-Type: application/json');
 require('header.php');
+require_once 'auth_check.php';
+header('Content-Type: application/json');
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
