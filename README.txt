@@ -1,18 +1,3 @@
-Hello knf
-
----
-2025-09-26 — Changes by developer
-
-- Added consistent user-facing JSON "message" fields to several admin toggle endpoints so the admin UI receives a clear message on success:
-	- knft/deleteUoM.php  => message: "UoM status updated."
-	- knft/deleteCategory.php  => message: "Category status updated."
-	- knft/deleteProduct.php  => message: "Product status updated."
-	- knft/deleteSupplier.php  => message: "Supplier status updated."
-	- knft/deleteCustomer.php  => message: "Customer status updated."
-	- knft/editTrayStatus.php  => message: "Tray status updated."
-
-- Frontend: normalized fetch header behavior and improved error handling in `public/js/admin.js` (earlier changes) so CSRF token is attached and client shows fallback messages when the server omits a message.
-
 Files changed on 2025-09-26 (full list):
 
 - public/js/admin.js

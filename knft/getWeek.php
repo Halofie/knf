@@ -1,6 +1,6 @@
 <?php
 require('header.php');
-require_once 'auth_check.php';
+// Minimal change: simply remove the admin-only auth_check so farmers can access.
 header('Content-Type: application/json');
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

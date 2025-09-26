@@ -1,6 +1,6 @@
 <?php
 require('header.php');
-require_once 'auth_check.php';
+// Minimal change: removed admin-only auth_check; restore original simple header usage.
 header('Content-Type: application/json');
 
 // Create connection

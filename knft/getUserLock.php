@@ -1,6 +1,5 @@
 <?php
-require('header.php');
-require_once 'auth_check.php';
+require('header.php'); // Removed admin-only auth_check for customer access (minimal change)
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
