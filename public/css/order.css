@@ -485,11 +485,18 @@ h5 { font-size: 1.25rem; }
 }
 
 .content-section {
-    display: none !important;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.content-section.active {
+.content-section.active-section {
     display: block !important;
+    opacity: 1;
+}
+
+#order-history, #invoice {
+    min-height: 300px;
 }
 
 #order-page {

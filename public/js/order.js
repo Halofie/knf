@@ -39,6 +39,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show order page by default
         showSection('order-page');
     }
+    // Handle browser back/forward buttons
+    window.addEventListener('hashchange', function() {
+        const sectionId = window.location.hash.substring(1) || 'order-page';
+        showSection(sectionId);
+    });
 });
 
 function initializeSectionNavigation() {
@@ -72,24 +77,53 @@ function initializeSectionNavigation() {
 }
 
 function showSection(sectionId) {
-    // Hide all sections
+    // First, remove active class from all sidebar links
+    const sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+    sidebarLinks.forEach(link => link.classList.remove('active'));
+    
+    // Add active class to current section's link
+    const activeLink = document.querySelector(`.sidebar a[href="#${sectionId}"]`);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    }
+    
+    // Hide all sections first
     const sections = document.querySelectorAll('.content-section');
     sections.forEach(section => {
         section.style.display = 'none';
-        section.classList.remove('active');
+        section.classList.remove('active-section');
     });
     
-    // Show target section
+    // Show target section with animation
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
         targetSection.style.display = 'block';
-        targetSection.classList.add('active');
+        targetSection.classList.add('active-section');
         
-        // Load section-specific data
+        // Load section specific data
         loadSectionData(sectionId);
     }
-    console.log(`Switched to section: ${sectionId}`);
 }
+
+// function showSection(sectionId) {
+//     // Hide all sections
+//     const sections = document.querySelectorAll('.content-section');
+//     sections.forEach(section => {
+//         section.style.display = 'none';
+//         section.classList.remove('active');
+//     });
+    
+//     // Show target section
+//     const targetSection = document.getElementById(sectionId);
+//     if (targetSection) {
+//         targetSection.style.display = 'block';
+//         targetSection.classList.add('active');
+        
+//         // Load section-specific data
+//         loadSectionData(sectionId);
+//     }
+//     console.log(`Switched to section: ${sectionId}`);
+// }
 
 function loadSectionData(sectionId) {
     switch(sectionId) {
