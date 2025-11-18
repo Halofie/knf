@@ -499,9 +499,7 @@ h5 { font-size: 1.25rem; }
     min-height: 300px;
 }
 
-#order-page {
-    display: block !important;
-}
+/* Removed the forced display:block from #order-page to allow proper section switching */
 
 /* Cart Badge Styling */
 #cart-item-count {

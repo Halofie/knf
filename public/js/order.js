@@ -27,7 +27,17 @@ function debugElements() {
 // =====================================
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded - Initializing...');
+    
+    // CRITICAL: Hide all sections first before any initialization
+    const allSections = document.querySelectorAll('.content-section');
+    allSections.forEach(section => {
+        section.style.display = 'none';
+        console.log('Initially hiding section:', section.id);
+    });
+    
     initializeSectionNavigation();
+    
     const hash = window.location.hash;
     if (hash && hash.length > 1) {
         const sectionId = hash.substring(1);
@@ -37,11 +47,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000); // Wait for main data to load
     } else {
         // Show order page by default
+        console.log('No hash, showing order-page by default');
         showSection('order-page');
     }
+    
     // Handle browser back/forward buttons
     window.addEventListener('hashchange', function() {
         const sectionId = window.location.hash.substring(1) || 'order-page';
+        console.log('Hash changed to:', sectionId);
         showSection(sectionId);
     });
 });
@@ -56,7 +69,11 @@ function initializeSectionNavigation() {
             
             console.log('Sidebar link clicked:', targetSection);
             
-            // Show target section
+            // Update URL hash (this will trigger hashchange event)
+            window.location.hash = targetSection;
+            
+            // Show target section is handled by hashchange event
+            // But we'll call it directly too to ensure immediate response
             showSection(targetSection);
             
             // Update active state
@@ -64,12 +81,17 @@ function initializeSectionNavigation() {
             this.classList.add('active');
             
             // Close offcanvas on mobile
-            const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasExample'));
-            if (offcanvas) {
-                offcanvas.hide();
+            const offcanvasElement = document.getElementById('offcanvasExample');
+            if (offcanvasElement) {
+                const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                if (offcanvas) {
+                    offcanvas.hide();
+                }
             }
         });
     });
+    
+    // Set initial active state
     const orderPageLink = document.querySelector('.sidebar a[href="#order-page"]');
     if (orderPageLink) {
         orderPageLink.classList.add('active');
@@ -77,6 +99,8 @@ function initializeSectionNavigation() {
 }
 
 function showSection(sectionId) {
+    console.log('=== showSection called with:', sectionId);
+    
     // First, remove active class from all sidebar links
     const sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
     sidebarLinks.forEach(link => link.classList.remove('active'));
@@ -85,13 +109,16 @@ function showSection(sectionId) {
     const activeLink = document.querySelector(`.sidebar a[href="#${sectionId}"]`);
     if (activeLink) {
         activeLink.classList.add('active');
+        console.log('Active link updated for:', sectionId);
     }
     
-    // Hide all sections first
+    // Hide ALL sections first - be explicit
     const sections = document.querySelectorAll('.content-section');
+    console.log('Found sections:', sections.length);
     sections.forEach(section => {
         section.style.display = 'none';
         section.classList.remove('active-section');
+        console.log('Hidden section:', section.id);
     });
     
     // Show target section with animation
@@ -99,31 +126,17 @@ function showSection(sectionId) {
     if (targetSection) {
         targetSection.style.display = 'block';
         targetSection.classList.add('active-section');
+        console.log('Showing section:', sectionId);
+        
+        // Scroll to top of page when switching sections
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         
         // Load section specific data
         loadSectionData(sectionId);
+    } else {
+        console.error('Section not found:', sectionId);
     }
 }
-
-// function showSection(sectionId) {
-//     // Hide all sections
-//     const sections = document.querySelectorAll('.content-section');
-//     sections.forEach(section => {
-//         section.style.display = 'none';
-//         section.classList.remove('active');
-//     });
-    
-//     // Show target section
-//     const targetSection = document.getElementById(sectionId);
-//     if (targetSection) {
-//         targetSection.style.display = 'block';
-//         targetSection.classList.add('active');
-        
-//         // Load section-specific data
-//         loadSectionData(sectionId);
-//     }
-//     console.log(`Switched to section: ${sectionId}`);
-// }
 
 function loadSectionData(sectionId) {
     switch(sectionId) {
@@ -199,14 +212,15 @@ async function runNextProgram(email) {
     globalCustomerId = cId;
     await loadMenu();
 
-    if (document.getElementById('purchaseHistorySection') && document.querySelector('.purchase-history-body')) {
+    // Initialize purchase history if the Order History section is present
+    if (document.getElementById('order-history') && document.querySelector('.purchase-history-body')) {
         await initializePurchaseHistory();
     } else {
         console.log("Purchase history section/table body not found on this page, skipping initialization.");
     }
 
-    // Initialize fulfillment section if present
-    if (document.getElementById('fulfillmentDisplaySection')) {
+    // Initialize fulfillment/invoice section if invoice area is present
+    if (document.getElementById('invoice') && document.querySelector('.fulfillment-table-body')) {
         await initializeFulfillmentSection();
     }
 }

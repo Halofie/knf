@@ -83,7 +83,7 @@ while ($row = $result->fetch_assoc()) {
 
     // Ensure numeric values are correctly typed for JSON
     $row['rate'] = floatval($row['rate']);
-    $row['quantity'] = intval($row['quantity']);
+    $row['quantity'] = floatval($row['quantity']);
     $row['total_cost'] = floatval($row['total_cost']);
     
     $purchase_items[] = $row;

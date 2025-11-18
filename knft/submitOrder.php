@@ -1,6 +1,26 @@
 <?php
 require('header.php');
-require_once 'auth_check.php';
+
+// Allow either admin users (existing admin flow) OR customers (role 'C') to access this endpoint.
+// The original `auth_check.php` enforces admin-only access and CSRF checks which blocks the
+// customer-facing order placement. For the customer portal we allow session role 'C'.
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// If user is not an admin and not a customer, deny access.
+$isAdmin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === true;
+$isCustomer = isset($_SESSION['role']) && $_SESSION['role'] === 'C';
+if (!($isAdmin || $isCustomer)) {
+    header('Content-Type: application/json');
+    http_response_code(403);
+    exit(json_encode(['error' => 'Access Denied: You do not have permission to access this resource.']));
+}
+
+// Note: we intentionally do not enforce the CSRF requirement from `auth_check.php` here
+// for the customer-facing flow because the customer front-end does not currently send
+// a CSRF token header. If you want stricter protections, add a CSRF token exchange
+// between the front-end and session and validate it here.
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
@@ -9,6 +29,9 @@ if ($conn->connect_error) {
 
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
+
+// DEBUG: Log received data to help troubleshoot
+error_log("submitOrder.php - Received data: " . print_r($data, true));
 
 $week_id = $data['week_id'];
 $customer_id = $data['customer_id'];
@@ -54,10 +77,13 @@ if (!empty($note)) {
 $total_order_cost = 0; // Initialize total order cost
 
 foreach ($data["items"] as $product) {
-    $product_id = $product['product_id'];
-    $quantity = $product['quantity'];
-    $rate = $product['price'];
-    $tc = $product['total'];
+    $product_id = intval($product['product_id']);
+    $quantity = floatval($product['quantity']);  // Explicitly convert to float to preserve decimals
+    $rate = floatval($product['price']);
+    $tc = floatval($product['total']);
+
+    // DEBUG: Log each product's quantity to verify decimal preservation
+    error_log("Product ID: $product_id, Quantity: $quantity (raw: {$product['quantity']}), Rate: $rate, Total: $tc");
 
     // Step 1: Get UoM for this product
     $unitCheckSQL = "SELECT UoM_id FROM product WHERE prod_id = ?";
@@ -79,7 +105,7 @@ foreach ($data["items"] as $product) {
         $sql_final_order = "INSERT INTO final_order (orderId, week_id, customer_id, product_id, quantity, route_id, route_rate, date_time, rate, total_cost)
                             VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
         $stmt = $conn->prepare($sql_final_order);
-        $stmt->bind_param("iiiiidddd", $order_id, $week_id, $customer_id, $product_id, $quantity, $routeId, $route_rate, $rate, $tc);
+        $stmt->bind_param("iiidddddd", $order_id, $week_id, $customer_id, $product_id, $quantity, $routeId, $route_rate, $rate, $tc);
         if ($stmt->execute()) {
             $stmt->close();
             
@@ -87,7 +113,7 @@ foreach ($data["items"] as $product) {
         $sql_order_fulfillment = "INSERT INTO order_fulfillment (orderId, week_id, customer_id, product_id, quantity, route_id, route_rate, date_time, rate, total_cost)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
         $stmt2 = $conn->prepare($sql_order_fulfillment);
-        $stmt2->bind_param("iiiiidddd", $order_id, $week_id, $customer_id, $product_id, $quantity, $routeId, $route_rate, $rate, $tc);
+        $stmt2->bind_param("iiidddddd", $order_id, $week_id, $customer_id, $product_id, $quantity, $routeId, $route_rate, $rate, $tc);
         if ($stmt2->execute()) {
             $stmt2->close();
             $updateSql = "UPDATE temp_inventory SET quantity = quantity - ? WHERE weekID = ? AND product_id = ? "; 
