@@ -30,7 +30,28 @@ if ($conn->connect_error) {
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-// DEBUG: Log received data to help troubleshoot
+// Validate JSON format
+if (json_last_error() !== JSON_ERROR_NONE) {
+    header('Content-Type: application/json');
+    http_response_code(400);
+    exit(json_encode(['error' => 'Invalid JSON format']));
+}
+
+// Validate required fields exist
+if (!isset($data['week_id']) || !isset($data['customer_id']) || !isset($data['routeId']) || !isset($data['items'])) {
+    header('Content-Type: application/json');
+    http_response_code(400);
+    exit(json_encode(['error' => 'Missing required fields']));
+}
+
+// Validate items is an array and not empty
+if (!is_array($data['items']) || empty($data['items'])) {
+    header('Content-Type: application/json');
+    http_response_code(400);
+    exit(json_encode(['error' => 'Order must contain at least one item']));
+}
+
+// Log received data for debugging
 error_log("submitOrder.php - Received data: " . print_r($data, true));
 
 $week_id = $data['week_id'];

@@ -13,13 +13,6 @@ let purchasedItems = {};
 let prodMap = {};
 
 function debugElements() {
-    console.log('=== DEBUG: Checking for required elements ===');
-    console.log('Purchase history body:', document.querySelector('.purchase-history-body'));
-    console.log('No orders message:', document.getElementById('no-orders-message'));
-    console.log('Order history result:', document.getElementById('order-history-result'));
-    console.log('Order history dropdown:', document.getElementById('orderHistoryWeekDropdown'));
-    console.log('Fulfillment table body:', document.querySelector('.fulfillment-table-body'));
-    console.log('=== END DEBUG ===');
 }
 
 // =====================================
@@ -27,13 +20,11 @@ function debugElements() {
 // =====================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded - Initializing...');
     
     // CRITICAL: Hide all sections first before any initialization
     const allSections = document.querySelectorAll('.content-section');
     allSections.forEach(section => {
         section.style.display = 'none';
-        console.log('Initially hiding section:', section.id);
     });
     
     initializeSectionNavigation();
@@ -41,20 +32,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const hash = window.location.hash;
     if (hash && hash.length > 1) {
         const sectionId = hash.substring(1);
-        console.log('URL hash detected:', sectionId);
         setTimeout(() => {
             showSection(sectionId);
         }, 1000); // Wait for main data to load
     } else {
         // Show order page by default
-        console.log('No hash, showing order-page by default');
         showSection('order-page');
     }
     
     // Handle browser back/forward buttons
     window.addEventListener('hashchange', function() {
         const sectionId = window.location.hash.substring(1) || 'order-page';
-        console.log('Hash changed to:', sectionId);
         showSection(sectionId);
     });
 });
@@ -66,8 +54,6 @@ function initializeSectionNavigation() {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const targetSection = this.getAttribute('href').substring(1);
-            
-            console.log('Sidebar link clicked:', targetSection);
             
             // Update URL hash (this will trigger hashchange event)
             window.location.hash = targetSection;
@@ -99,7 +85,6 @@ function initializeSectionNavigation() {
 }
 
 function showSection(sectionId) {
-    console.log('=== showSection called with:', sectionId);
     
     // First, remove active class from all sidebar links
     const sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
@@ -109,16 +94,13 @@ function showSection(sectionId) {
     const activeLink = document.querySelector(`.sidebar a[href="#${sectionId}"]`);
     if (activeLink) {
         activeLink.classList.add('active');
-        console.log('Active link updated for:', sectionId);
     }
     
     // Hide ALL sections first - be explicit
     const sections = document.querySelectorAll('.content-section');
-    console.log('Found sections:', sections.length);
     sections.forEach(section => {
         section.style.display = 'none';
         section.classList.remove('active-section');
-        console.log('Hidden section:', section.id);
     });
     
     // Show target section with animation
@@ -126,7 +108,6 @@ function showSection(sectionId) {
     if (targetSection) {
         targetSection.style.display = 'block';
         targetSection.classList.add('active-section');
-        console.log('Showing section:', sectionId);
         
         // Scroll to top of page when switching sections
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -141,10 +122,8 @@ function showSection(sectionId) {
 function loadSectionData(sectionId) {
     switch(sectionId) {
         case 'order-page':
-            console.log('Loading order page...');
             break;
         case 'order-history':
-            console.log('Loading order history section...');
             debugElements(); // Add this line
             if (globalCustomerId && globalCustomerId !== 0) {
                 loadOrderHistoryWeekDropdown();
@@ -152,16 +131,13 @@ function loadSectionData(sectionId) {
                     fetchAndDisplayConsumerOrders(globalCustomerId, 'all');
                 }, 500);
             } else {
-                console.warn('Customer ID not available for order history');
             }
             break;
         case 'invoice':
-            console.log('Loading invoice section...');
             debugElements(); // Add this line
             if (globalCustomerId && globalCustomerId !== 0) {
                 initializeFulfillmentSection();
             } else {
-                console.warn('Customer ID not available for invoice');
             }
             break;
     }
@@ -177,7 +153,6 @@ async function fetchUserLock() {
         const data = await response.json();
         // Store the status in the global variable
         lock = typeof data.Status !== "undefined" ? parseInt(data.Status, 10) : 0;
-        console.log("User lock status:", lock);
     } catch (error) {
         console.error('Error fetching user lock status:', error);
         lock = 0; // Default to unlocked if error
@@ -195,11 +170,9 @@ async function fetchEmailAndRunProgram() {
         const data = await response.json();
         const email = data?.email;
         if (!email) {
-            console.warn("Email is null or undefined. Redirecting...");
             window.location.href = '../home.html';
             return;
         }
-        console.log("User's session email:", email);
         runNextProgram(email);
     } catch (error) {
         console.error('Error fetching session email:', error);
@@ -216,7 +189,6 @@ async function runNextProgram(email) {
     if (document.getElementById('order-history') && document.querySelector('.purchase-history-body')) {
         await initializePurchaseHistory();
     } else {
-        console.log("Purchase history section/table body not found on this page, skipping initialization.");
     }
 
     // Initialize fulfillment/invoice section if invoice area is present
@@ -320,7 +292,6 @@ async function main_load(email) {
             const historyWeekEl = document.querySelector("#history_week");
             if(historyWeekEl) historyWeekEl.innerText = "Week: N/A";
         }
-        console.log('Fetched routes:', routes);
     } catch (error) {
         console.error('Error:', error);
     }
@@ -341,7 +312,6 @@ async function initializePurchaseHistory() {
     if (globalCustomerId && globalCustomerId !== 0) {
        await fetchAndDisplayConsumerOrders(globalCustomerId, 'all'); 
     } else {
-       console.warn("Customer ID (cId) not available yet for initial history load.");
        const tableBody = document.querySelector('.purchase-history-body');
        const noOrdersMsg = document.getElementById('no-orders-message');
        if (tableBody) tableBody.innerHTML = '<tr><td colspan="7" class="text-center p-5"><i class="fas fa-spinner fa-spin"></i> Waiting for user details...</td></tr>';
@@ -499,7 +469,6 @@ async function fetchOrders(week_id, customer_id) {
         });
 
         const text = await response.text(); // Debugging
-        console.log("Raw Response:", text);
 
         const data = JSON.parse(text); // Convert response to JSON
 
@@ -509,7 +478,6 @@ async function fetchOrders(week_id, customer_id) {
             if (orderResultEl) orderResultEl.innerHTML = `<p class="text-danger">${data.error}</p>`;
             return;
         }
-        console.log("Fetched existing orders (for prefill maybe?):", data);
         // renderOrders(data);
     } catch (error) {
         console.error('Error fetching orders:', error);
@@ -1007,7 +975,6 @@ function displayOrderHistoryMessage(message, isSuccess) {
         element.style.display = 'block';
         setTimeout(() => { element.style.display = 'none'; }, 5000); // Hide after 5 seconds
     } else {
-        console.warn("displayOrderHistoryMessage: #order-history-result element not found");
     }
 } 
 
@@ -1210,8 +1177,6 @@ document.getElementById('placeOrderButton').addEventListener('click', async () =
         showOrderMessage('Please select a delivery route before placing your order.', 'warning');
         return;
     }
-
-    console.warn("Confirm Purchase By clicking Ok");
     note=document.querySelector("#noteText").value || ''; // Get note from the note input field
     const orderButton = document.getElementById('placeOrderButton');
     const originalText = orderButton.innerHTML;

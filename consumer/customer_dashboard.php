@@ -149,21 +149,7 @@ $customer_address = $_SESSION['customer_address'] ?? 'N/A';
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-6">
-                    <div class="card animate-slide-up" style="animation-delay: 0.1s;">
-                        <div class="card-header">
-                            <i class="fas fa-bell me-2"></i>Notifications
-                        </div>
-                        <div class="card-body">
-                            <div id="notifications-container">
-                                <p class="text-muted mb-0">
-                                    <i class="fas fa-info-circle me-2"></i>No new notifications at this time.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             <div class="row">
@@ -196,11 +182,6 @@ $customer_address = $_SESSION['customer_address'] ?? 'N/A';
                                 </div>
                                 <div class="col-md-4 text-center">
                                     <i class="fas fa-user-circle fa-5x text-success mb-3"></i>
-                                    <div class="d-grid">
-                                        <a href="#profile" class="btn btn-outline-primary">
-                                            <i class="fas fa-edit me-1"></i>Edit Profile
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -209,9 +190,13 @@ $customer_address = $_SESSION['customer_address'] ?? 'N/A';
             </div>
         </section>
 
-        <!-- Profile Section -->
+        <!-- Profile Section - DISABLED (Incomplete functionality) -->
         <section id="profile" class="content-section" style="display: none;">
             <h2 class="section-title">My Profile</h2>
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i>Profile editing is currently unavailable. Please contact support to update your information.
+            </div>
+            <!--
             
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -280,6 +265,7 @@ $customer_address = $_SESSION['customer_address'] ?? 'N/A';
                     </div>
                 </div>
             </div>
+            -->
         </section>
     </main>
             

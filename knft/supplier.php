@@ -1,18 +1,14 @@
 <?php
-// Start the session
 session_start();
 
-// Check if user is logged in; redirect to login page if not authenticated
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SESSION['role'] !== 'F') {
-    header("Location: ../login/login.html");
+// Check if the user is logged in and has the 'F' (Farmer/Supplier) role
+if (!isset($_SESSION['loggedin']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'F') {
+    // Not logged in or not a farmer/supplier, redirect to login
+    header("Location: ../login/login.php");
     exit();
 }
 
-// Redirect to admin dashboard if email exists in session
-if (isset($_SESSION['email'])) {
-    header("Location: ../producer/addinv.html");
-    exit();
-} else {
-    echo "Access denied. No email provided.";
-}
+// User is authenticated and is a farmer/supplier, redirect to farmer dashboard
+header("Location: ../producer/addinv.php");
+exit();
 ?>

@@ -1,0 +1,21 @@
+[28-Nov-2025 17:54:59 UTC] submitOrder.php - Received data: Array
+(
+    [week_id] => 12
+    [customer_id] => 9
+    [routeId] => 27
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [product_id] => 8
+                    [quantity] => 2
+                    [price] => 225
+                    [total] => 450
+                )
+
+        )
+
+    [note] => 
+)
+
+[28-Nov-2025 17:54:59 UTC] Product ID: 8, Quantity: 2 (raw: 2), Rate: 225, Total: 450

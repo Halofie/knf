@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         } catch (e) {
-            console.warn('CSRF helper failed to attach token or normalize headers:', e);
         }
         return originalFetch(resource, init);
     };
@@ -30,13 +29,11 @@ document.addEventListener('DOMContentLoaded', function() {
     editTrayNumberListener();
     const allocationWeekDropdown = document.getElementById('allocationWeekId');
     if (allocationWeekDropdown) {
-        console.log("Found #allocationWeekId dropdown. Attempting to populate...");
         // Assuming populateAdminWeekDropdown is defined or we'll define a local one
         // For now, let's define a local one if it's not already a global utility
         if (typeof populateAdminWeekDropdown_Local === "function") {
             populateAdminWeekDropdown_Local('allocationWeekId');
         } else {
-            console.warn("populateAdminWeekDropdown_Local not defined. Week dropdown for allocation might not populate.");
         }
     } else {
         console.log("#allocationWeekId dropdown NOT found on this page load."); // << ADD THIS LOG
@@ -91,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     let message = resultData.message || 'Process completed with an unknown server status.';
                     if (resultData.unallocated_items && resultData.unallocated_items.length > 0) {
                         message += ` <br><strong>Warning:</strong> ${resultData.unallocated_items.length} customer order line(s) could not be fully allocated. Check server logs for details.`;
-                        console.warn("Unallocated items details:", resultData.unallocated_items);
                     }
                     resultDiv.innerHTML = message; // Use innerHTML for <br>
                 } else {
@@ -162,7 +158,6 @@ async function populateAdminWeekDropdown_Local(dropdownId, includeAllOption = fa
         console.error("Admin week dropdown not found:", dropdownId);
         return;
     }
-    console.log(`populateAdminWeekDropdown_Local: Populating '${dropdownId}'...`);
     // Preserve the first option if it's a placeholder like "Loading..." or "Select Week"
     let firstOptionHTML = dropdown.options.length > 0 && dropdown.options[0].value === "" ? 
                           `<option value="" selected disabled>${dropdown.options[0].textContent}</option>` : 
@@ -176,7 +171,6 @@ async function populateAdminWeekDropdown_Local(dropdownId, includeAllOption = fa
 
     try {
         const response = await fetch('../knft/getWeek.php'); // Centralized week fetching
-        console.log(`populateAdminWeekDropdown_Local: Fetch response status for getWeek.php: ${response.status}`);
         if (!response.ok) throw new Error(`Failed to fetch weeks, status: ${response.status}`);
         const weeks = await response.json();
         console.log(`populateAdminWeekDropdown_Local: Weeks data received from getWeek.php:`, weeks); // << LOG 3 (CRUCIAL)
@@ -202,7 +196,6 @@ async function populateAdminWeekDropdown_Local(dropdownId, includeAllOption = fa
                             dropdown.add(new Option(`${week.weekdate} (ID: ${week.weekID})`, week.weekID));
                             weeksAddedCount++;
                         } else {
-                            console.warn("populateAdminWeekDropdown_Local: Week object missing weekID or weekdate", week);
                         }
                     }
                 });
@@ -550,7 +543,6 @@ function handleAddProduct(e) {
          step: parseFloat(document.querySelector("#itmStep").value),
          durability: parseFloat(document.querySelector("#itmDurability").value)
      };
-     console.log(payload.price);
      displayMessage('#result-product', 'Adding...', true);
      fetch('../knft/submitProduct.php', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
         .then(response => { if (!response.ok) throw response; return response.json(); })
@@ -996,7 +988,6 @@ async function promptAndUpdateCustomMessage() {
             alert("Failed to update message: " + (data.message || "Unknown error"));
         }
     } catch (error) {
-        console.warn("Error updating custom message:", error);
         alert("Error updating custom message. See console for details.");
     }
 }
@@ -1034,7 +1025,6 @@ function Fullfillform() {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             const week_id = weekDropdown.value;
-            console.log("Selected Week ID:", week_id);
             const get_mode = document.querySelector('input[name="get_mode"]:checked')?.value || 0; // Default to 'all' if not selected
             if (!week_id) return;
 
@@ -1211,7 +1201,6 @@ function editFarmerRankListener() {
 
         btn.disabled = true;
         btn.textContent = 'Updating...';
-        console.log(`Updating rank for ID: ${id}, New Rank: ${newRank}`);
         try {
             const response = await fetch('../knft/editFarmerRank.php', {
                 method: 'POST',
@@ -1241,7 +1230,6 @@ async function getTrayStatusData() {
     const weekId = weekDropdown ? weekDropdown.value : null;
 
     if (!weekId) {
-        console.warn('No week selected');
         renderTrayStatusTable([]);
         return;
     }
@@ -1278,7 +1266,6 @@ function renderTrayStatusTable(rows) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No tray status data found.</td></tr>';
         return;
     }
-    console.log(rows);
     rows.forEach(row => {
         tbody.innerHTML += `
             <tr>
@@ -1359,7 +1346,6 @@ function editTrayStatusListener() {
 
         btn.disabled = true;
         btn.textContent = 'Updating...';
-        console.log(`Toggling tray status for ID: ${id}`);
 
         try {
             const response = await fetch('../knft/editTrayStatus.php', {

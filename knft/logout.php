@@ -1,6 +1,7 @@
 <?php
 require('header.php');
-session_start();
+// Session already started in header.php, no need to start again
+
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection

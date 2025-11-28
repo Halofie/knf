@@ -4,7 +4,18 @@ ini_set('display_errors', 0); // Prevent errors from being sent to the browser.
 ini_set('log_errors', 1);
 header('Content-Type: application/json');
 require('header.php');
-require_once 'auth_check.php';
+
+// Farmer-specific authentication check
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if the user is logged in and is a farmer (role 'F')
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || 
+    !isset($_SESSION['role']) || $_SESSION['role'] !== 'F') {
+    http_response_code(403);
+    exit(json_encode(['error' => 'Access Denied: Only farmers can submit inventory.']));
+}
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

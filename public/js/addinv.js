@@ -8,14 +8,12 @@ function displayMessage(selector, message, isSuccess) {
         element.className = `m-3 alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
         element.style.display = 'block';
     } else {
-        console.warn("displayMessage: selector not found", selector);
     }
 }
 
 function displayChecklistMessage(selector, message, isSuccess) {
     const element = document.querySelector(selector);
     if (!element) {
-        console.warn("displayChecklistMessage: selector not found", selector);
         return;
     }
 
@@ -122,15 +120,12 @@ async function fetchAndDisplayInventory(farmerId, weekId, tableSelector, addDele
             throw new Error(`HTTP error! status: ${response.status}, Response: ${errorText}`);
         }
         const data = await response.json();
-        console.log(`Data from getFarmerHistory.php for week ${weekId} (selector ${tableSelector}):`, JSON.stringify(data, null, 2));
         if (data.error) { // Assuming PHP might send {error: "message"}
             console.error("Error fetching inventory:", data.error);
             displayMessage(tableSelector === ".inventory-body" ? '#inventory-result' : '#currentinventory-result', `Error: ${data.error}`, false);
             populateInventoryTableInternal(tableSelector, [], addDeleteButton); // Show empty
             return;
         }
-        
-        console.log(`Inventory for ${tableSelector} (Week: ${weekId}):`, data);
         populateInventoryTableInternal(tableSelector, data, addDeleteButton);
 
     } catch (error) {
@@ -158,7 +153,6 @@ function populateInventoryTableInternal(tableBodySelector, products, addDeleteBu
     products.forEach(product => {
         const row = document.createElement("tr");
         const dateTimeDisplay = product.inv_datetime || product.datetime || 'N/A';
-        console.log("Rendering product for history:", product);
         // Add data-product-id for copy logic
         row.innerHTML = `
             <td data-product-id="${product.prod_id || product.product_id || ''}">${product.product_name || 'N/A'}</td>
@@ -213,7 +207,6 @@ async function fetchFarmerNotifyStatus() {
         if (data.status === 'success') {
             canShowFarmerChecklist = (data.notify_status === 1);
         } else {
-            console.warn("Could not fetch farmer notification status:", data.message);
             canShowFarmerChecklist = false;
         }
     } catch (error) {
@@ -298,7 +291,6 @@ async function fetchAndDisplayFarmerChecklist(selectedWeekId) {
             throw new Error(`Server error: ${response.status}. ${errorText}`);
         }
         const data = await response.json();
-        console.log("Farmer Checklist Data:", data);
 
         if (data.status === 'success') {
             renderFarmerChecklist(data);
@@ -401,7 +393,6 @@ function htmlspecialchars(str) {
 }
 
 async function initialize() {
-    console.log("Initializing page...");
     const email = await fetchEmail();
     if (!email) {
         alert("Session expired or not logged in. Redirecting to home.");
@@ -436,7 +427,6 @@ async function initialize() {
     if (globalFarmerId && globalCurrentWeekId) {
         fetchAndDisplayInventory(globalFarmerId, globalCurrentWeekId, ".currentinventory-body", true);
     } else {
-        console.warn("Cannot fetch current inventory: Missing Farmer ID or Current Week ID.");
         populateInventoryTableInternal(".currentinventory-body", [], true); // Show empty
     }
 
@@ -466,7 +456,6 @@ async function initialize() {
     updateDashboardStats();
     
     setupEventListeners(globalFarmerId, globalCurrentWeekId, globalProductMasterData);
-    console.log("Initialization complete.");
 }
 
 function setupEventListeners(fId, currentLocalWeekId, productMasterList) {
@@ -631,8 +620,6 @@ function setupEventListeners(fId, currentLocalWeekId, productMasterList) {
                 }
 
                 const data = await response.json(); // Try to parse JSON
-
-                console.log('Submission Response:', data);
                 if (data && data.status === 'success') {
                     displayMessage('#submission-result', data.message || 'Inventory submitted successfully!', true);
                     tempInv = {}; // Clear temporary inventory
@@ -725,7 +712,6 @@ function initializeClock() {
         // Check for .clock if #date is not found (some pages might use class)
         const clockElement = document.querySelector('.clock');
         if (!clockElement) {
-            console.warn("Date/Clock element not found for header.");
             return;
         }
         function updateDynamicClock() {
@@ -826,7 +812,6 @@ function showSection(sectionId) {
 
 async function updateDashboardStats() {
     if (!globalFarmerId || !globalCurrentWeekId) {
-        console.warn('Cannot load dashboard stats: Missing farmer ID or week ID');
         return;
     }
 
@@ -870,7 +855,6 @@ async function getCurrentInventoryStats() {
         
         // Get the raw text first to debug
         const rawText = await response.text();
-        console.log('Raw API Response:', rawText);
         
         // Try to parse as JSON
         const jsonData = JSON.parse(rawText);
@@ -898,7 +882,6 @@ async function getPendingOrdersCount() {
         
         // Get the raw text first to debug
         const rawText = await response.text();
-        console.log('Raw Pending Orders Response:', rawText);
         
         // Try to parse as JSON
         const jsonData = JSON.parse(rawText);

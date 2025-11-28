@@ -1,7 +1,7 @@
 <?php 
 session_start();
-if ($_SESSION['role'] !== 'C') {
-    header("Location: ../login/login.html");
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['role']) || $_SESSION['role'] !== 'C') {
+    header("Location: ../login/login.php");
     exit();
 }
 ?>
