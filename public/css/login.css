@@ -1,26 +1,75 @@
-/* Original color classes - keeping exactly as they were */
+/* ============================================
+   CSS DESIGN TOKENS - KNF E-Commerce
+   ============================================ */
+:root {
+    /* Brand Colors - DO NOT MODIFY THESE VALUES */
+    --primary-green: #4caf50;
+    --dark-green: #3a5c3a;
+    --light-green: #4c7a4c;
+    --pale-green: #d9e7d9;
+    --white-bg: #f2f2f2;
+
+    /* Hover States - Slight variations only */
+    --primary-green-hover: #45a049;
+    --primary-green-light: #66bb6a;
+    --dark-green-hover: #2d4a2d;
+    --light-green-hover: #3d6b3d;
+    --pale-green-light: #e8f5e9;
+
+    /* Neutral Colors */
+    --white: #ffffff;
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-300: #e0e0e0;
+    --gray-700: #616161;
+    --gray-900: #212121;
+
+    /* Spacing Scale (8px grid) */
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+
+    /* Border Radius */
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+}
+
+/* ============================================
+   COLOR UTILITY CLASSES
+   ============================================ */
 .lightGreen {
-    background-color: #4c7a4c;
+    background-color: var(--light-green);
 }
 
 .darkGreen {
-    background-color: #3a5c3a;
+    background-color: var(--dark-green);
 }
 
 .paleGreen {
-    background-color: #d9e7d9;
+    background-color: var(--pale-green);
 }
 
 .Green {
-    background-color: #4caf50;
+    background-color: var(--primary-green);
 }
 
 .White {
-    background-color: #f2f2f2;
+    background-color: var(--white-bg);
 }
 
 .color-paleGreen {
-    color: #d9e7d9;
+    color: var(--pale-green-light);
 }
 
 /* Original profile styles - optimized */
@@ -191,21 +240,22 @@ body.paleGreen {
     .title {
         font-size: 1.6rem;
     }
-    
+
     .bg-white.p-4.p-md-5.rounded.shadow-sm {
         margin: 0.5rem;
         border-radius: 8px !important;
         padding: 1rem !important;
         background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%) !important;
     }
-    
+
     .profile {
         width: 70px;
         height: 70px;
         background: linear-gradient(135deg, #d9e7d9 60%, #b2dfdb 100%);
     }
-    
-    .form-control, .btn-primary {
+
+    .form-control,
+    .btn-primary {
         font-size: 0.95rem !important;
         padding: 0.7rem 1.2rem !important;
     }
@@ -216,21 +266,22 @@ body.paleGreen {
         font-size: 1.3rem;
         padding: 0 1rem;
     }
-    
+
     .profile {
         width: 50px;
         height: 50px;
         background: linear-gradient(135deg, #e0f7fa 60%, #d9e7d9 100%);
     }
-    
+
     .bg-white.p-4.p-md-5.rounded.shadow-sm {
         margin: 0.25rem;
         border-radius: 6px !important;
         padding: 0.5rem !important;
         background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%) !important;
     }
-    
-    .form-control, .btn-primary {
+
+    .form-control,
+    .btn-primary {
         font-size: 0.9rem !important;
         padding: 0.5rem 0.8rem !important;
     }
@@ -285,11 +336,11 @@ html {
     .profile:hover {
         transform: none;
     }
-    
+
     .bg-white.p-4.p-md-5.rounded.shadow-sm:hover {
         transform: none;
     }
-    
+
     .btn-primary:hover {
         transform: none;
     }

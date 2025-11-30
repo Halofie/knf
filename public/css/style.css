@@ -1,3 +1,74 @@
+/* ============================================
+   CSS DESIGN TOKENS - KNF E-Commerce
+   ============================================ */
+:root {
+    /* Brand Colors - DO NOT MODIFY THESE VALUES */
+    --primary-green: #4caf50;
+    --dark-green: #3a5c3a;
+    --light-green: #4c7a4c;
+    --pale-green: #d9e7d9;
+    --white-bg: #f2f2f2;
+
+    /* Hover States - Slight variations only */
+    --primary-green-hover: var(--primary-green-hover);
+    --primary-green-light: #66bb6a;
+    --dark-green-hover: #2d4a2d;
+    --light-green-hover: #3d6b3d;
+    --pale-green-light: #e8f5e9;
+
+    /* Neutral Colors */
+    --white: #ffffff;
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-200: #eeeeee;
+    --gray-300: #e0e0e0;
+    --gray-700: #616161;
+    --gray-900: #212121;
+
+    /* Spacing Scale (8px grid) */
+    --space-1: 0.25rem;
+    /* 4px */
+    --space-2: 0.5rem;
+    /* 8px */
+    --space-3: 0.75rem;
+    /* 12px */
+    --space-4: 1rem;
+    /* 16px */
+    --space-5: 1.25rem;
+    /* 20px */
+    --space-6: 1.5rem;
+    /* 24px */
+    --space-8: 2rem;
+    /* 32px */
+    --space-10: 2.5rem;
+    /* 40px */
+    --space-12: 3rem;
+    /* 48px */
+    --space-16: 4rem;
+    /* 64px */
+    --space-20: 5rem;
+    /* 80px */
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 20px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -18,12 +89,29 @@ body {
 }
 
 /* Color Classes */
-.lightGreen { background-color: #4c7a4c; }
-.darkGreen { background-color: #3a5c3a; }
-.paleGreen { background-color: #d9e7d9; }
-.Green { background-color: #4caf50; }
-.White { background-color: #f2f2f2; }
-.color-paleGreen { color: #d9e7d9; }
+.lightGreen {
+    background-color: var(--light-green);
+}
+
+.darkGreen {
+    background-color: var(--dark-green);
+}
+
+.paleGreen {
+    background-color: var(--pale-green-light);
+}
+
+.Green {
+    background-color: var(--primary-green);
+}
+
+.White {
+    background-color: var(--white-bg);
+}
+
+.color-paleGreen {
+    color: var(--pale-green-light);
+}
 
 /* Sidebar Styles */
 .sidebar {
@@ -34,7 +122,7 @@ body {
     position: fixed;
     height: 100%;
     overflow: auto;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
 }
 
@@ -42,7 +130,7 @@ body {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 3px solid #4c7a4c;
+    border: 3px solid var(--light-green);
     margin: 20px 0;
     transition: all 0.3s ease;
     box-shadow: 0 8px 25px rgba(76, 122, 76, 0.3);
@@ -86,7 +174,7 @@ body {
 }
 
 .sidebar-btn:hover {
-    background-color: #4c7a4c;
+    background-color: var(--light-green);
     color: white;
     transform: translateX(10px);
     box-shadow: 0 5px 15px rgba(76, 122, 76, 0.3);
@@ -99,7 +187,7 @@ body {
     align-items: center;
     background: linear-gradient(135deg, #4c7a4c 0%, #3a5c3a 100%);
     padding: 15px 30px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -116,21 +204,21 @@ body {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    border: 3px solid rgba(255,255,255,0.3);
+    border: 3px solid rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .logo-img:hover {
     transform: rotate(5deg) scale(1.05);
-    border-color: rgba(255,255,255,0.8);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 .logo-text {
     font-size: 28px;
     font-weight: 800;
     color: #fff;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     letter-spacing: -0.5px;
 }
 
@@ -161,7 +249,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     transition: left 0.3s ease;
 }
 
@@ -170,9 +258,9 @@ body {
 }
 
 .nav-link:hover {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .login-btn {
@@ -185,13 +273,13 @@ body {
     font-weight: 700;
     font-size: 16px;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .login-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #4caf50 0%, var(--primary-green-hover) 100%);
     color: white;
 }
 
@@ -200,7 +288,7 @@ body {
     position: relative;
     min-height: 70vh;
     background-image: linear-gradient(135deg, rgba(76, 122, 76, 0.8) 0%, rgba(58, 92, 58, 0.9) 100%),
-                      url('../Assets/farm-hero.jpg');
+        url('../Assets/farm-hero.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -228,6 +316,7 @@ body {
         opacity: 0;
         transform: translateY(50px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -238,7 +327,7 @@ body {
     font-size: clamp(2.5rem, 5vw, 4rem);
     font-weight: 800;
     margin-bottom: 20px;
-    text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
     line-height: 1.2;
     letter-spacing: -1px;
 }
@@ -247,7 +336,7 @@ body {
     font-size: clamp(1.1rem, 2.5vw, 1.5rem);
     margin-bottom: 40px;
     font-weight: 400;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     opacity: 0.95;
 }
 
@@ -279,7 +368,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s;
 }
 
@@ -288,7 +377,7 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    background: linear-gradient(135deg, #4caf50 0%, var(--primary-green-hover) 100%);
     color: white;
     box-shadow: 0 8px 25px rgba(76, 122, 76, 0.3);
 }
@@ -306,9 +395,9 @@ body {
 }
 
 .btn-secondary:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(255,255,255,0.2);
+    box-shadow: 0 12px 35px rgba(255, 255, 255, 0.2);
 }
 
 /* Section Titles */
@@ -330,7 +419,7 @@ body {
     transform: translateX(-50%);
     width: 80px;
     height: 4px;
-    background: linear-gradient(90deg, #4caf50, #45a049);
+    background: linear-gradient(90deg, #4caf50, var(--primary-green-hover));
     border-radius: 2px;
 }
 
@@ -351,14 +440,14 @@ body {
     background: white;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     position: relative;
 }
 
 .product-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
 }
 
 .product-image-wrapper {
@@ -382,7 +471,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
     color: white;
     padding: 30px 20px 20px;
     transform: translateY(100%);
@@ -417,7 +506,7 @@ body {
     padding: 40px 20px;
     background: white;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -430,7 +519,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #4caf50, #45a049);
+    background: linear-gradient(90deg, #4caf50, var(--primary-green-hover));
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 }
@@ -455,7 +544,7 @@ body {
     border: 4px solid #f0f0f0;
     padding: 20px;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .benefit-card:hover .benefit-icon img {
@@ -490,7 +579,7 @@ body {
 }
 
 .accordion-enhanced {
-    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    background: linear-gradient(135deg, #4caf50 0%, var(--primary-green-hover) 100%);
     color: white;
     cursor: pointer;
     padding: 20px 40px;
@@ -513,7 +602,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s;
 }
 
@@ -527,7 +616,7 @@ body {
 }
 
 .accordion-enhanced.active {
-    background: linear-gradient(135deg, #45a049 0%, #4caf50 100%);
+    background: linear-gradient(135deg, var(--primary-green-hover) 0%, #4caf50 100%);
 }
 
 .learn-more-enhanced {
@@ -544,7 +633,7 @@ body {
     padding: 30px 40px;
     background: linear-gradient(135deg, #f8f9fa 0%, white 100%);
     border-radius: 0 0 20px 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .learn-more-content p {
@@ -583,7 +672,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, #4caf50, #45a049);
+    background: linear-gradient(90deg, #4caf50, var(--primary-green-hover));
 }
 
 .footer-content-enhanced {
@@ -628,7 +717,7 @@ body {
 .social-link {
     display: inline-block;
     padding: 12px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
@@ -660,7 +749,7 @@ body {
     left: -100vw;
     overflow-y: auto;
     z-index: 0;
-    background-color: #d9e7d9;
+    background-color: var(--pale-green-light);
     transition: all 0.3s ease;
 }
 
@@ -676,51 +765,51 @@ body {
         gap: 20px;
         padding: 20px;
     }
-    
+
     .logo-text {
         font-size: 24px;
         text-align: center;
     }
-    
+
     .nav-enhanced ul {
         flex-direction: column;
         gap: 15px;
         text-align: center;
     }
-    
+
     .hero-title {
         font-size: 2.5rem;
     }
-    
+
     .hero-subtitle {
         font-size: 1.2rem;
     }
-    
+
     .hero-buttons {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .enhanced-btn {
         width: 250px;
     }
-    
+
     .product-grid-enhanced {
         grid-template-columns: 1fr;
         gap: 30px;
     }
-    
+
     .benefits-grid {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 30px;
     }
-    
+
     .footer-content-enhanced {
         flex-direction: column;
         text-align: center;
         padding: 0 8px;
     }
-    
+
     .sidebar {
         width: 100%;
         position: static;
@@ -729,20 +818,24 @@ body {
         padding: 0;
         background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
     }
+
     .profile {
         width: 70px;
         height: 70px;
         margin: 10px 0;
         background: linear-gradient(135deg, #d9e7d9 60%, #b2dfdb 100%);
     }
+
     .container {
         padding: 0 8px;
         background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
     }
+
     .about-content {
         padding: 0 8px;
         background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
     }
+
     .hero-content {
         padding: 0 8px;
         background: linear-gradient(135deg, #e0f7fa 0%, #d9e7d9 100%);
@@ -754,31 +847,32 @@ body {
         min-height: 60vh;
         padding: 40px 20px;
     }
-    
+
     .section-title {
         font-size: 2rem;
         margin-bottom: 30px;
     }
-    
+
     .featured-products-enhanced,
     .why-choose-us-enhanced,
     .about-us-enhanced {
         padding: 50px 0;
     }
-    
+
     .benefit-card,
     .product-card {
         margin: 0 10px;
     }
-    
+
     .accordion-enhanced {
         padding: 15px 25px;
         font-size: 16px;
     }
-    
+
     .learn-more-content {
         padding: 20px 25px;
     }
+
     .sidebar {
         width: 100%;
         position: static;
@@ -787,24 +881,29 @@ body {
         padding: 0;
         background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
     }
+
     .profile {
         width: 50px;
         height: 50px;
         margin: 5px 0;
         background: linear-gradient(135deg, #e0f7fa 60%, #d9e7d9 100%);
     }
+
     .container {
         padding: 0 4px;
         background: linear-gradient(135deg, #ffffff 80%, #e0f2f1 100%);
     }
+
     .footer-content-enhanced {
         padding: 0 4px;
         background: linear-gradient(135deg, #333 0%, #4caf50 100%);
     }
+
     .about-content {
         padding: 0 4px;
         background: linear-gradient(135deg, #f1f8e9 0%, #d9e7d9 100%);
     }
+
     .hero-content {
         padding: 0 4px;
         background: linear-gradient(135deg, #e0f7fa 0%, #d9e7d9 100%);
@@ -813,8 +912,13 @@ body {
 
 /* Loading Animation */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .product-card,
@@ -828,6 +932,7 @@ body {
         opacity: 0;
         transform: translateY(50px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -849,12 +954,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #4caf50, #45a049);
+    background: linear-gradient(135deg, #4caf50, var(--primary-green-hover));
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #45a049, #4caf50);
+    background: linear-gradient(135deg, var(--primary-green-hover), #4caf50);
 }
 
 /* Focus States for Accessibility */

@@ -1,3 +1,51 @@
+/* ============================================
+   CSS DESIGN TOKENS - KNF E-Commerce
+   ============================================ */
+:root {
+    /* Brand Colors - DO NOT MODIFY THESE VALUES */
+    --primary-green: #4caf50;
+    --dark-green: #3a5c3a;
+    --light-green: #4c7a4c;
+    --pale-green: #d9e7d9;
+    --white-bg: #f2f2f2;
+
+    /* Hover States - Slight variations only */
+    --primary-green-hover: #45a049;
+    --primary-green-light: #66bb6a;
+    --dark-green-hover: #2d4a2d;
+    --light-green-hover: #3d6b3d;
+    --pale-green-light: #e8f5e9;
+
+    /* Neutral Colors */
+    --white: #ffffff;
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-300: #e0e0e0;
+    --gray-700: #616161;
+    --gray-900: #212121;
+
+    /* Spacing Scale (8px grid) */
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+}
+
 /* Use Nunito font everywhere */
 body {
     font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,8 +63,8 @@ body {
     position: fixed;
     height: 100%;
     overflow: auto;
-    box-shadow: 2px 0 15px rgba(46,125,50,0.1);
-    border-right: 2px solid rgba(76,175,80,0.1);
+    box-shadow: 2px 0 15px rgba(46, 125, 50, 0.1);
+    border-right: 2px solid rgba(76, 175, 80, 0.1);
     will-change: transform;
 }
 
@@ -50,7 +98,7 @@ body {
 }
 
 .sidebar a.active {
-    background-color: #4caf50;
+    background-color: var(--primary-green);
     color: white;
     box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
 }
@@ -65,15 +113,17 @@ body {
 /* Navbar styling to match consumer theme */
 .navbar {
     background: linear-gradient(90deg, #388e3c 0%, #4caf50 100%);
-    box-shadow: 0 2px 10px rgba(76,175,80,0.08);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.08);
     border-bottom: 2px solid #388e3c;
 }
+
 .navbar-brand {
     font-weight: 700;
     font-size: 1.3rem;
     color: #fff !important;
     letter-spacing: 1px;
 }
+
 .navbar-nav .nav-link {
     font-size: 1.08rem;
     font-weight: 600;
@@ -81,23 +131,28 @@ body {
     margin-right: 1rem;
     transition: color 0.2s;
 }
+
 .navbar-nav .nav-link.active,
 .navbar-nav .nav-link:hover {
     color: #ffeaa7 !important;
     text-shadow: 0 1px 4px #388e3c33;
 }
+
 .navbar-toggler {
     border-radius: 8px;
     border: 2px solid #388e3c;
 }
 
 /* Card styling for profile, quick links, dashboard sections */
-.card, .card-header, .card-body {
+.card,
+.card-header,
+.card-body {
     border-radius: 12px;
-    box-shadow: 0 4px 18px rgba(76,175,80,0.12);
+    box-shadow: 0 4px 18px rgba(76, 175, 80, 0.12);
     background: linear-gradient(135deg, #fffbe6 0%, #ffeaa7 100%);
     margin-bottom: 2rem;
 }
+
 .card-header {
     font-weight: 700;
     font-size: 1.1rem;
@@ -105,54 +160,65 @@ body {
     color: #fff;
     border-bottom: 2px solid #388e3c;
 }
+
 .card-title {
     font-size: 1.2rem;
     font-weight: 700;
     color: #388e3c;
 }
+
 .card-text {
     font-size: 1.05rem;
     color: #333;
 }
+
 .list-group-item {
     background: #fffbe6;
     border: none;
     font-size: 1.05rem;
     padding: 0.85rem 1.1rem;
 }
+
 .list-group-item a {
     color: #388e3c;
     font-weight: 600;
     transition: color 0.2s;
 }
+
 .list-group-item a:hover {
     color: #20c997;
     text-decoration: underline;
 }
 
 /* Buttons */
-.btn, .btn-outline-primary, .btn-outline-info {
+.btn,
+.btn-outline-primary,
+.btn-outline-info {
     border-radius: 12px;
     font-weight: 700;
     font-size: 1.08rem;
     padding: 0.85rem 2.2rem;
-    box-shadow: 0 2px 10px rgba(76,175,80,0.12);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.12);
     transition: background 0.2s, transform 0.2s;
 }
+
 .btn-outline-primary {
     border: 2px solid #388e3c;
     color: #388e3c;
     background: #fff;
 }
+
 .btn-outline-primary:hover {
     background: #388e3c;
     color: #fff;
 }
+
 .btn-outline-info {
     border: 2px solid #20c997;
     color: #20c997;
     background: #fff;
 }
+
 .btn-outline-info:hover {
     background: #20c997;
     color: #fff;
@@ -165,7 +231,7 @@ body {
     border-radius: 12px;
     border: 2px solid #388e3c;
     font-size: 1.08rem;
-    box-shadow: 0 2px 10px rgba(76,175,80,0.08);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.08);
 }
 
 /* Footer styling */
@@ -175,7 +241,7 @@ footer {
     font-size: 1.08rem;
     font-weight: 600;
     border-top: 2px solid #388e3c;
-    box-shadow: 0 -2px 10px rgba(76,175,80,0.08);
+    box-shadow: 0 -2px 10px rgba(76, 175, 80, 0.08);
     border-radius: 0 0 12px 12px;
     margin-top: 2rem;
     padding: 1.2rem 0;
@@ -183,18 +249,25 @@ footer {
 
 /* Responsive adjustments */
 @media screen and (max-width: 700px) {
-    .container, .container-fluid {
+
+    .container,
+    .container-fluid {
         /* padding-top: 1rem; */
         padding-bottom: 1rem;
     }
-    .card, .card-header, .card-body {
+
+    .card,
+    .card-header,
+    .card-body {
         border-radius: 10px;
         margin-bottom: 1rem;
         font-size: 1rem !important;
     }
+
     .navbar-brand {
         font-size: 1.1rem;
     }
+
     .footer {
         font-size: 1rem;
         padding: 0.8rem 0;
@@ -208,7 +281,8 @@ footer {
 }
 
 /* Section spacing */
-.mt-4, .mb-4 {
+.mt-4,
+.mb-4 {
     margin-top: 2rem !important;
     margin-bottom: 2rem !important;
 }
